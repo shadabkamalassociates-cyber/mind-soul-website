@@ -2,6 +2,12 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Header from "@/components/Header";
 import CategoryBar from "@/components/CategoryBar";
+import FeaturedLiveSessions from "@/components/FeaturedLiveSessions";
+import SoulExperts from "@/components/SoulExperts";
+import TransformationPrograms from "@/components/TransformationPrograms";
+import CommunityReviews from "@/components/CommunityReviews";
+import FAQ from "@/components/FAQ";
+import Footer from "@/components/Footer";
 import { ArrowCircle, StarIcon } from "@/components/Icons";
 
 const avatars = [
@@ -123,6 +129,13 @@ export default function Home() {
 
         <CategoryBar />
       </section>
+
+      <FeaturedLiveSessions />
+      <SoulExperts />
+      <TransformationPrograms />
+      <CommunityReviews />
+      <FAQ />
+      <Footer />
     </main>
   );
 }
