@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 type FaqItem = {
   id: string;
@@ -17,118 +18,165 @@ const faqs: FaqItem[] = [
   },
   {
     id: "2",
-    question: "How can SoulSensei help you in your spiritual journey?",
+    question: "How can SoulSensei help you in your journey?",
     answer:
       "Through curated live sessions, transformation programs and one-on-one guidance, SoulSensei helps you heal emotional blocks, find clarity and grow with expert support at every step.",
   },
   {
     id: "3",
-    question: "Who is a Soul Sensei? How can I interact with them?",
+    question: "Is my data and session information safe?",
     answer:
-      "A Soul Sensei is a verified spiritual guide or healer on our platform. You can explore their profiles, book sessions, and join live interactive experiences with them.",
+      "Yes. Your privacy is our priority. All session data and personal information are encrypted and handled with strict confidentiality standards.",
   },
   {
     id: "4",
-    question: "What is a SoulSession? How can I sign up for one?",
+    question: "Can I reschedule my live session?",
     answer:
-      "A SoulSession is a live guided experience with an expert. Browse Featured Live Sessions or Meet Our Soul Experts, pick a session, and book instantly to join.",
-  },
-  {
-    id: "5",
-    question:
-      "Can I access the Live sessions and content shared if I live outside India?",
-    answer:
-      "Yes. SoulSensei sessions are accessible globally. As long as you have a stable internet connection, you can join live sessions and access shared content from anywhere.",
-  },
-  {
-    id: "6",
-    question: "Does SoulSensei have an app?",
-    answer:
-      "You can access SoulSensei fully on the web today. A dedicated mobile app experience is on the way to make booking and joining sessions even easier.",
-  },
-  {
-    id: "7",
-    question: "How do I contact someone from the SoulSensei Team?",
-    answer:
-      "Reach out through the Contact / Support option on the website, or email our team. We typically respond within 24–48 hours.",
+      "Yes. You can reschedule your live session from your bookings dashboard, subject to the expert's availability and our reschedule policy.",
   },
 ];
 
+const exploreLinks = [
+  { label: "All Categories", href: "#categories" },
+  { label: "Soul Experts", href: "#experts" },
+  { label: "Live Sessions", href: "#book" },
+  { label: "Retreats", href: "#retreats" },
+  { label: "Blog", href: "#blog" },
+];
+
+const programLinks = [
+  { label: "All Programs", href: "#programs" },
+  { label: "7-Day Programs", href: "#programs" },
+  { label: "21-Day Programs", href: "#programs" },
+  { label: "Masterclasses", href: "#programs" },
+  { label: "Workshops", href: "#programs" },
+];
+
+const companyLinks = [
+  { label: "About Us", href: "#about" },
+  { label: "Careers", href: "#careers" },
+  { label: "Press & Media", href: "#press" },
+  { label: "Affiliate Program", href: "#affiliate" },
+];
+
+const supportLinks = [
+  { label: "Help Center", href: "#help" },
+  { label: "Privacy Policy", href: "#privacy" },
+  { label: "Terms of Service", href: "#terms" },
+  { label: "Refund Policy", href: "#refund" },
+  { label: "Community Guidelines", href: "#guidelines" },
+];
+
 export default function FAQ() {
-  const [openId, setOpenId] = useState<string | null>("1");
+  const [openId, setOpenId] = useState<string | null>(null);
 
   function toggle(id: string) {
     setOpenId((current) => (current === id ? null : id));
   }
 
   return (
-    <section id="faq" className="relative w-full bg-[#05070A] py-8 sm:py-10 lg:py-12">
-      <div className="mx-auto w-[90%] sm:w-[70%]">
-        <h2
-          className="mb-5 text-center text-[24px] font-medium leading-tight text-white sm:mb-6 sm:text-[30px] lg:text-[34px]"
-          style={{ fontFamily: "var(--font-cormorant), serif" }}
-        >
-          Frequently Asked Questions
-        </h2>
+    <section id="faq" className="relative w-full overflow-hidden bg-[#05070A] py-8 sm:py-10 lg:py-12">
+      <div className="pointer-events-none absolute -right-24 top-6 h-[280px] w-[280px] opacity-[0.15]">
+        <Image src="/bg-mandala.png" alt="" fill className="object-contain object-right" sizes="280px" quality={80} />
+      </div>
 
-        <div className="faq-panel">
-          {faqs.map((item) => {
-            const isOpen = openId === item.id;
-            return (
-              <div key={item.id} className={`faq-item ${isOpen ? "is-open" : ""}`}>
-                <button
-                  type="button"
-                  className="faq-trigger flex w-full items-center justify-between gap-3 py-3.5 text-left sm:py-4"
-                  aria-expanded={isOpen}
-                  onClick={() => toggle(item.id)}
-                >
-                  <span
-                    className={`text-[13px] leading-snug sm:text-[15px] ${
-                      isOpen ? "font-medium text-[#F0D78C]" : "text-[#E4E4E4]"
-                    }`}
-                  >
-                    {item.question}
-                  </span>
-                  <span
-                    className={`faq-chevron-btn flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-transform duration-300 ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                    aria-hidden
-                  >
-                    <ChevronDown />
-                  </span>
-                </button>
+      <div className="relative z-10 mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.45fr_1.35fr_0.55fr] lg:gap-8 xl:gap-10">
+          {/* Left — FAQ card */}
+          <div className="faq-panel w-full rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
+            <h2 className="mb-3 text-[16px] font-semibold text-white sm:text-[17px]">
+              Frequently Asked Questions
+            </h2>
 
-                <div
-                  className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-                    isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                  }`}
-                >
-                  <div className="overflow-hidden">
-                    <p className="pb-3.5 pr-10 text-[12px] leading-[1.65] text-[#A0A0A0] sm:pb-4 sm:text-[13px]">
-                      {item.answer}
-                    </p>
+            <div>
+              {faqs.map((item) => {
+                const isOpen = openId === item.id;
+                return (
+                  <div
+                    key={item.id}
+                    className={`faq-item ${isOpen ? "is-open" : ""}`}
+                  >
+                    <button
+                      type="button"
+                      className="faq-trigger flex w-full items-center justify-between gap-3 py-3.5 text-left"
+                      aria-expanded={isOpen}
+                      onClick={() => toggle(item.id)}
+                    >
+                      <span className="text-[13px] leading-snug text-[#E8E8E8] sm:text-[14px]">
+                        {item.question}
+                      </span>
+                      <span
+                        className="faq-plus shrink-0 text-[18px] leading-none font-light text-[#D4AF37]"
+                        aria-hidden
+                      >
+                        {isOpen ? "−" : "+"}
+                      </span>
+                    </button>
+
+                    <div
+                      className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                        isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <p className="pb-3.5 pr-6 text-[12px] leading-[1.65] text-[#A0A0A0] sm:text-[13px]">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Center — nav columns */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4 sm:gap-x-5 lg:gap-x-6 xl:gap-x-8">
+            <LinkColumn title="Explore" links={exploreLinks} />
+            <LinkColumn title="Programs" links={programLinks} />
+            <LinkColumn title="Company" links={companyLinks} />
+            <LinkColumn title="Support" links={supportLinks} />
+          </div>
+
+          {/* Right — decorative image */}
+          <div className="relative mx-auto hidden h-[220px] w-full max-w-[220px] lg:mx-0 lg:block lg:h-[240px] lg:max-w-none xl:h-[260px]">
+            <Image
+              src="/footer-meditate.png"
+              alt="Meditative silhouette with golden mandala"
+              fill
+              className="object-contain object-center"
+              sizes="220px"
+              quality={95}
+            />
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function ChevronDown() {
+function LinkColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { label: string; href: string }[];
+}) {
   return (
-    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden>
-      <path
-        d="M4.5 6.75L9 11.25L13.5 6.75"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <div>
+      <h3 className="text-[14px] font-semibold text-white sm:text-[15px]">{title}</h3>
+      <ul className="mt-3.5 space-y-2.5">
+        {links.map((link) => (
+          <li key={link.label}>
+            <a
+              href={link.href}
+              className="text-[12px] text-[#D0D0D0] transition hover:text-[#E8C69F] sm:text-[13px]"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

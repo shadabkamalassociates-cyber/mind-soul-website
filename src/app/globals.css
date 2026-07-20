@@ -202,14 +202,13 @@ a {
   display: none;
 }
 
-/* Responsive visible cards: 1 → 2 → 3 → 4 (no half-cut peeks) */
+/* Responsive visible cards: 1 → 2 → 3 → 5 (no half-cut peeks) */
 .session-card {
-  --session-gap: 20px;
+  --session-gap: 16px;
   width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  border: 1px solid rgba(201, 160, 106, 0.45);
-  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -227,13 +226,13 @@ a {
 
 @media (min-width: 1280px) {
   .session-card {
-    width: calc((100% - (3 * var(--session-gap))) / 4);
+    width: calc((100% - (4 * var(--session-gap))) / 5);
   }
 }
 
 .session-card:hover {
-  border-color: rgba(212, 175, 55, 0.7);
-  box-shadow: 0 0 28px rgba(212, 175, 55, 0.18);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .session-book-btn {
@@ -291,13 +290,14 @@ a {
   display: none;
 }
 
+/* Responsive visible cards: 1 → 2 → 3 → 6 */
 .expert-card {
   --expert-gap: 16px;
-  width: min(240px, 78vw);
+  width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  background: linear-gradient(180deg, #0e1016 0%, #0a0b10 100%);
-  border: 1px solid rgba(201, 160, 106, 0.28);
+  background: #0a0c10;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -307,51 +307,41 @@ a {
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .expert-card {
     width: calc((100% - (2 * var(--expert-gap))) / 3);
   }
 }
 
-@media (min-width: 1100px) {
-  .expert-card {
-    width: calc((100% - (3 * var(--expert-gap))) / 4);
-  }
-}
-
 @media (min-width: 1280px) {
   .expert-card {
-    width: calc((100% - (4 * var(--expert-gap))) / 5);
+    width: calc((100% - (5 * var(--expert-gap))) / 6);
   }
 }
 
 .expert-card:hover {
-  border-color: rgba(212, 175, 55, 0.55);
-  box-shadow: 0 0 28px rgba(212, 175, 55, 0.12);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.expert-photo {
+  background: #000;
+}
+
+.expert-glow {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(234, 179, 8, 0.55) 0%,
+    rgba(212, 175, 55, 0.28) 35%,
+    rgba(212, 175, 55, 0.08) 60%,
+    transparent 75%
+  );
+  filter: blur(2px);
 }
 
 .expert-verified {
   background: linear-gradient(145deg, #f0d78c, #d4af37 50%, #9b754d);
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.45);
-}
-
-.expert-view-all {
-  color: #e8c69f;
-  border: 1px solid rgba(212, 175, 55, 0.55);
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
-}
-
-.expert-view-all:hover {
-  border-color: #d4af37;
-  background: rgba(212, 175, 55, 0.1);
-  color: #f0d78c;
-}
-
-.expert-card-divider {
-  height: 1px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.08);
 }
 
 .experts-lotus-ring {
@@ -385,11 +375,36 @@ a:hover .expert-arrow-circle {
   color: #f0d78c;
 }
 
+/* Why SoulSensei */
+.why-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(14, 12, 20, 0.98) 0%,
+    rgba(8, 8, 14, 0.99) 50%,
+    rgba(10, 8, 16, 0.98) 100%
+  );
+  border: 1px solid rgba(201, 160, 106, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.why-know-more {
+  border: 1px solid rgba(201, 160, 106, 0.65);
+  background: rgba(8, 10, 14, 0.6);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.why-know-more:hover {
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.1);
+  color: #e8c69f;
+}
+
 /* Transformation Programs */
 .programs-panel {
   background: linear-gradient(160deg, rgba(14, 16, 22, 0.95) 0%, rgba(8, 10, 14, 0.98) 100%);
-  border: 1px solid rgba(201, 160, 106, 0.4);
-  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .programs-explore-btn {
@@ -414,14 +429,147 @@ a:hover .expert-arrow-circle {
 }
 
 .program-card {
-  border: 1px solid rgba(201, 160, 106, 0.35);
   background: #0a0b10;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .program-card:hover {
-  border-color: rgba(212, 175, 55, 0.65);
   box-shadow: 0 0 22px rgba(212, 175, 55, 0.14);
+}
+
+.works-panel {
+  background: #05070A;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.works-trust-row {
+  border-top: 1px solid rgba(212, 175, 55, 0.18);
+  background: transparent;
+}
+
+.works-connector {
+  align-items: center;
+  gap: 6px;
+  min-width: 58px;
+}
+
+.works-connector-line {
+  flex: 1;
+  border-top: 1px dashed rgba(255, 255, 255, 0.35);
+}
+
+.works-connector-arrow {
+  color: #d4af37;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.works-trust-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.works-trust-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.35), transparent);
+}
+
+.works-trust-title {
+  color: #b8925a;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  white-space: nowrap;
+}
+
+/* Upcoming Retreats */
+.retreat-scroller {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+
+.retreat-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.retreat-card {
+  --retreat-gap: 16px;
+  width: min(260px, 78vw);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background: #0a0c10;
+  border: none;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .retreat-card {
+    width: calc((100% - var(--retreat-gap)) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .retreat-card {
+    width: calc((100% - (2 * var(--retreat-gap))) / 3);
+  }
+}
+
+@media (min-width: 1280px) {
+  .retreat-card {
+    width: calc((100% - (4 * var(--retreat-gap))) / 5);
+  }
+}
+
+.retreat-card:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* Blog Insights */
+.blog-scroller {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+
+.blog-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.blog-card {
+  --blog-gap: 16px;
+  width: min(260px, 78vw);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background: #0a0c10;
+  border: none;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .blog-card {
+    width: calc((100% - var(--blog-gap)) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .blog-card {
+    width: calc((100% - (2 * var(--blog-gap))) / 3);
+  }
+}
+
+@media (min-width: 1280px) {
+  .blog-card {
+    width: calc((100% - (4 * var(--blog-gap))) / 5);
+  }
+}
+
+.blog-card:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
 }
 
 /* Community Reviews */
@@ -448,9 +596,9 @@ a:hover .expert-arrow-circle {
 
 /* FAQ */
 .faq-panel {
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  background: linear-gradient(180deg, rgba(14, 16, 22, 0.95) 0%, rgba(10, 12, 18, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .faq-item {
@@ -465,15 +613,6 @@ a:hover .expert-arrow-circle {
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
-.faq-chevron-btn {
-  color: #e8c69f;
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  background: rgba(212, 175, 55, 0.06);
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease,
-    transform 0.3s ease;
-}
-
 .faq-trigger {
   cursor: pointer;
   transition: color 0.2s ease;
@@ -483,9 +622,11 @@ a:hover .expert-arrow-circle {
   color: #f0d78c;
 }
 
-.faq-item.is-open .faq-chevron-btn {
-  border-color: rgba(212, 175, 55, 0.7);
-  background: rgba(212, 175, 55, 0.14);
+.faq-plus {
+  transition: color 0.2s ease;
+}
+
+.faq-trigger:hover .faq-plus {
   color: #f0d78c;
 }
 
