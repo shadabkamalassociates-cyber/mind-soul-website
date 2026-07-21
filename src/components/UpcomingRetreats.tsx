@@ -64,22 +64,18 @@ export default function UpcomingRetreats() {
   }
 
   return (
-    <section id="retreats" className="relative w-full overflow-hidden bg-[#05070A] py-10 sm:py-12 lg:py-14">
-      <div className="pointer-events-none absolute -left-24 bottom-10 h-[300px] w-[300px] opacity-[0.16]">
-        <Image src="/bg-mandala.png" alt="" fill className="object-contain object-left" sizes="300px" quality={80} />
-      </div>
-
+    <section id="retreats" className="relative w-full overflow-hidden bg-white py-10 sm:py-12 lg:py-14">
       <div className="relative z-10 mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
         {/* Header */}
         <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
           <div>
             <h2
-              className="text-[28px] font-medium leading-tight text-white sm:text-[34px] lg:text-[40px]"
-              style={{ fontFamily: "var(--font-cormorant), serif" }}
+              className="text-[28px] font-medium leading-tight text-[#3D3D8F] sm:text-[34px] lg:text-[40px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Upcoming Spiritual Retreats
             </h2>
-            <p className="mt-1.5 text-[13px] text-[#A8A8A8] sm:text-[14px]">
+            <p className="mt-1.5 text-[13px] text-[#5C5C7A] sm:text-[14px]">
               Discover the upcoming experiences and expeditions.
             </p>
           </div>
@@ -87,7 +83,7 @@ export default function UpcomingRetreats() {
           <div className="hidden items-center gap-3 sm:flex">
             <a
               href="#all-retreats"
-              className="text-[13px] font-medium text-[#C8C8C8] transition hover:text-[#E8C69F]"
+              className="text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
             >
               View All Retreats
             </a>
@@ -104,7 +100,7 @@ export default function UpcomingRetreats() {
             type="button"
             aria-label="Previous retreats"
             onClick={() => scrollByCard(-1)}
-            className="carousel-side-btn absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
+            className="carousel-side-btn-light absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
           >
             <ChevronLeft />
           </button>
@@ -112,7 +108,7 @@ export default function UpcomingRetreats() {
             type="button"
             aria-label="Next retreats"
             onClick={() => scrollByCard(1)}
-            className="carousel-side-btn absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
+            className="carousel-side-btn-light absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
           >
             <ChevronRight />
           </button>
@@ -128,7 +124,7 @@ export default function UpcomingRetreats() {
         </div>
 
         <div className="mt-5 flex items-center justify-between sm:hidden">
-          <a href="#all-retreats" className="text-[13px] font-medium text-[#C8C8C8]">
+          <a href="#all-retreats" className="text-[13px] font-medium text-[#3D3D8F]">
             View All Retreats
           </a>
           <div className="flex items-center gap-2">
@@ -145,7 +141,7 @@ function RetreatCard({ retreat }: { retreat: Retreat }) {
   return (
     <article
       data-retreat-card
-      className="retreat-card group relative flex shrink-0 flex-col overflow-hidden rounded-xl"
+      className="retreat-card group relative flex shrink-0 flex-col overflow-hidden rounded-xl border border-[#E4E2EF] shadow-[0_4px_20px_rgba(26,26,74,0.06)]"
     >
       <div className="relative aspect-[3/3.6] w-full overflow-hidden">
         <Image
@@ -156,14 +152,14 @@ function RetreatCard({ retreat }: { retreat: Retreat }) {
           sizes="(max-width: 640px) 80vw, (max-width: 1280px) 33vw, 20vw"
           quality={95}
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
 
         <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-3.5 sm:p-4">
           <h3 className="text-[15px] font-semibold leading-snug text-white sm:text-[16px]">
             {retreat.title}
           </h3>
-          <p className="mt-1 text-[12px] text-[#D8D8D8] sm:text-[13px]">{retreat.dates}</p>
-          <p className="mt-0.5 text-[11px] text-[#A8A8A8] sm:text-[12px]">{retreat.location}</p>
+          <p className="mt-1 text-[12px] text-white/90 sm:text-[13px]">{retreat.dates}</p>
+          <p className="mt-0.5 text-[11px] text-white/70 sm:text-[12px]">{retreat.location}</p>
         </div>
       </div>
     </article>
@@ -182,7 +178,7 @@ function CarouselBtn({
       type="button"
       aria-label={direction === "prev" ? "Previous" : "Next"}
       onClick={onClick}
-      className="carousel-nav-btn flex h-9 w-9 items-center justify-center rounded-full"
+      className="carousel-nav-btn-light flex h-9 w-9 items-center justify-center rounded-full"
     >
       {direction === "prev" ? <ChevronLeft /> : <ChevronRight />}
     </button>

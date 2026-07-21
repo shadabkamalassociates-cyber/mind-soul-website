@@ -1,6 +1,14 @@
 import type { ReactNode } from "react";
 
-export function LogoIcon({ className = "" }: { className?: string }) {
+export function LogoIcon({
+  className = "",
+  variant = "gold",
+}: {
+  className?: string;
+  variant?: "gold" | "indigo";
+}) {
+  const gradientId = variant === "indigo" ? "logoIndigo" : "logoGold";
+
   return (
     <svg
       className={className}
@@ -12,36 +20,58 @@ export function LogoIcon({ className = "" }: { className?: string }) {
       aria-hidden
     >
       <defs>
-        <linearGradient id="logoGold" x1="0" y1="0" x2="36" y2="36">
-          <stop stopColor="#F0D78C" />
-          <stop offset="0.5" stopColor="#D4AF37" />
-          <stop offset="1" stopColor="#9B754D" />
-        </linearGradient>
+        {variant === "indigo" ? (
+          <linearGradient id="logoIndigo" x1="0" y1="0" x2="36" y2="36">
+            <stop stopColor="#6B6BC4" />
+            <stop offset="0.5" stopColor="#3D3D8F" />
+            <stop offset="1" stopColor="#1B1B4D" />
+          </linearGradient>
+        ) : (
+          <linearGradient id="logoGold" x1="0" y1="0" x2="36" y2="36">
+            <stop stopColor="#F0D78C" />
+            <stop offset="0.5" stopColor="#D4AF37" />
+            <stop offset="1" stopColor="#9B754D" />
+          </linearGradient>
+        )}
       </defs>
       <path
         d="M18 4C18 4 10 12.5 10 18.5C10 22.5 13.5 25.5 18 25.5C22.5 25.5 26 22.5 26 18.5C26 12.5 18 4 18 4Z"
-        stroke="url(#logoGold)"
+        stroke={`url(#${gradientId})`}
         strokeWidth="1.4"
         fill="none"
       />
       <path
         d="M18 8C18 8 13 14 13 18C13 20.8 15.2 23 18 23C20.8 23 23 20.8 23 18C23 14 18 8 18 8Z"
-        fill="url(#logoGold)"
+        fill={`url(#${gradientId})`}
         opacity="0.35"
       />
       <path
         d="M18 25.5V31"
-        stroke="url(#logoGold)"
+        stroke={`url(#${gradientId})`}
         strokeWidth="1.4"
         strokeLinecap="round"
       />
       <path
         d="M12 31H24"
-        stroke="url(#logoGold)"
+        stroke={`url(#${gradientId})`}
         strokeWidth="1.4"
         strokeLinecap="round"
       />
-      <circle cx="18" cy="17.5" r="2" fill="url(#logoGold)" />
+      <circle cx="18" cy="17.5" r="2" fill={`url(#${gradientId})`} />
+    </svg>
+  );
+}
+
+export function UserIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M5 19.5C5 16.5 8 14.5 12 14.5C16 14.5 19 16.5 19 19.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -172,16 +202,16 @@ export function CountriesIcon() {
 export function GridIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
-      <rect x="2" y="2" width="5" height="5" rx="1" stroke="#D4AF37" strokeWidth="1.3" />
-      <rect x="11" y="2" width="5" height="5" rx="1" stroke="#D4AF37" strokeWidth="1.3" />
-      <rect x="2" y="11" width="5" height="5" rx="1" stroke="#D4AF37" strokeWidth="1.3" />
-      <rect x="11" y="11" width="5" height="5" rx="1" stroke="#D4AF37" strokeWidth="1.3" />
+      <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
+      <rect x="11" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
+      <rect x="2" y="11" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
+      <rect x="11" y="11" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
     </svg>
   );
 }
 
 /* Category line icons */
-const stroke = "#D4AF37";
+const stroke = "currentColor";
 const sw = 1.3;
 
 export const categoryIcons: Record<string, ReactNode> = {
@@ -245,7 +275,7 @@ export const categoryIcons: Record<string, ReactNode> = {
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
       <path d="M14 24C14 24 8 20 8 15C8 11 11 9 14 7C17 9 20 11 20 15C20 20 14 24 14 24Z" stroke={stroke} strokeWidth={sw} />
       <path d="M14 7V4" stroke={stroke} strokeWidth={sw} strokeLinecap="round" />
-      <circle cx="14" cy="3" r="1.2" fill={stroke} />
+      <circle cx="14" cy="3" r="1.2" fill="currentColor" />
     </svg>
   ),
   "Akashic Records": (

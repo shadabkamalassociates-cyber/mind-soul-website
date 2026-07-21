@@ -53,7 +53,7 @@ const programLinks = [
 ];
 
 const companyLinks = [
-  { label: "About Us", href: "#about" },
+  { label: "About Us", href: "/about" },
   { label: "Careers", href: "#careers" },
   { label: "Press & Media", href: "#press" },
   { label: "Affiliate Program", href: "#affiliate" },
@@ -61,8 +61,8 @@ const companyLinks = [
 
 const supportLinks = [
   { label: "Help Center", href: "#help" },
-  { label: "Privacy Policy", href: "#privacy" },
-  { label: "Terms of Service", href: "#terms" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
   { label: "Refund Policy", href: "#refund" },
   { label: "Community Guidelines", href: "#guidelines" },
 ];
@@ -75,16 +75,12 @@ export default function FAQ() {
   }
 
   return (
-    <section id="faq" className="relative w-full overflow-hidden bg-[#05070A] py-8 sm:py-10 lg:py-12">
-      <div className="pointer-events-none absolute -right-24 top-6 h-[280px] w-[280px] opacity-[0.15]">
-        <Image src="/bg-mandala.png" alt="" fill className="object-contain object-right" sizes="280px" quality={80} />
-      </div>
-
+    <section id="faq" className="relative w-full overflow-hidden bg-[#F4F2FA] py-10 sm:py-12 lg:py-14">
       <div className="relative z-10 mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1.45fr_1.35fr_0.55fr] lg:gap-8 xl:gap-10">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.5fr)_auto] lg:items-center lg:gap-10 xl:gap-12">
           {/* Left — FAQ card */}
-          <div className="faq-panel w-full rounded-2xl px-5 py-5 sm:px-6 sm:py-6">
-            <h2 className="mb-3 text-[16px] font-semibold text-white sm:text-[17px]">
+          <div className="faq-panel w-full rounded-2xl px-5 py-5 sm:px-6 sm:py-6 lg:max-w-[420px]">
+            <h2 className="mb-4 text-[17px] font-semibold text-black sm:text-[18px]">
               Frequently Asked Questions
             </h2>
 
@@ -102,11 +98,11 @@ export default function FAQ() {
                       aria-expanded={isOpen}
                       onClick={() => toggle(item.id)}
                     >
-                      <span className="text-[13px] leading-snug text-[#E8E8E8] sm:text-[14px]">
+                      <span className="text-[13px] font-medium leading-snug text-black sm:text-[14px]">
                         {item.question}
                       </span>
                       <span
-                        className="faq-plus shrink-0 text-[18px] leading-none font-light text-[#D4AF37]"
+                        className="faq-plus flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#D8D5EA] text-[16px] leading-none font-normal text-black"
                         aria-hidden
                       >
                         {isOpen ? "−" : "+"}
@@ -119,7 +115,7 @@ export default function FAQ() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <p className="pb-3.5 pr-6 text-[12px] leading-[1.65] text-[#A0A0A0] sm:text-[13px]">
+                        <p className="pb-3.5 pr-2 text-[12px] leading-[1.7] text-[#333333] sm:text-[13px]">
                           {item.answer}
                         </p>
                       </div>
@@ -131,7 +127,7 @@ export default function FAQ() {
           </div>
 
           {/* Center — nav columns */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4 sm:gap-x-5 lg:gap-x-6 xl:gap-x-8">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4 sm:gap-x-6 lg:gap-x-8 xl:gap-x-10">
             <LinkColumn title="Explore" links={exploreLinks} />
             <LinkColumn title="Programs" links={programLinks} />
             <LinkColumn title="Company" links={companyLinks} />
@@ -139,13 +135,14 @@ export default function FAQ() {
           </div>
 
           {/* Right — decorative image */}
-          <div className="relative mx-auto hidden h-[220px] w-full max-w-[220px] lg:mx-0 lg:block lg:h-[240px] lg:max-w-none xl:h-[260px]">
+          <div className="relative mx-auto hidden h-[200px] w-[180px] shrink-0 lg:mx-0 lg:block xl:h-[220px] xl:w-[200px]">
             <Image
               src="/footer-meditate.png"
               alt="Meditative silhouette with golden mandala"
               fill
+              unoptimized
               className="object-contain object-center"
-              sizes="220px"
+              sizes="200px"
               quality={95}
             />
           </div>
@@ -164,13 +161,13 @@ function LinkColumn({
 }) {
   return (
     <div>
-      <h3 className="text-[14px] font-semibold text-white sm:text-[15px]">{title}</h3>
+      <h3 className="text-[14px] font-semibold text-black sm:text-[15px]">{title}</h3>
       <ul className="mt-3.5 space-y-2.5">
         {links.map((link) => (
           <li key={link.label}>
             <a
               href={link.href}
-              className="text-[12px] text-[#D0D0D0] transition hover:text-[#E8C69F] sm:text-[13px]"
+              className="text-[12px] text-[#333333] transition hover:text-black sm:text-[13px]"
             >
               {link.label}
             </a>

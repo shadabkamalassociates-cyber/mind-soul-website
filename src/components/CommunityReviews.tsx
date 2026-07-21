@@ -35,11 +35,11 @@ const reviews: Review[] = [
 
 export default function CommunityReviews() {
   return (
-    <section id="reviews" className="relative w-full bg-[#05070A] py-10 sm:py-12 lg:py-14">
+    <section id="reviews" className="relative w-full bg-white py-10 sm:py-12 lg:py-14">
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
         <h2
-          className="mb-7 text-[28px] font-medium leading-tight text-white sm:mb-8 sm:text-[34px] lg:text-[40px]"
-          style={{ fontFamily: "var(--font-cormorant), serif" }}
+          className="mb-7 text-[28px] font-medium leading-tight text-[#3D3D8F] sm:mb-8 sm:text-[34px] lg:text-[40px]"
+          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
         >
           Community Reviews
         </h2>
@@ -57,18 +57,18 @@ export default function CommunityReviews() {
 function ReviewCard({ review }: { review: Review }) {
   return (
     <article className="review-card flex w-[min(320px,85vw)] shrink-0 flex-col rounded-2xl p-5 sm:w-[min(340px,70vw)] sm:p-6 lg:w-auto lg:min-w-0">
-      <div className="mb-4 flex items-center gap-[3px] text-[#D4AF37]">
+      <div className="mb-4 flex items-center gap-[3px] text-[#EAB308]">
         {Array.from({ length: 5 }).map((_, i) => (
           <StarIcon key={i} />
         ))}
       </div>
 
-      <p className="flex-1 text-[14px] leading-[1.7] text-white sm:text-[15px]">
+      <p className="flex-1 text-[14px] leading-[1.7] text-[#3D3D8F] sm:text-[15px]">
         {review.text}
       </p>
 
       <div className="mt-6 flex items-center gap-3">
-        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-[#D4AF37]/35">
+        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-[#3D3D8F]/25">
           <Image
             src={review.image}
             alt={review.name}
@@ -79,8 +79,8 @@ function ReviewCard({ review }: { review: Review }) {
           />
         </div>
         <div>
-          <p className="text-[14px] font-semibold text-white">{review.name}</p>
-          <p className="mt-0.5 text-[12px] text-[#A0A0A0]">{review.location}</p>
+          <p className="text-[14px] font-semibold text-[#1A1A4A]">{review.name}</p>
+          <p className="mt-0.5 text-[12px] text-[#5C5C7A]">{review.location}</p>
         </div>
       </div>
     </article>

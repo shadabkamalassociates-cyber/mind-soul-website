@@ -1,26 +1,25 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { LogoIcon } from "@/components/Icons";
 
 const exploreLinks = [
-  "Live Sessions",
-  "Soul Experts",
-  "Programs",
-  "Membership",
-  "Events",
-  "Blog",
-  "Gift Cards",
+  { label: "Live Sessions", href: "/#sessions" },
+  { label: "Soul Experts", href: "/#experts" },
+  { label: "Programs", href: "/#programs" },
+  { label: "Membership", href: "/#membership" },
+  { label: "Events", href: "/#events" },
+  { label: "Blog", href: "/#blog" },
+  { label: "Gift Cards", href: "/#gift-cards" },
 ];
 
 const supportLinks = [
-  "Help Center",
-  "FAQs",
-  "Contact Us",
-  "Privacy Policy",
-  "Terms & Conditions",
-  "Refund Policy",
+  { label: "Help Center", href: "/#help" },
+  { label: "FAQs", href: "/#faq" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "Refund Policy", href: "/#refund" },
 ];
 
 const programs = [
@@ -51,29 +50,22 @@ const stats = [
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-[#05070A] pt-8 pb-5 sm:pt-10 lg:pt-12">
+    <footer className="relative w-full bg-white pt-8 pb-5 sm:pt-10 lg:pt-12">
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
         {/* Newsletter */}
         <div className="footer-newsletter mb-10 flex flex-col gap-5 rounded-2xl p-5 sm:mb-12 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6 lg:p-7">
           <div className="flex items-start gap-3.5 sm:items-center sm:gap-4">
-            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full sm:h-14 sm:w-14">
-              <Image
-                src="/footer-meditate.png"
-                alt=""
-                fill
-                className="object-cover"
-                sizes="56px"
-                quality={90}
-              />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#3D3D8F] sm:h-14 sm:w-14">
+              <LotusWhite />
             </div>
             <div>
               <h3
-                className="text-[20px] font-medium leading-tight text-[#D4AF37] sm:text-[24px] lg:text-[26px]"
-                style={{ fontFamily: "var(--font-cormorant), serif" }}
+                className="text-[20px] font-medium leading-tight text-[#1A1A4A] sm:text-[24px] lg:text-[26px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Stay Inspired, Stay Connected
               </h3>
-              <p className="mt-1 max-w-md text-[12px] leading-relaxed text-[#A0A0A0] sm:text-[13px]">
+              <p className="mt-1 max-w-md text-[12px] leading-relaxed text-[#5C5C7A] sm:text-[13px]">
                 Subscribe to our newsletter and get latest updates, events &amp;
                 offers straight to your inbox.
               </p>
@@ -87,12 +79,12 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Enter your email address"
-              className="footer-email-input h-11 w-full rounded-lg px-4 text-[13px] text-white outline-none placeholder:text-[#777] sm:flex-1"
+              className="footer-email-input h-11 w-full rounded-lg px-4 text-[13px] text-[#1A1A4A] outline-none placeholder:text-[#8A8AA8] sm:flex-1"
               required
             />
             <button
               type="submit"
-              className="btn-gold inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg px-5 text-[13px] font-semibold whitespace-nowrap"
+              className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#1A1A4A] px-5 text-[13px] font-semibold whitespace-nowrap text-white transition hover:bg-[#2A2A6A]"
             >
               Subscribe Now
               <ArrowRight />
@@ -101,27 +93,34 @@ export default function Footer() {
         </div>
 
         {/* Main columns */}
-        <div className="grid grid-cols-1 gap-8 border-b border-white/10 pb-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-6 xl:gap-8">
+        <div className="grid grid-cols-1 gap-8 border-b border-[#E4E2EF] pb-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-6 xl:gap-8">
           {/* Brand */}
           <div className="lg:col-span-3">
-            <a href="/" className="inline-flex items-center gap-2.5">
-              <LogoIcon className="shrink-0" />
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <LogoIcon className="shrink-0" variant="indigo" />
               <div className="flex flex-col leading-none">
-                <span className="text-[20px] font-semibold text-white">SoulSensei</span>
-                <span className="mt-[3px] text-[8.5px] font-medium tracking-[0.2em] text-[#C5A059] uppercase">
+                <span className="text-[20px] font-semibold text-[#1A1A4A]">
+                  SoulSensei
+                </span>
+                <span className="mt-[3px] text-[8.5px] font-medium tracking-[0.2em] text-[#5B5B9A] uppercase">
                   Awaken. Heal. Transform.
                 </span>
               </div>
-            </a>
-            <p className="mt-4 max-w-xs text-[12px] leading-[1.7] text-[#A0A0A0] sm:text-[13px]">
+            </Link>
+            <p className="mt-4 max-w-xs text-[12px] leading-[1.7] text-[#5C5C7A] sm:text-[13px]">
               India&apos;s most trusted platform for spiritual growth, healing and
               self-discovery — connecting you with verified experts for real
               transformation.
             </p>
-            <div className="mt-5 space-y-2.5 border-t border-[#D4AF37]/25 pt-4">
+            <div className="mt-5 space-y-2.5 border-t border-[#3D3D8F]/15 pt-4">
               {stats.map((s) => (
-                <div key={s.label} className="flex items-center gap-2.5 text-[12px] text-white sm:text-[13px]">
-                  <span className="text-[#D4AF37]">{s.icon}</span>
+                <div
+                  key={s.label}
+                  className="flex items-center gap-2.5 text-[12px] text-[#1A1A4A] sm:text-[13px]"
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
+                    {s.icon}
+                  </span>
                   {s.label}
                 </div>
               ))}
@@ -133,14 +132,14 @@ export default function Footer() {
             <FooterHeading>Explore</FooterHeading>
             <ul className="mt-4 space-y-2.5">
               {exploreLinks.map((link) => (
-                <li key={link}>
-                  <a
-                    href={`#${link.toLowerCase().replace(/\s+/g, "-")}`}
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
                     className="footer-link group inline-flex items-center gap-1.5 text-[13px]"
                   >
-                    {link}
+                    {link.label}
                     <ChevronTiny className="opacity-50 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -152,20 +151,22 @@ export default function Footer() {
             <ul className="mt-4 space-y-3.5">
               {programs.map((p) => (
                 <li key={p.title}>
-                  <a href="#programs" className="block transition hover:opacity-90">
-                    <p className="text-[13px] font-medium text-white">{p.title}</p>
-                    <p className="mt-0.5 text-[11px] leading-snug text-[#888]">{p.desc}</p>
-                  </a>
+                  <Link href="/#programs" className="block transition hover:opacity-90">
+                    <p className="text-[13px] font-medium text-[#1A1A4A]">{p.title}</p>
+                    <p className="mt-0.5 text-[11px] leading-snug text-[#6B6B88]">
+                      {p.desc}
+                    </p>
+                  </Link>
                 </li>
               ))}
             </ul>
-            <a
-              href="#programs"
-              className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#D4AF37] transition hover:text-[#F0D78C]"
+            <Link
+              href="/#programs"
+              className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
             >
               View All Programs
               <ArrowRight />
-            </a>
+            </Link>
           </div>
 
           {/* Support */}
@@ -173,13 +174,10 @@ export default function Footer() {
             <FooterHeading>Support</FooterHeading>
             <ul className="mt-4 space-y-2.5">
               {supportLinks.map((link) => (
-                <li key={link}>
-                  <a
-                    href={`#${link.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="footer-link text-[13px]"
-                  >
-                    {link}
-                  </a>
+                <li key={link.label}>
+                  <Link href={link.href} className="footer-link text-[13px]">
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -188,7 +186,7 @@ export default function Footer() {
           {/* Follow + CTA */}
           <div className="lg:col-span-2">
             <FooterHeading>Follow Us</FooterHeading>
-            <p className="mt-3 text-[12px] leading-relaxed text-[#A0A0A0]">
+            <p className="mt-3 text-[12px] leading-relaxed text-[#5C5C7A]">
               Join our community and stay connected on social media.
             </p>
             <div className="mt-4 flex items-center gap-2.5">
@@ -209,21 +207,21 @@ export default function Footer() {
             <div className="footer-cta-card relative mt-6 overflow-hidden rounded-xl p-4">
               <div className="relative z-10 max-w-[70%]">
                 <h4
-                  className="text-[16px] font-medium leading-snug text-white"
-                  style={{ fontFamily: "var(--font-cormorant), serif" }}
+                  className="text-[16px] font-medium leading-snug text-[#1A1A4A]"
+                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                 >
                   Begin Your Transformation
                 </h4>
-                <p className="mt-1 text-[11px] leading-snug text-[#A0A0A0]">
+                <p className="mt-1 text-[11px] leading-snug text-[#5C5C7A]">
                   Discover peace, purpose, and the real you.
                 </p>
-                <a
-                  href="#start"
-                  className="btn-gold mt-3 inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[12px] font-semibold"
+                <Link
+                  href="/#start"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[#1A1A4A] px-3.5 py-2 text-[12px] font-semibold text-white transition hover:bg-[#2A2A6A]"
                 >
                   Start Your Journey
                   <ArrowRight />
-                </a>
+                </Link>
               </div>
               <div className="pointer-events-none absolute right-[-8px] bottom-[-4px] h-[88px] w-[88px] sm:h-[96px] sm:w-[96px]">
                 <Image
@@ -240,28 +238,34 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col items-center gap-4 pt-5 text-[11px] text-[#888] sm:flex-row sm:justify-between sm:gap-3 sm:text-[12px]">
+        <div className="flex flex-col items-center gap-4 pt-5 text-[11px] text-[#5C5C7A] sm:flex-row sm:justify-between sm:gap-3 sm:text-[12px]">
           <div className="flex items-center gap-2">
-            <LogoIcon className="h-5 w-5 scale-75" />
+            <LogoIcon className="h-5 w-5 scale-75" variant="indigo" />
             <span>© 2025 SoulSensei. All rights reserved.</span>
           </div>
 
           <div className="flex items-center gap-1.5">
             <LotusTiny />
             <span>
-              Made with <span className="text-[#D4AF37]">💛</span> for your transformation
+              Made with <span className="text-[#3D3D8F]">💜</span> for your
+              transformation
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5">
-              <ShieldIcon />
-              Secure Payments
-            </span>
-            <span className="payment-badge">VISA</span>
-            <span className="payment-badge payment-mc">MC</span>
-            <span className="payment-badge">PayPal</span>
-            <span className="payment-badge">UPI</span>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/privacy"
+              className="font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A] hover:underline"
+            >
+              Privacy Policy
+            </Link>
+            <span className="text-[#C8C6DC]">|</span>
+            <Link
+              href="/terms"
+              className="font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A] hover:underline"
+            >
+              Terms &amp; Conditions
+            </Link>
           </div>
         </div>
       </div>
@@ -274,8 +278,8 @@ function FooterHeading({ children }: { children: ReactNode }) {
     <div className="flex items-center gap-2">
       <LotusTiny />
       <h4
-        className="text-[16px] font-medium text-[#D4AF37] sm:text-[17px]"
-        style={{ fontFamily: "var(--font-cormorant), serif" }}
+        className="text-[16px] font-medium text-[#1A1A4A] sm:text-[17px]"
+        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
       >
         {children}
       </h4>
@@ -334,11 +338,24 @@ function LotusTiny() {
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
         d="M8 13C8 13 3.5 9.5 3.5 6.5C3.5 4.8 4.8 3.5 6.3 3.5C7.1 3.5 7.7 3.9 8 4.4C8.3 3.9 8.9 3.5 9.7 3.5C11.2 3.5 12.5 4.8 12.5 6.5C12.5 9.5 8 13 8 13Z"
-        stroke="#D4AF37"
+        stroke="#3D3D8F"
         strokeWidth="1.15"
         strokeLinejoin="round"
       />
-      <path d="M8 10.5V14" stroke="#D4AF37" strokeWidth="1.15" strokeLinecap="round" />
+      <path d="M8 10.5V14" stroke="#3D3D8F" strokeWidth="1.15" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function LotusWhite() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 20C12 20 5 14.5 5 10C5 7.5 7 6 9 6C10.2 6 11.1 6.6 12 7.5C12.9 6.6 13.8 6 15 6C17 6 19 7.5 19 10C19 14.5 12 20 12 20Z"
+        stroke="white"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -360,7 +377,12 @@ function MedalIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
       <circle cx="8" cy="9.5" r="3.5" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M6 6.5L5 2H7.2L8 4.5L8.8 2H11L10 6.5" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+      <path
+        d="M6 6.5L5 2H7.2L8 4.5L8.8 2H11L10 6.5"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -388,20 +410,6 @@ function GlobeIcon() {
         stroke="currentColor"
         strokeWidth="1.2"
       />
-    </svg>
-  );
-}
-
-function ShieldIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden>
-      <path
-        d="M7 1.5L11.5 3.5V7C11.5 9.8 9.5 12 7 12.5C4.5 12 2.5 9.8 2.5 7V3.5L7 1.5Z"
-        stroke="#D4AF37"
-        strokeWidth="1.15"
-        strokeLinejoin="round"
-      />
-      <path d="M5 7L6.4 8.4L9 5.5" stroke="#D4AF37" strokeWidth="1.15" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

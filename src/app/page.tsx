@@ -11,127 +11,119 @@ import BlogInsights from "@/components/BlogInsights";
 import CommunityReviews from "@/components/CommunityReviews";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
-import { ArrowCircle, StarIcon } from "@/components/Icons";
-
-const avatars = [
-  { bg: "linear-gradient(145deg, #e8c69f, #8b6914)", initial: "A" },
-  { bg: "linear-gradient(145deg, #f0d4a8, #9b754d)", initial: "M" },
-  { bg: "linear-gradient(145deg, #d4af37, #6b4423)", initial: "S" },
-  { bg: "linear-gradient(145deg, #c9a06a, #7a5a2e)", initial: "K" },
-];
+import { StarIcon } from "@/components/Icons";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#05070A] text-white">
-      <Header />
+      {/* First screen — exact 2nd sc: indigo + white */}
+      <div className="relative bg-white text-[#1A1A4A]">
+        <Header />
 
-      <section className="relative">
-        {/* Hero — less top margin, smaller right image */}
-        <div className="mx-auto grid max-w-[1400px] items-center gap-5 px-6 pt-6 pb-2 sm:px-8 sm:pt-7 lg:grid-cols-[1.1fr_0.9fr] lg:gap-6 lg:px-10 lg:pt-8 xl:px-12">
-          {/* LEFT */}
-          <div className="animate-fade-up relative z-10 w-full min-w-0 py-1 lg:py-2">
-            <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.28em] text-[#D4AF37] sm:mb-4 sm:text-[11px] lg:text-[12px]">
-              Live Guidance • Deep Healing • Real Transformation
-            </p>
+        <section className="relative">
+          <div className="mx-auto grid max-w-[1280px] items-center gap-6 px-6 pt-8 pb-0 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:px-10 lg:pt-10">
+            {/* LEFT */}
+            <div className="relative z-10 flex w-full min-w-0 flex-col justify-center py-2 lg:py-6 lg:pb-16">
+              <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#4A4A8A] sm:text-[12px]">
+                Live • Elevate • Deep Healing • Real Transformation
+              </p>
 
-            <h1
-              className="text-[34px] font-medium leading-[1.12] text-white sm:text-[42px] lg:text-[48px] xl:text-[52px]"
-              style={{ fontFamily: "var(--font-cormorant), serif" }}
-            >
-              Transform Your Mind,
-              <br />
-              <span className="gold-gradient-text">Heal Your Soul,</span>
-              <br />
-              Rediscover Yourself
-            </h1>
-
-            <p className="animate-fade-up-delay mt-4 max-w-[400px] text-[13px] leading-[1.7] text-[#A8A8A8] sm:text-[14px] lg:mt-5 lg:text-[15px]">
-              Join thousands on a journey of self-discovery, healing and
-              spiritual growth with India&apos;s most trusted experts.
-            </p>
-
-            <div className="animate-fade-up-delay-2 mt-6 flex flex-wrap items-center gap-3 sm:mt-7 sm:gap-3.5 lg:mt-8">
-              <a
-                href="#book"
-                className="btn-gold inline-flex items-center gap-2.5 rounded-full px-5 py-3 text-[13px] font-semibold sm:px-6 sm:py-3.5 sm:text-[14px]"
+              <h1
+                className="max-w-[520px] text-[36px] font-semibold leading-[1.15] tracking-[-0.01em] text-[#1A1A4A] sm:text-[44px] lg:text-[48px] xl:text-[52px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
-                Book A Session
-                <ArrowCircle className="border-black/30 text-[#1a1208]" />
-              </a>
-              <a
-                href="#experts"
-                className="btn-outline-gold inline-flex items-center gap-2.5 rounded-full px-5 py-3 text-[13px] font-medium sm:px-6 sm:py-3.5 sm:text-[14px]"
-              >
-                Explore Experts
-                <ArrowCircle className="border-[#D4AF37]/50 text-[#E8C69F]" />
-              </a>
+                Transform Your Mind,{" "}
+                <span className="text-[#3D3D8F]">Heal Your Soul,</span>{" "}
+                Rediscover Yourself
+              </h1>
+
+              <p className="mt-5 max-w-[440px] text-[15px] leading-[1.7] text-[#5C5C7A] sm:text-[16px]">
+                Join thousands on a journey of self-discovery, healing and
+                spiritual growth with our transformational sessions.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3.5">
+                <a
+                  href="#book"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#1A1A4A] px-6 py-3.5 text-[14px] font-semibold text-white transition hover:bg-[#2A2A6A]"
+                >
+                  Book a Session
+                  <ArrowRight />
+                </a>
+                <a
+                  href="#programs"
+                  className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#1A1A4A] bg-white px-6 py-3.5 text-[14px] font-semibold text-[#1A1A4A] transition hover:bg-[#F4F4FA]"
+                >
+                  Explore Programs
+                  <ArrowRight />
+                </a>
+              </div>
             </div>
-          </div>
 
-          {/* RIGHT — slightly larger image */}
-          <div className="animate-fade-in relative flex w-full min-w-0 justify-center lg:justify-end">
-            <div className="relative aspect-[4/3.15] w-full max-w-[460px] overflow-hidden sm:max-w-[500px] lg:max-w-[540px] xl:max-w-[560px]">
-              <Image
-                src="/hero-meditation.png"
-                alt="Meditative silhouette with golden mandala over mountains"
-                fill
-                priority
-                className="object-cover object-[center_30%]"
-                sizes="(max-width: 1024px) 90vw, 560px"
-                quality={95}
-              />
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-[18%] bg-gradient-to-r from-[#05070A] via-[#05070A]/40 to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[12%] bg-gradient-to-t from-[#05070A] to-transparent" />
+            {/* RIGHT — shorter image, soft merge into white */}
+            <div className="relative z-10 w-full min-w-0 pb-6 lg:pb-4">
+              <div className="relative mx-auto aspect-[16/11] w-full max-w-[540px] overflow-hidden rounded-r-[24px] rounded-bl-[24px] rounded-tl-none sm:max-w-[580px] lg:ml-auto lg:max-w-none">
+                <Image
+                  src="/hero-right.png"
+                  alt="Woman meditating at sunrise among mountains and candles"
+                  fill
+                  priority
+                  unoptimized
+                  className="object-cover object-[center_35%]"
+                  sizes="(max-width: 1024px) 90vw, 560px"
+                />
+                {/* Soft merge into left white */}
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-[28%] bg-gradient-to-r from-white via-white/70 to-transparent" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[18%] bg-gradient-to-t from-white/80 to-transparent lg:from-white/50" />
 
-              {/* Trust card — bottom right */}
-              <div className="glass-card absolute bottom-1 right-3 z-10 w-[min(100%,200px)] rounded-xl p-3 pt-3.5 shadow-[0_12px_40px_rgba(0,0,0,0.55)] sm:bottom-2 sm:right-4 sm:w-[220px] sm:rounded-2xl sm:p-3.5 sm:pt-4">
-                <p className="text-[11px] font-medium leading-snug text-white sm:text-[12px]">
-                  Trusted by 50,000+ Souls Worldwide
-                </p>
+                {/* Live session card */}
+                <div className="absolute bottom-4 right-4 z-10 w-[min(100%,220px)] rounded-2xl bg-white p-3.5 shadow-[0_10px_40px_rgba(26,26,74,0.18)] sm:bottom-5 sm:right-5 sm:w-[230px] sm:p-4">
+                  <p className="text-[13px] font-semibold leading-snug text-[#1A1A4A]">
+                    Live Healing Session
+                  </p>
+                  <p className="mt-0.5 text-[12px] text-[#6B6B8A]">
+                    with Ananda Devi
+                  </p>
 
-                <div className="mt-2.5 flex items-center gap-2">
-                  <div className="flex -space-x-2">
-                    {avatars.map((a) => (
-                      <div
-                        key={a.initial}
-                        className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#0a0b10] text-[9px] font-semibold text-white sm:h-7 sm:w-7 sm:text-[10px]"
-                        style={{ background: a.bg }}
-                      >
-                        {a.initial}
+                  <div className="mt-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-[1px] text-[#1A1A4A]">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <StarIcon key={i} />
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-[2px] text-[#D4AF37]">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <StarIcon key={i} />
-                      ))}
+                      <span className="text-[11px] font-medium text-[#5C5C7A]">
+                        4.9 (2.1K)
+                      </span>
                     </div>
-                    <span className="text-[10px] text-[#A0A0A0]">
-                      4.9{" "}
-                      <span className="text-[#777]">(10k+ reviews)</span>
-                    </span>
+                    <a
+                      href="#join"
+                      className="shrink-0 rounded-lg bg-[#1A1A4A] px-3.5 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[#2A2A6A]"
+                    >
+                      Join Now
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Stats — 60% width, left aligned */}
-        <div className="relative z-10 w-full bg-[#05070A] pt-3 pb-4 lg:pt-4 lg:pb-5">
-          <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
-            <div className="flex w-full max-w-none items-center justify-between gap-3 overflow-x-auto sm:w-[60%] sm:justify-between sm:gap-4 sm:overflow-visible">
-              <Stat icon={<LotusIcon />} value="50,000+" label="Lives Transformed" />
-              <Stat icon={<MedalIcon />} value="300+" label="Verified Experts" />
+          {/* Stats bar — overlaps bottom like 2nd sc */}
+          <div className="relative z-20 -mt-2 w-full border-t border-[#E8E8F0] bg-white lg:-mt-10">
+            <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 overflow-x-auto px-6 py-5 sm:px-8 sm:py-6 lg:px-10">
+              <Stat icon={<SessionsIcon />} value="10K+" label="Sessions Held" />
+              <Stat icon={<LotusIcon />} value="15K+" label="Lives Touched" />
+              <Stat icon={<ExpertsIcon />} value="200+" label="Healing Experts" />
               <Stat icon={<StarOutlineIcon />} value="4.9" label="Average Rating" />
-              <Stat icon={<GlobeIcon />} value="100+" label="Countries" />
+              <Stat icon={<ReviewsIcon />} value="1000+" label="5-Star Reviews" />
             </div>
           </div>
-        </div>
+        </section>
+      </div>
 
+      <div className="bg-white">
         <CategoryBar />
-      </section>
+      </div>
 
       <FeaturedLiveSessions />
       <SoulExperts />
@@ -146,6 +138,20 @@ export default function Home() {
   );
 }
 
+function ArrowRight() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M3 8H13M13 8L9 4M13 8L9 12"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function Stat({
   icon,
   value,
@@ -156,49 +162,64 @@ function Stat({
   label: string;
 }) {
   return (
-    <div className="flex min-w-fit shrink-0 items-center gap-2 sm:gap-2.5">
-      <span className="flex shrink-0 text-[#D4AF37]" aria-hidden>
+    <div className="flex min-w-fit shrink-0 items-center gap-2.5">
+      <span className="flex shrink-0 text-[#1A1A4A]" aria-hidden>
         {icon}
       </span>
-      <p className="whitespace-nowrap text-[13px] leading-none sm:text-[14px] lg:text-[15px]">
-        <span className="font-semibold text-white">{value}</span>{" "}
-        <span className="font-normal text-[#A8A8A8]">{label}</span>
+      <p className="whitespace-nowrap text-[14px] leading-none sm:text-[15px]">
+        <span className="font-bold text-[#1A1A4A]">{value}</span>{" "}
+        <span className="font-medium text-[#1A1A4A]">{label}</span>
       </p>
     </div>
   );
 }
 
+function SessionsIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 3V7M16 3V7M4 10H20" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function LotusIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden>
+    <svg width="22" height="22" viewBox="0 0 28 28" fill="none" aria-hidden>
       <path
         d="M14 22C14 22 6 16 6 11C6 8 8.5 6 11 6C12.3 6 13.3 6.7 14 7.5C14.7 6.7 15.7 6 17 6C19.5 6 22 8 22 11C22 16 14 22 14 22Z"
         stroke="currentColor"
-        strokeWidth="1.35"
+        strokeWidth="1.4"
         strokeLinejoin="round"
       />
       <path
         d="M14 7.5C14 7.5 11 11 11 14.5C11 16.5 12.3 18 14 18C15.7 18 17 16.5 17 14.5C17 11 14 7.5 14 7.5Z"
         stroke="currentColor"
-        strokeWidth="1.35"
+        strokeWidth="1.4"
         opacity="0.75"
       />
-      <path d="M14 18V23" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
+      <path d="M14 18V23" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }
 
-function MedalIcon() {
+function ExpertsIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="14" r="5.5" stroke="currentColor" strokeWidth="1.35" />
+      <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="16" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.4" />
       <path
-        d="M9 9.5L7 3H10.5L12 6.5L13.5 3H17L15 9.5"
+        d="M3.5 19C3.5 16.5 5.5 14.5 9 14.5C12.5 14.5 14.5 16.5 14.5 19"
         stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinejoin="round"
+        strokeWidth="1.4"
+        strokeLinecap="round"
       />
-      <circle cx="12" cy="14" r="2" stroke="currentColor" strokeWidth="1.2" />
+      <path
+        d="M14.5 14.8C15.5 14.6 16.3 14.5 17 14.5C19.8 14.5 21.5 16 21.5 18.2"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -209,22 +230,20 @@ function StarOutlineIcon() {
       <path
         d="M12 3L14.2 8.5L20 9.2L15.8 13.2L17 19L12 16.2L7 19L8.2 13.2L4 9.2L9.8 8.5L12 3Z"
         stroke="currentColor"
-        strokeWidth="1.35"
+        strokeWidth="1.4"
         strokeLinejoin="round"
       />
     </svg>
   );
 }
 
-function GlobeIcon() {
+function ReviewsIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.35" />
-      <path d="M3.5 12H20.5" stroke="currentColor" strokeWidth="1.35" />
       <path
-        d="M12 3.5C14.5 6.5 15.5 9.5 15.5 12C15.5 14.5 14.5 17.5 12 20.5C9.5 17.5 8.5 14.5 8.5 12C8.5 9.5 9.5 6.5 12 3.5Z"
-        stroke="currentColor"
-        strokeWidth="1.35"
+        d="M12 3L14.2 8.5L20 9.2L15.8 13.2L17 19L12 16.2L7 19L8.2 13.2L4 9.2L9.8 8.5L12 3Z"
+        fill="currentColor"
+        opacity="0.9"
       />
     </svg>
   );

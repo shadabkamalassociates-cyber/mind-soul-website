@@ -86,22 +86,18 @@ export default function SoulExperts() {
   }
 
   return (
-    <section id="experts" className="relative w-full overflow-hidden bg-[#05070A] py-10 sm:py-12 lg:py-14">
-      <div className="pointer-events-none absolute -right-20 top-16 h-[300px] w-[300px] opacity-[0.18] lg:-right-10">
-        <Image src="/bg-mandala.png" alt="" fill className="object-contain object-right" sizes="300px" quality={80} />
-      </div>
-
+    <section id="experts" className="relative w-full overflow-hidden bg-white py-10 sm:py-12 lg:py-14">
       <div className="relative z-10 mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
-        {/* Header — same pattern as Featured Live Sessions */}
+        {/* Header */}
         <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
           <div>
             <h2
-              className="text-[28px] font-medium leading-tight text-white sm:text-[34px] lg:text-[40px]"
-              style={{ fontFamily: "var(--font-cormorant), serif" }}
+              className="text-[28px] font-medium leading-tight text-[#3D3D8F] sm:text-[34px] lg:text-[40px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Meet Our Soul Experts
             </h2>
-            <p className="mt-1.5 text-[13px] text-[#A8A8A8] sm:text-[14px]">
+            <p className="mt-1.5 text-[13px] text-[#5C5C7A] sm:text-[14px]">
               Learn from certified and experienced spiritual guides.
             </p>
           </div>
@@ -109,7 +105,7 @@ export default function SoulExperts() {
           <div className="hidden items-center gap-3 sm:flex">
             <a
               href="#all-experts"
-              className="text-[13px] font-medium text-[#C8C8C8] transition hover:text-[#E8C69F]"
+              className="text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
             >
               View All Experts
             </a>
@@ -126,7 +122,7 @@ export default function SoulExperts() {
             type="button"
             aria-label="Previous experts"
             onClick={() => scrollByCard(-1)}
-            className="carousel-side-btn absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
+            className="carousel-side-btn-light absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
           >
             <ChevronLeft />
           </button>
@@ -134,7 +130,7 @@ export default function SoulExperts() {
             type="button"
             aria-label="Next experts"
             onClick={() => scrollByCard(1)}
-            className="carousel-side-btn absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
+            className="carousel-side-btn-light absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
           >
             <ChevronRight />
           </button>
@@ -150,7 +146,7 @@ export default function SoulExperts() {
         </div>
 
         <div className="mt-5 flex items-center justify-between sm:hidden">
-          <a href="#all-experts" className="text-[13px] font-medium text-[#C8C8C8]">
+          <a href="#all-experts" className="text-[13px] font-medium text-[#3D3D8F]">
             View All Experts
           </a>
           <div className="flex items-center gap-2">
@@ -169,14 +165,12 @@ function ExpertCard({ expert }: { expert: Expert }) {
       data-expert-card
       className="expert-card group relative flex shrink-0 flex-col overflow-hidden rounded-xl"
     >
-      {/* Same image height as Featured Live Sessions */}
-      <div className="expert-photo relative aspect-[4/2.6] w-full overflow-hidden bg-black">
-        <div className="expert-glow pointer-events-none absolute inset-x-[8%] top-[12%] z-0 aspect-square rounded-full" />
+      <div className="expert-photo relative aspect-[4/2.6] w-full overflow-hidden">
         <Image
           src={expert.image}
           alt={expert.name}
           fill
-          className="relative z-10 object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.02]"
+          className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
           sizes="(max-width: 640px) 78vw, (max-width: 900px) 50vw, 16vw"
           quality={90}
         />
@@ -184,7 +178,7 @@ function ExpertCard({ expert }: { expert: Expert }) {
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
             <path
               d="M2 5.2L4.1 7.3L8 2.8"
-              stroke="#1a1208"
+              stroke="#fff"
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -193,21 +187,21 @@ function ExpertCard({ expert }: { expert: Expert }) {
         </span>
       </div>
 
-      <div className="flex flex-col bg-[#0a0c10] p-2.5">
-        <h3 className="text-[13px] font-semibold leading-snug text-white sm:text-[14px]">
+      <div className="flex flex-col bg-white p-2.5">
+        <h3 className="text-[13px] font-semibold leading-snug text-[#1A1A4A] sm:text-[14px]">
           {expert.name}
         </h3>
-        <p className="mt-0.5 text-[11px] text-[#C8C8C8]">{expert.specialty}</p>
+        <p className="mt-0.5 text-[11px] text-[#5C5C7A]">{expert.specialty}</p>
 
-        <div className="mt-2 flex items-center justify-between gap-2 text-[10px] text-[#C8C8C8] sm:text-[11px]">
+        <div className="mt-2 flex items-center justify-between gap-2 text-[10px] text-[#5C5C7A] sm:text-[11px]">
           <span className="flex items-center gap-1">
-            <StarIcon className="text-[#EAB308]" />
-            <span className="text-[#EAB308]">
+            <StarIcon className="text-[#3D3D8F]" />
+            <span className="text-[#3D3D8F]">
               {expert.rating}{" "}
-              <span className="text-[#888]">({expert.reviews})</span>
+              <span className="text-[#8A8AA8]">({expert.reviews})</span>
             </span>
           </span>
-          <span className="flex items-center gap-1 text-[#EAB308]">
+          <span className="flex items-center gap-1 text-[#3D3D8F]">
             <ClockIcon />
             {expert.experience}
           </span>
@@ -229,7 +223,7 @@ function CarouselBtn({
       type="button"
       aria-label={direction === "prev" ? "Previous" : "Next"}
       onClick={onClick}
-      className="carousel-nav-btn flex h-9 w-9 items-center justify-center rounded-full"
+      className="carousel-nav-btn-light flex h-9 w-9 items-center justify-center rounded-full"
     >
       {direction === "prev" ? <ChevronLeft /> : <ChevronRight />}
     </button>
@@ -239,10 +233,10 @@ function CarouselBtn({
 function ClockIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden>
-      <circle cx="7" cy="7" r="5.25" stroke="#EAB308" strokeWidth="1.2" />
+      <circle cx="7" cy="7" r="5.25" stroke="#3D3D8F" strokeWidth="1.2" />
       <path
         d="M7 4.5V7L8.75 8.5"
-        stroke="#EAB308"
+        stroke="#3D3D8F"
         strokeWidth="1.2"
         strokeLinecap="round"
         strokeLinejoin="round"

@@ -30,20 +30,20 @@ const features = [
 
 export default function WhySoulSensei() {
   return (
-    <section className="relative w-full bg-[#05070A] py-10 sm:py-12 lg:py-14">
+    <section className="relative w-full bg-[#1A1A4A] py-10 sm:py-12 lg:py-14">
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
         <div className="why-panel overflow-hidden rounded-2xl">
           <div className="why-panel-inner flex flex-col items-stretch gap-8 px-5 py-7 sm:px-7 sm:py-8 lg:flex-row lg:items-center lg:gap-5 lg:px-8 lg:py-9 xl:gap-6 xl:px-10 xl:py-10">
             {/* Left */}
             <div className="shrink-0 lg:w-[210px] xl:w-[230px]">
               <p
-                className="text-[13px] font-medium leading-none text-[#C9A06A] sm:text-[14px]"
+                className="text-[13px] font-medium leading-none text-[#3D3D8F] sm:text-[14px]"
                 style={{ fontFamily: "var(--font-cormorant), serif" }}
               >
                 Why SoulSensei?
               </p>
               <h2
-                className="mt-1.5 text-[20px] font-medium leading-[1.15] text-white sm:text-[21px] lg:text-[22px] xl:text-[23px]"
+                className="mt-1.5 text-[20px] font-medium leading-[1.15] text-[#1A1A4A] sm:text-[21px] lg:text-[22px] xl:text-[23px]"
                 style={{ fontFamily: "var(--font-cormorant), serif" }}
               >
                 A Safe Space For
@@ -51,8 +51,8 @@ export default function WhySoulSensei() {
                 Your Transformation
               </h2>
               <a
-                href="#about"
-                className="why-know-more mt-5 inline-flex items-center rounded-full px-5 py-2.5 text-[12px] font-medium text-white sm:mt-6 sm:px-6 sm:py-3 sm:text-[13px]"
+                href="/about"
+                className="why-know-more mt-5 inline-flex items-center rounded-full px-5 py-2.5 text-[12px] font-medium text-[#1A1A4A] sm:mt-6 sm:px-6 sm:py-3 sm:text-[13px]"
               >
                 Know More About Us
               </a>
@@ -75,10 +75,10 @@ export default function WhySoulSensei() {
                       quality={95}
                     />
                   </div>
-                  <h3 className="text-[11px] font-semibold leading-tight text-[#C9A06A] sm:text-[12px] lg:text-[11px] xl:text-[12px]">
+                  <h3 className="text-[11px] font-semibold leading-tight text-[#3D3D8F] sm:text-[12px] lg:text-[11px] xl:text-[12px]">
                     {feature.title}
                   </h3>
-                  <p className="mt-1 max-w-[108px] text-[9px] leading-[1.35] text-[#A8A8A8] sm:max-w-[120px] sm:text-[10px] lg:text-[9px] xl:text-[10px]">
+                  <p className="mt-1 max-w-[108px] text-[9px] leading-[1.35] text-[#5A5A7A] sm:max-w-[120px] sm:text-[10px] lg:text-[9px] xl:text-[10px]">
                     {feature.description}
                   </p>
                 </div>
@@ -89,7 +89,7 @@ export default function WhySoulSensei() {
             <div className="relative mx-auto h-[150px] w-full max-w-[210px] shrink-0 sm:h-[170px] sm:max-w-[230px] lg:mx-0 lg:h-[190px] lg:w-[190px] lg:max-w-none xl:h-[210px] xl:w-[210px]">
               <Image
                 src="/why/lotus.png"
-                alt="Glowing purple lotus flower"
+                alt="Glowing lotus flower"
                 fill
                 className="object-contain object-center"
                 sizes="(max-width: 1024px) 230px, 210px"

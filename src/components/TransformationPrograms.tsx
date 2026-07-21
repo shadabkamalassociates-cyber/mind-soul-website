@@ -97,24 +97,21 @@ export default function TransformationPrograms() {
   return (
     <section
       id="programs"
-      className="relative w-full bg-[#05070A] py-8 sm:py-9 lg:py-10"
+      className="relative w-full bg-white py-8 sm:py-9 lg:py-10"
     >
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
-        <div className="programs-panel relative overflow-hidden rounded-2xl px-4 py-5 sm:px-6 sm:py-6 lg:px-7 lg:py-6">
-          <div className="pointer-events-none absolute -left-28 -bottom-24 h-[320px] w-[320px] opacity-[0.16]">
-            <Image src="/bg-mandala.png" alt="" fill className="object-contain object-left" sizes="320px" quality={80} />
-          </div>
+        <div className="programs-panel relative overflow-hidden rounded-2xl border border-[#E4E2EF] bg-[#F8F7FC] px-4 py-5 sm:px-6 sm:py-6 lg:px-7 lg:py-6">
           <div className="relative z-10">
-          {/* Header — matches 1st sc */}
+          {/* Header */}
           <div className="flex items-start justify-between gap-4">
             <div className="max-w-[520px]">
               <h2
-                className="text-[28px] font-medium leading-[1.1] text-white sm:text-[32px] lg:text-[36px]"
-                style={{ fontFamily: "var(--font-cormorant), serif" }}
+                className="text-[28px] font-medium leading-[1.1] text-[#3D3D8F] sm:text-[32px] lg:text-[36px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Our Transformation Programs
               </h2>
-              <p className="mt-2 text-[13px] leading-[1.55] text-[#8F929D] sm:text-[14px]">
+              <p className="mt-2 text-[13px] leading-[1.55] text-[#5C5C7A] sm:text-[14px]">
                 Curated programs to help you heal, grow and manifest your best
                 life.
               </p>
@@ -122,14 +119,14 @@ export default function TransformationPrograms() {
 
             <a
               href="#all-programs"
-              className="mt-1 hidden items-center gap-2 text-[13px] font-medium text-[#C8C8C8] transition hover:text-[#E8C69F] sm:flex"
+              className="mt-1 hidden items-center gap-2 text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A] sm:flex"
             >
               <span>View All Programs</span>
-              <ArrowCircle className="h-[20px] w-[20px] text-[#E8C69F]" />
+              <ArrowCircle className="h-[20px] w-[20px] text-[#3D3D8F]" />
             </a>
           </div>
 
-          {/* Full-width cards row — no empty right space */}
+          {/* Full-width cards row */}
           <div className="program-cards-row mt-5 flex gap-3 overflow-x-auto pb-1 lg:gap-3.5 lg:overflow-visible lg:pb-0">
             {programs.map((program) => (
               <ProgramCard key={program.id} program={program} />
@@ -147,7 +144,7 @@ export default function TransformationPrograms() {
 
 function ProgramCard({ program }: { program: Program }) {
   return (
-    <article className="program-card group relative flex w-[168px] shrink-0 flex-col overflow-hidden rounded-xl sm:w-[180px] lg:w-auto lg:min-w-0 lg:flex-1">
+    <article className="program-card group relative flex w-[168px] shrink-0 flex-col overflow-hidden rounded-xl border border-[#E4E2EF] bg-white sm:w-[180px] lg:w-auto lg:min-w-0 lg:flex-1">
       <div className="relative aspect-[3/3.35] w-full overflow-hidden">
         <Image
           src={program.image}
@@ -164,18 +161,16 @@ function ProgramCard({ program }: { program: Program }) {
             background: `radial-gradient(ellipse at 50% 38%, ${program.glow} 0%, transparent 65%)`,
           }}
         />
-
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0a0b10] via-[#0a0b10]/50 to-transparent" />
       </div>
 
-      <div className="flex flex-1 flex-col bg-[#0a0b10] px-3 pb-3 pt-2.5">
-        <h3 className="text-[14px] font-semibold leading-[1.2] text-white sm:text-[15px]">
+      <div className="flex flex-1 flex-col bg-white px-3 pb-3 pt-2.5">
+        <h3 className="text-[14px] font-semibold leading-[1.2] text-[#1A1A4A] sm:text-[15px]">
           {program.title}
         </h3>
-        <p className="mt-1 text-[11px] leading-[1.4] text-[#9A9A9A] sm:text-[12px]">
+        <p className="mt-1 text-[11px] leading-[1.4] text-[#5C5C7A] sm:text-[12px]">
           {program.description}
         </p>
-        <p className="mt-auto pt-2.5 text-[11px] font-medium text-[#D4AF37] sm:text-[12px]">
+        <p className="mt-auto pt-2.5 text-[11px] font-medium text-[#3D3D8F] sm:text-[12px]">
           {program.duration}
         </p>
       </div>
@@ -185,7 +180,7 @@ function ProgramCard({ program }: { program: Program }) {
 
 function MembershipCard() {
   return (
-    <aside className="program-card relative flex w-[280px] shrink-0 overflow-hidden rounded-xl bg-[#0a0b10] sm:w-[300px] lg:w-auto lg:min-w-0 lg:flex-[1.65]">
+    <aside className="program-card relative flex w-[280px] shrink-0 overflow-hidden rounded-xl border border-[#E4E2EF] bg-[#1A1A4A] sm:w-[300px] lg:w-auto lg:min-w-0 lg:flex-[1.65]">
       <div className="relative min-h-[220px] w-full flex-1 sm:min-h-[240px]">
         <Image
           src="/programs/program-plus.png"
@@ -196,10 +191,10 @@ function MembershipCard() {
           quality={95}
         />
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0d0a12] via-[#0d0a12]/90 via-50% to-[#0d0a12]/20" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#1A1A4A] via-[#1A1A4A]/92 via-50% to-[#1A1A4A]/25" />
 
         <div className="relative z-10 flex h-full flex-col px-4 pb-4 pt-4 sm:px-5 sm:pb-5 sm:pt-5">
-          <h3 className="max-w-[160px] text-[15px] font-semibold leading-[1.2] text-[#D4AF37] sm:text-[16px]">
+          <h3 className="max-w-[160px] text-[15px] font-semibold leading-[1.2] text-white sm:text-[16px]">
             Become a SoulSensei Plus
           </h3>
 
@@ -207,9 +202,9 @@ function MembershipCard() {
             {perks.map((perk) => (
               <li
                 key={perk}
-                className="flex items-center gap-2 text-[12px] text-[#B0B0B0] sm:text-[13px]"
+                className="flex items-center gap-2 text-[12px] text-white/80 sm:text-[13px]"
               >
-                <span className="flex h-4 w-4 items-center justify-center rounded-full border border-[#D4AF37]/60 bg-[#D4AF37]/10">
+                <span className="flex h-4 w-4 items-center justify-center rounded-full border border-[#9B9BD4] bg-[#3D3D8F]/40">
                   <svg
                     width="8"
                     height="8"
@@ -219,7 +214,7 @@ function MembershipCard() {
                   >
                     <path
                       d="M2 5.2L4.1 7.3L8 2.8"
-                      stroke="#D4AF37"
+                      stroke="#C8C8F0"
                       strokeWidth="1.4"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -233,7 +228,7 @@ function MembershipCard() {
 
           <button
             type="button"
-            className="mt-auto w-fit rounded-lg bg-gradient-to-r from-[#F0D78C] via-[#D4AF37] to-[#C18A4C] px-5 py-2.5 text-[13px] font-semibold text-[#1a1208] hover:brightness-[1.05]"
+            className="mt-auto w-fit rounded-lg bg-[#3D3D8F] px-5 py-2.5 text-[13px] font-semibold text-white shadow-[0_6px_18px_rgba(61,61,143,0.35)] transition hover:bg-[#2F2F75]"
           >
             Join Membership
           </button>
@@ -245,24 +240,24 @@ function MembershipCard() {
 
 function HowSoulSenseiWorks() {
   return (
-    <div className="works-panel relative mt-5 overflow-hidden rounded-2xl">
-      {/* Full mandala background for How SoulSensei Works */}
+    <div className="works-panel relative mt-5 overflow-hidden rounded-2xl border border-[#E4E2EF]">
+      {/* Soft mandala on light indigo */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <Image
           src="/bg-mandala.png"
           alt=""
           fill
-          className="object-cover object-left opacity-[0.55]"
+          className="object-cover object-left opacity-[0.08]"
           sizes="1400px"
           quality={90}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#05070A]/55 via-[#05070A]/75 to-[#05070A]/92" />
+        <div className="absolute inset-0 bg-[#F4F2FA]/85" />
       </div>
 
       <div className="relative z-10 px-5 pt-5 pb-4 sm:px-6 lg:px-7 lg:pt-6">
         <h3
-          className="text-[24px] font-medium leading-none text-white sm:text-[28px]"
-          style={{ fontFamily: "var(--font-cormorant), serif" }}
+          className="text-[24px] font-medium leading-none text-[#3D3D8F] sm:text-[28px]"
+          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
         >
           How SoulSensei Works
         </h3>
@@ -273,7 +268,7 @@ function HowSoulSenseiWorks() {
               <div className="flex items-start gap-3">
                 <div className="flex min-w-0 flex-1 items-start gap-3">
                   <div className="shrink-0">
-                    <p className="text-[12px] font-semibold tracking-[0.18em] text-[#D4AF37]">
+                    <p className="text-[12px] font-semibold tracking-[0.18em] text-[#3D3D8F]">
                       {step.number}
                     </p>
                     <div className="relative mt-2 h-[52px] w-[52px]">
@@ -281,6 +276,7 @@ function HowSoulSenseiWorks() {
                         src={step.icon}
                         alt=""
                         fill
+                        unoptimized
                         className="object-contain"
                         sizes="46px"
                         quality={95}
@@ -289,10 +285,10 @@ function HowSoulSenseiWorks() {
                   </div>
 
                   <div className="pt-[18px]">
-                    <h4 className="text-[15px] font-semibold leading-tight text-white">
+                    <h4 className="text-[15px] font-semibold leading-tight text-[#1A1A4A]">
                       {step.title}
                     </h4>
-                    <p className="mt-1 max-w-[165px] text-[12px] leading-[1.45] text-[#9DA0A8]">
+                    <p className="mt-1 max-w-[165px] text-[12px] leading-[1.45] text-[#5C5C7A]">
                       {step.description}
                     </p>
                   </div>
@@ -325,16 +321,17 @@ function HowSoulSenseiWorks() {
                   src={stat.icon}
                   alt=""
                   fill
+                  unoptimized
                   className="object-contain"
                   sizes="22px"
                   quality={95}
                 />
               </div>
               <div>
-                <p className="text-[20px] font-semibold leading-none text-white">
+                <p className="text-[20px] font-semibold leading-none text-[#1A1A4A]">
                   {stat.value}
                 </p>
-                <p className="mt-1 text-[11px] leading-none text-[#8F929D]">
+                <p className="mt-1 text-[11px] leading-none text-[#5C5C7A]">
                   {stat.label}
                 </p>
               </div>
