@@ -110,7 +110,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
                       />
                     </div>
                   </div>
-                  <div className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border-[2.5px] border-white bg-[#1A1A4A] text-white shadow-md sm:h-9 sm:w-9">
+                  <div className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border-[2.5px] border-white bg-[#3D3D8F] text-white shadow-md sm:h-9 sm:w-9">
                     <LotusIcon />
                   </div>
                 </div>
@@ -136,7 +136,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
                     />
                   </div>
                 </div>
-                <div className="absolute bottom-1.5 right-1.5 z-10 flex h-9 w-9 items-center justify-center rounded-full border-[2.5px] border-white bg-[#1A1A4A] text-white shadow-md">
+                <div className="absolute bottom-1.5 right-1.5 z-10 flex h-9 w-9 items-center justify-center rounded-full border-[2.5px] border-white bg-[#3D3D8F] text-white shadow-md">
                   <LotusIcon />
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
                   onClick={() => setActiveNav(item.id)}
                   className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-[13px] font-medium transition ${
                     activeNav === item.id
-                      ? "bg-[#1A1A4A] text-white shadow-md"
+                      ? "bg-[#3D3D8F] text-white shadow-md"
                       : "text-[#5C5C7A] hover:bg-white hover:text-[#1A1A4A]"
                   }`}
                 >
@@ -220,7 +220,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
                   unoptimized
                 />
                 <h2
-                  className="text-[22px] font-semibold text-[#1A1A4A] sm:text-[24px]"
+                  className="text-[22px] font-semibold text-[#3D3D8F] sm:text-[24px]"
                   style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                 >
                   About {expert.name}
@@ -244,7 +244,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
                         <LotusIcon />
                       </span>
                       <div>
-                        <h4 className="text-[13px] font-semibold text-[#1A1A4A]">
+                        <h4 className="text-[13px] font-semibold text-[#3D3D8F]">
                           {item.title}
                         </h4>
                         <p className="mt-1 text-[12px] leading-relaxed text-[#5C5C7A]">
@@ -264,7 +264,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
               <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 opacity-[0.06]">
                 <Image src="/bg-mandala.png" alt="" fill unoptimized className="object-contain" />
               </div>
-              <h3 className="text-[15px] font-semibold text-[#1A1A4A]">Professional Details</h3>
+              <h3 className="text-[15px] font-semibold text-[#3D3D8F]">Professional Details</h3>
 
               <DetailRow label="Profession" value={expert.profession} />
               <DetailRow label="Years of Experience" value={expert.experienceDetail} />
@@ -317,7 +317,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2
-              className="text-[28px] font-semibold text-[#1A1A4A] sm:text-[32px]"
+              className="text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Services Offered
@@ -335,11 +335,11 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
                 key={service.title}
                 className="relative rounded-2xl border border-[#E4E2EF] bg-white px-4 pb-5 pt-12 text-center shadow-[0_2px_16px_rgba(26,26,74,0.05)]"
               >
-                <div className="absolute left-1/2 top-0 flex h-[68px] w-[68px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#1A1A4A] text-white shadow-[0_6px_20px_rgba(26,26,74,0.22)]">
+                <div className="absolute left-1/2 top-0 flex h-[68px] w-[68px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#3D3D8F] text-white shadow-[0_6px_20px_rgba(26,26,74,0.22)]">
                   <ServiceCardIcon index={index} />
                 </div>
                 <h3
-                  className="text-[15px] font-semibold leading-snug text-[#1A1A4A] sm:text-[16px]"
+                  className="text-[15px] font-semibold leading-snug text-[#3D3D8F] sm:text-[16px]"
                   style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                 >
                   {service.title}
@@ -349,7 +349,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
                 </p>
                 <button
                   type="button"
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#1A1A4A] px-5 py-2 text-[12px] font-medium text-[#1A1A4A] transition hover:bg-[#1A1A4A] hover:text-white"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#3D3D8F] px-5 py-2 text-[12px] font-medium text-[#3D3D8F] transition hover:bg-[#3D3D8F] hover:text-white"
                 >
                   Know More <ArrowIcon />
                 </button>
@@ -360,7 +360,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
           <div className="mt-6 flex justify-center">
             <Link
               href="/#book"
-              className="inline-flex items-center gap-2 rounded-full bg-[#1A1A4A] px-8 py-3 text-[13px] font-semibold text-white transition hover:bg-[#2A2A6A]"
+              className="inline-flex items-center gap-2 rounded-full bg-[#3D3D8F] px-8 py-3 text-[13px] font-semibold text-white transition hover:bg-[#2F2F70]"
             >
               View All Services <ArrowIcon />
             </Link>
@@ -372,7 +372,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
       <section className="bg-white py-12 sm:py-14">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <h2
-            className="text-center text-[28px] font-semibold text-[#1A1A4A] sm:text-[32px]"
+            className="text-center text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
           >
             Consultation Types
@@ -474,7 +474,7 @@ function ProfileHeaderContent({
       </span>
 
       <h1
-        className="mt-2.5 text-[26px] font-semibold leading-[1.15] text-[#1A1A4A] sm:text-[32px] lg:text-[36px]"
+        className="mt-2.5 text-[26px] font-semibold leading-[1.15] text-[#3D3D8F] sm:text-[32px] lg:text-[36px]"
         style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
       >
         {expert.name}

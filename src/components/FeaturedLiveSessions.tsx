@@ -178,7 +178,7 @@ function SessionCard({ session }: { session: Session }) {
       </div>
 
       <div className="flex flex-col p-2.5">
-        <h3 className="text-[13px] font-semibold leading-snug text-[#1A1A4A] sm:text-[14px]">
+        <h3 className="text-[13px] font-semibold leading-snug text-[#3D3D8F] sm:text-[14px]">
           {session.title}
         </h3>
         <p className="mt-0.5 text-[11px] text-[#5C5C7A]">{session.expert}</p>

@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { LogoIcon } from "@/components/Icons";
 
 const exploreLinks = [
-  { label: "Live Sessions", href: "/#sessions" },
+  { label: "Live Sessions", href: "/live-sessions" },
   { label: "Soul Experts", href: "/#experts" },
   { label: "Programs", href: "/#programs" },
   { label: "Membership", href: "/#membership" },

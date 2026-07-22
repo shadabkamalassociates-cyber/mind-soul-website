@@ -188,7 +188,7 @@ function ExpertCard({ expert }: { expert: Expert }) {
       </div>
 
       <div className="flex flex-col bg-white p-2.5">
-        <h3 className="text-[13px] font-semibold leading-snug text-[#1A1A4A] sm:text-[14px]">
+        <h3 className="text-[13px] font-semibold leading-snug text-[#3D3D8F] sm:text-[14px]">
           {expert.name}
         </h3>
         <p className="mt-0.5 text-[11px] text-[#5C5C7A]">{expert.specialty}</p>

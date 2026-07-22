@@ -86,7 +86,7 @@ export default function ContactPage() {
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.95fr] lg:gap-10">
             <div className="relative z-10 max-w-[560px]">
               <h1
-                className="text-[40px] font-semibold leading-[1.1] text-[#1A1A4A] sm:text-[48px] lg:text-[52px]"
+                className="text-[40px] font-semibold leading-[1.1] text-[#3D3D8F] sm:text-[48px] lg:text-[52px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Contact Us
@@ -164,7 +164,7 @@ export default function ContactPage() {
             {/* Form */}
             <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-7 shadow-[0_8px_30px_rgba(26,26,74,0.06)] sm:px-8 sm:py-8">
               <h2
-                className="text-[26px] font-semibold text-[#1A1A4A] sm:text-[28px]"
+                className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[28px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Send Us a Message
@@ -254,7 +254,7 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
-                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1A1A4A] px-6 py-3.5 text-[14px] font-semibold text-white transition hover:bg-[#2A2A6A]"
+                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3D3D8F] px-6 py-3.5 text-[14px] font-semibold text-white transition hover:bg-[#2F2F70]"
                 >
                   Send Message
                   <ArrowIcon />
@@ -272,7 +272,7 @@ export default function ContactPage() {
             {/* Contact Information */}
             <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-7 shadow-[0_8px_30px_rgba(26,26,74,0.06)] sm:px-7 sm:py-8">
               <h2
-                className="text-[26px] font-semibold text-[#1A1A4A] sm:text-[28px]"
+                className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[28px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Contact Information
@@ -308,11 +308,11 @@ export default function ContactPage() {
           <div className="mt-8 grid gap-5 md:grid-cols-3 lg:mt-10 lg:gap-6">
             {/* Office Hours */}
             <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] sm:px-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1A1A4A] text-white">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3D3D8F] text-white">
                 <ClockIcon />
               </span>
               <h3
-                className="mt-4 text-[18px] font-semibold text-[#1A1A4A]"
+                className="mt-4 text-[18px] font-semibold text-[#3D3D8F]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Office Hours
@@ -335,11 +335,11 @@ export default function ContactPage() {
 
             {/* Quick Links */}
             <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] sm:px-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1A1A4A] text-white">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3D3D8F] text-white">
                 <PeopleIcon />
               </span>
               <h3
-                className="mt-4 text-[18px] font-semibold text-[#1A1A4A]"
+                className="mt-4 text-[18px] font-semibold text-[#3D3D8F]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Quick Links
@@ -361,11 +361,11 @@ export default function ContactPage() {
 
             {/* FAQs */}
             <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] sm:px-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1A1A4A] text-white">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3D3D8F] text-white">
                 <FaqIcon />
               </span>
               <h3
-                className="mt-4 text-[18px] font-semibold text-[#1A1A4A]"
+                className="mt-4 text-[18px] font-semibold text-[#3D3D8F]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Frequently Asked Questions
@@ -376,7 +376,7 @@ export default function ContactPage() {
               </p>
               <Link
                 href="/#faq"
-                className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#1A1A4A]/30 px-5 py-2 text-[13px] font-medium text-[#1A1A4A] transition hover:border-[#1A1A4A] hover:bg-[#F4F2FA]"
+                className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#3D3D8F]/30 px-5 py-2 text-[13px] font-medium text-[#3D3D8F] transition hover:border-[#3D3D8F] hover:bg-[#F4F2FA]"
               >
                 View FAQs
                 <ArrowIcon />

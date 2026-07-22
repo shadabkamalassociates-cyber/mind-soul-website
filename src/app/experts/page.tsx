@@ -73,7 +73,7 @@ export default function ExpertsPage() {
               OUR EXPERTS —
             </p>
             <h1
-              className="mt-3 text-[34px] font-semibold leading-[1.15] tracking-[-0.02em] text-[#1A1A4A] sm:text-[40px] lg:text-[44px]"
+              className="mt-3 text-[34px] font-semibold leading-[1.15] tracking-[-0.02em] text-[#3D3D8F] sm:text-[40px] lg:text-[44px]"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Guided by Experts.
@@ -142,13 +142,13 @@ export default function ExpertsPage() {
               <span className="h-px w-12 bg-[#C9A06A] sm:w-16" />
               <p className="text-[11px] font-semibold uppercase tracking-[0.26em] sm:text-[13px]">
                 <span className="text-[#C9A06A]">MEET OUR </span>
-                <span className="text-[#1A1A4A]">EXPERT TEAM</span>
+                <span className="text-[#3D3D8F]">EXPERT TEAM</span>
               </p>
-              <span className="h-px w-12 bg-[#1A1A4A] sm:w-16" />
+              <span className="h-px w-12 bg-[#3D3D8F] sm:w-16" />
             </div>
             <h2
-              className="mt-4 text-[34px] font-semibold leading-[1.12] text-[#1A1A4A] sm:text-[40px] lg:text-[44px]"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1A4A" }}
+              className="mt-4 text-[34px] font-semibold leading-[1.12] text-[#3D3D8F] sm:text-[40px] lg:text-[44px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#3D3D8F" }}
             >
               Experts Who Inspire Transformation
             </h2>
@@ -252,7 +252,7 @@ function ExpertCard({ expert }: { expert: Expert }) {
       <article className="group flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_8px_28px_rgba(26,26,74,0.10)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_rgba(26,26,74,0.14)] sm:rounded-[20px]">
         {/* Top — portrait + frame (2nd sc: straight edge, no bulb) */}
         <div className="relative bg-[#F7F6FB] pb-5 pt-3">
-          <span className="absolute left-3 top-3 z-20 rounded-[3px] bg-[#1A1A4A] px-2 py-[4px] text-[7px] font-bold uppercase tracking-[0.1em] text-white sm:left-3.5 sm:top-3.5 sm:text-[7.5px]">
+          <span className="absolute left-3 top-3 z-20 rounded-[3px] bg-[#3D3D8F] px-2 py-[4px] text-[7px] font-bold uppercase tracking-[0.1em] text-white sm:left-3.5 sm:top-3.5 sm:text-[7.5px]">
             {expert.experience}
           </span>
 
@@ -277,7 +277,7 @@ function ExpertCard({ expert }: { expert: Expert }) {
           </div>
 
           {/* Lotus circle sits on the straight join */}
-          <div className="absolute bottom-0 left-1/2 z-30 flex h-[34px] w-[34px] -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border border-[#C9A06A] bg-[#1A1A4A] shadow-[0_3px_10px_rgba(0,0,0,0.22)] sm:h-[36px] sm:w-[36px]">
+          <div className="absolute bottom-0 left-1/2 z-30 flex h-[34px] w-[34px] -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border border-[#C9A06A] bg-[#3D3D8F] shadow-[0_3px_10px_rgba(0,0,0,0.22)] sm:h-[36px] sm:w-[36px]">
             <CardLotusIcon />
           </div>
         </div>
