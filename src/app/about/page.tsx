@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const offerCards = [
   {
@@ -571,7 +572,7 @@ export default function AboutPage() {
               Need help finding the right match?
             </p>
             <Link
-              href="/#contact"
+              href="/contact"
               className="mt-1 inline-block text-[13px] text-white/70 underline underline-offset-2 transition hover:text-white"
             >
               Visit Contact Page
@@ -588,6 +589,8 @@ export default function AboutPage() {
           </div>
         </div>
       </footer>
+
+      <Footer />
     </main>
   );
 }

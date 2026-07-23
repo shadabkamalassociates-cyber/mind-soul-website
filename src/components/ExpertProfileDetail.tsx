@@ -2,20 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import type { ExpertProfile } from "@/data/experts";
-
-const navItems = [
-  { id: "about", label: "About", icon: <UserIcon /> },
-  { id: "services", label: "Services", icon: <GridIcon /> },
-  { id: "consultation", label: "Consultation", icon: <ChatIcon /> },
-  { id: "experience", label: "Experience", icon: <BriefcaseIcon /> },
-  { id: "reviews", label: "Reviews", icon: <StarIcon /> },
-  { id: "gallery", label: "Gallery", icon: <ImageIcon /> },
-  { id: "faqs", label: "FAQs", icon: <HelpIcon /> },
-];
 
 const consultationTypes = [
   {
@@ -61,7 +51,6 @@ const consultationTypes = [
 ];
 
 export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile }) {
-  const [activeNav, setActiveNav] = useState("about");
   const firstName = expert.name.replace(/^Dr\.\s*/, "").split(" ")[0];
 
   return (
@@ -182,35 +171,12 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
         </div>
       </section>
 
-      {/* Main 3-column layout */}
-      <section className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[200px_1fr_280px] lg:gap-8">
-          {/* Left nav */}
-          <aside className="hidden lg:block">
-            <nav className="space-y-1">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setActiveNav(item.id)}
-                  className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-[13px] font-medium transition ${
-                    activeNav === item.id
-                      ? "bg-[#3D3D8F] text-white shadow-md"
-                      : "text-[#5C5C7A] hover:bg-white hover:text-[#1A1A4A]"
-                  }`}
-                >
-                  <span className={activeNav === item.id ? "text-white" : "text-[#3D3D8F]"}>
-                    {item.icon}
-                  </span>
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-          </aside>
-
-          {/* Center - About */}
+      {/* About + Professional Details */}
+      <section className="mx-auto max-w-[1180px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
+          {/* About */}
           <div className="min-w-0">
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-6 py-7 sm:px-8 sm:py-8">
+            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-6 py-7 sm:px-8 sm:py-8 shadow-[0_8px_28px_rgba(26,26,74,0.05)]">
               <div className="flex items-center gap-3">
                 <Image
                   src="/experts-page/lotus-gold.png"
@@ -258,9 +224,9 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
             </div>
           </div>
 
-          {/* Right sidebar - Professional Details */}
-          <aside>
-            <div className="relative overflow-hidden rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6">
+          {/* Professional Details */}
+          <aside className="lg:sticky lg:top-24">
+            <div className="relative overflow-hidden rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_8px_28px_rgba(26,26,74,0.05)]">
               <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 opacity-[0.06]">
                 <Image src="/bg-mandala.png" alt="" fill unoptimized className="object-contain" />
               </div>
@@ -314,7 +280,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
 
       {/* Services Offered */}
       <section className="bg-white py-8 sm:py-10">
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2
               className="text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
@@ -370,7 +336,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
 
       {/* Consultation Types */}
       <section className="bg-white py-12 sm:py-14">
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
           <h2
             className="text-center text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
@@ -415,7 +381,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
       </section>
 
       {/* CTA Banner */}
-      <section className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 lg:px-8">
         <div className="rounded-2xl bg-[#1A1A4A] px-6 py-8 sm:px-10 sm:py-10">
           <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
             <div>
@@ -745,17 +711,6 @@ function StarIcon() {
   );
 }
 
-function GridIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4" y="4" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="14" y="4" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="4" y="14" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="14" y="14" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
-}
-
 function ChatIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -765,40 +720,6 @@ function ChatIcon() {
         strokeWidth="1.4"
         strokeLinejoin="round"
       />
-    </svg>
-  );
-}
-
-function BriefcaseIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4" y="8" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M9 8V6C9 5.2 9.8 4 12 4C14.2 4 15 5.2 15 6V8" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
-}
-
-function ImageIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.4" />
-      <circle cx="9" cy="10" r="1.5" fill="currentColor" />
-      <path d="M4 16L9 12L13 15L20 10V19H4V16Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function HelpIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.4" />
-      <path
-        d="M9.5 9.5C9.5 8.1 10.7 7 12 7C13.3 7 14.5 8.1 14.5 9.5C14.5 10.5 13.8 11.2 12.9 11.6C12.3 11.9 12 12.4 12 13V13.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      <circle cx="12" cy="16.5" r="0.8" fill="currentColor" />
     </svg>
   );
 }

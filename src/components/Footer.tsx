@@ -5,16 +5,6 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { LogoIcon } from "@/components/Icons";
 
-const exploreLinks = [
-  { label: "Live Sessions", href: "/live-sessions" },
-  { label: "Soul Experts", href: "/#experts" },
-  { label: "Programs", href: "/#programs" },
-  { label: "Membership", href: "/#membership" },
-  { label: "Events", href: "/#events" },
-  { label: "Blog", href: "/#blog" },
-  { label: "Gift Cards", href: "/#gift-cards" },
-];
-
 const supportLinks = [
   { label: "Help Center", href: "/#help" },
   { label: "FAQs", href: "/#faq" },
@@ -95,7 +85,7 @@ export default function Footer() {
         {/* Main columns */}
         <div className="grid grid-cols-1 gap-8 border-b border-[#E4E2EF] pb-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-6 xl:gap-8">
           {/* Brand */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-4">
             <Link href="/" className="inline-flex items-center gap-2.5">
               <LogoIcon className="shrink-0" variant="indigo" />
               <div className="flex flex-col leading-none">
@@ -125,24 +115,6 @@ export default function Footer() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Explore */}
-          <div className="lg:col-span-2">
-            <FooterHeading>Explore</FooterHeading>
-            <ul className="mt-4 space-y-2.5">
-              {exploreLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="footer-link group inline-flex items-center gap-1.5 text-[13px]"
-                  >
-                    {link.label}
-                    <ChevronTiny className="opacity-50 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Programs */}
@@ -184,7 +156,7 @@ export default function Footer() {
           </div>
 
           {/* Follow + CTA */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <FooterHeading>Follow Us</FooterHeading>
             <p className="mt-3 text-[12px] leading-relaxed text-[#5C5C7A]">
               Join our community and stay connected on social media.
@@ -312,20 +284,6 @@ function ArrowRight() {
         d="M2.5 7H11.5M11.5 7L8 3.5M11.5 7L8 10.5"
         stroke="currentColor"
         strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ChevronTiny({ className = "" }: { className?: string }) {
-  return (
-    <svg className={className} width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
-      <path
-        d="M3.5 2L6.5 5L3.5 8"
-        stroke="currentColor"
-        strokeWidth="1.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

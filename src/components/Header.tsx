@@ -13,8 +13,6 @@ const navItems = [
   { label: "Expert", href: "/experts" },
   { label: "Live Sessions", href: "/live-sessions" },
   { label: "Categories", href: "/categories", hasDropdown: true },
-  { label: "Retreats", href: "/#retreats" },
-  { label: "Blog", href: "/#blog" },
   { label: "Contact", href: "/contact" },
 ];
 

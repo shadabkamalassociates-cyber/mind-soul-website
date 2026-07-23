@@ -36,14 +36,6 @@ const faqs: FaqItem[] = [
   },
 ];
 
-const exploreLinks = [
-  { label: "All Categories", href: "#categories" },
-  { label: "Soul Experts", href: "#experts" },
-  { label: "Live Sessions", href: "#book" },
-  { label: "Retreats", href: "#retreats" },
-  { label: "Blog", href: "#blog" },
-];
-
 const programLinks = [
   { label: "All Programs", href: "#programs" },
   { label: "7-Day Programs", href: "#programs" },
@@ -127,8 +119,7 @@ export default function FAQ() {
           </div>
 
           {/* Center — nav columns */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4 sm:gap-x-6 lg:gap-x-8 xl:gap-x-10">
-            <LinkColumn title="Explore" links={exploreLinks} />
+          <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:gap-x-8 xl:gap-x-10">
             <LinkColumn title="Programs" links={programLinks} />
             <LinkColumn title="Company" links={companyLinks} />
             <LinkColumn title="Support" links={supportLinks} />
