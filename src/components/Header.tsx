@@ -180,13 +180,13 @@ export default function Header() {
           >
             <SearchIcon />
           </button>
-          <button
-            type="button"
+          <Link
+            href="/login"
             aria-label="Account"
             className="hidden p-1 text-[#1A1A4A] transition-colors hover:text-[#3D3D8F] sm:inline-flex"
           >
             <UserIcon />
-          </button>
+          </Link>
 
           <Link
             href="/#start"
