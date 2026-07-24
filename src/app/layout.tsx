@@ -29,8 +29,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${jakarta.variable} h-full`}>
-      <body className="min-h-full antialiased">
+    <html
+      lang="en"
+      className={`${playfair.variable} ${jakarta.variable} h-full`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-full antialiased" suppressHydrationWarning>
         <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
