@@ -2,11 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { liveSessions } from "@/data/liveSessions";
-import { sessionCategories } from "@/data/categories";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  fetchCategories,
+  mapCategoryForUi,
+} from "@/store/slices/categoriesSlice";
+import { fetchSessions } from "@/store/slices/sessionsSlice";
+import { mapSessionForUi } from "@/services/sessionsService";
 
 const features = [
   {
@@ -31,27 +36,33 @@ const features = [
   },
 ];
 
-const categories = [
-  { id: "all", label: "All" },
-  ...sessionCategories.map((c) => ({ id: c.slug, label: c.label })),
-];
-
-const sessions = liveSessions.map((s) => ({
-  slug: s.slug,
-  category: s.category,
-  categoryId: s.categoryId,
-  title: s.title,
-  expert: s.expert,
-  role: s.role,
-  avatar: s.avatar,
-  date: s.date,
-  time: s.time,
-  duration: s.duration,
-}));
-
 export default function LiveSessionsPage() {
+  const dispatch = useAppDispatch();
+  const categoryState = useAppSelector((s) => s.categories);
+  const sessionState = useAppSelector((s) => s.sessions);
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    if (categoryState.status === "idle") dispatch(fetchCategories());
+    if (sessionState.status === "idle") dispatch(fetchSessions());
+  }, [categoryState.status, sessionState.status, dispatch]);
+
+  const categories = useMemo(
+    () => [
+      { id: "all", label: "All" },
+      ...categoryState.items.map(mapCategoryForUi).map((c) => ({
+        id: c.id,
+        label: c.label,
+      })),
+    ],
+    [categoryState.items],
+  );
+
+  const sessions = useMemo(
+    () => sessionState.items.map(mapSessionForUi),
+    [sessionState.items],
+  );
 
   const filtered = useMemo(() => {
     return sessions.filter((s) => {
@@ -64,7 +75,11 @@ export default function LiveSessionsPage() {
         s.category.toLowerCase().includes(q);
       return catOk && qOk;
     });
-  }, [activeCategory, query]);
+  }, [sessions, activeCategory, query]);
+
+  const isLoading =
+    sessionState.status === "loading" ||
+    (sessionState.status === "idle" && sessions.length === 0);
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -215,7 +230,19 @@ export default function LiveSessionsPage() {
             ))}
           </div>
 
-          {filtered.length === 0 && (
+          {isLoading && (
+            <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
+              Loading sessions...
+            </p>
+          )}
+
+          {!isLoading && sessionState.error && (
+            <p className="py-16 text-center text-[14px] text-[#B42318]">
+              {sessionState.error}
+            </p>
+          )}
+
+          {!isLoading && !sessionState.error && filtered.length === 0 && (
             <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
               No sessions found. Try a different search or category.
             </p>
@@ -310,15 +337,15 @@ export default function LiveSessionsPage() {
   );
 }
 
-type Session = (typeof sessions)[number];
+type SessionCardData = ReturnType<typeof mapSessionForUi>;
 
-function SessionCard({ session }: { session: Session }) {
+function SessionCard({ session }: { session: SessionCardData }) {
   return (
     <Link href={`/live-sessions/${session.slug}`} className="block h-full">
     <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_6px_20px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(26,26,74,0.10)]">
       <div className="relative h-[118px] w-full overflow-hidden sm:h-[128px]">
         <Image
-          src="/live-sessions/astrology-card.png"
+          src={session.image || "/live-sessions/astrology-card.png"}
           alt=""
           fill
           unoptimized
@@ -326,7 +353,7 @@ function SessionCard({ session }: { session: Session }) {
           sizes="(max-width: 768px) 100vw, 33vw"
         />
         <span className="absolute left-2.5 top-2.5 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-white">
-          {session.category}
+          {session.category || "Session"}
         </span>
         <button
           type="button"

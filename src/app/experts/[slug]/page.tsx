@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import ExpertProfileDetail from "@/components/ExpertProfileDetail";
+import ExpertProfileClient from "@/components/ExpertProfileClient";
 import { experts, getExpertBySlug } from "@/data/experts";
 
 type Props = {
@@ -14,19 +13,19 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const expert = getExpertBySlug(slug);
-  if (!expert) return { title: "Expert Not Found | SoulSensei" };
-
+  if (expert) {
+    return {
+      title: `${expert.name} | SoulSensei Experts`,
+      description: expert.bio,
+    };
+  }
   return {
-    title: `${expert.name} | SoulSensei Experts`,
-    description: expert.bio,
+    title: "Expert Profile | SoulSensei",
+    description: "View expert profile on SoulSensei.",
   };
 }
 
 export default async function ExpertProfilePage({ params }: Props) {
   const { slug } = await params;
-  const expert = getExpertBySlug(slug);
-
-  if (!expert) notFound();
-
-  return <ExpertProfileDetail expert={expert} />;
+  return <ExpertProfileClient slug={slug} />;
 }

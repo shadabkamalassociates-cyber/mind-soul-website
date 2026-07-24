@@ -2,9 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  clearAuthError,
+  loginUser,
+  signupUser,
+} from "@/store/slices/authSlice";
 
 type Tab = "login" | "signup";
 
@@ -53,6 +60,10 @@ function generatePassword(length = 12) {
 }
 
 export default function LoginPage() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const authStatus = useAppSelector((s) => s.auth.status);
+  const authError = useAppSelector((s) => s.auth.error);
   const [tab, setTab] = useState<Tab>("login");
 
   // Shared auth fields
@@ -86,6 +97,8 @@ export default function LoginPage() {
     [password],
   );
 
+  const isSubmitting = authStatus === "loading";
+
   function resetOtpState() {
     setOtpSent(false);
     setOtpVerified(false);
@@ -98,6 +111,7 @@ export default function LoginPage() {
     resetOtpState();
     setSignupError("");
     setPasswordHint("");
+    dispatch(clearAuthError());
   }
 
   function onSendOtp() {
@@ -135,18 +149,35 @@ export default function LoginPage() {
     setPasswordHint("Password generated. You can edit or copy it.");
   }
 
-  function onLoginSubmit(e: FormEvent) {
+  async function onLoginSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!otpVerified) {
-      setOtpMessage("Please verify OTP before logging in.");
+    dispatch(clearAuthError());
+
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length < 10) {
+      setOtpMessage("Enter a valid 10-digit phone number.");
+      return;
+    }
+    if (!password.trim()) {
+      return;
+    }
+
+    const result = await dispatch(
+      loginUser({ phone: digits, password }),
+    );
+    if (loginUser.fulfilled.match(result)) {
+      router.push("/");
     }
   }
 
-  function onSignupSubmit(e: FormEvent) {
+  async function onSignupSubmit(e: FormEvent) {
     e.preventDefault();
     setSignupError("");
-    if (!otpVerified) {
-      setOtpMessage("Please verify OTP before creating your account.");
+    dispatch(clearAuthError());
+
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length < 10) {
+      setOtpMessage("Enter a valid 10-digit phone number.");
       return;
     }
     if (!passwordRules.every((r) => r.ok)) {
@@ -159,6 +190,32 @@ export default function LoginPage() {
     }
     if (!agreed) {
       setSignupError("Please agree to the Terms & Privacy Policy.");
+      return;
+    }
+    if (!fullName.trim()) {
+      setSignupError("Please enter your full name.");
+      return;
+    }
+    if (!email.trim()) {
+      setSignupError("Please enter your email address.");
+      return;
+    }
+
+    const parts = fullName.trim().split(/\s+/);
+    const first_name = parts[0] || fullName.trim();
+    const last_name = parts.slice(1).join(" ") || first_name;
+
+    const result = await dispatch(
+      signupUser({
+        first_name,
+        last_name,
+        email: email.trim(),
+        phone: digits,
+        password,
+      }),
+    );
+    if (signupUser.fulfilled.match(result)) {
+      router.push("/");
     }
   }
 
@@ -296,12 +353,17 @@ export default function LoginPage() {
                     </Link>
                   </div>
 
+                  {authError && tab === "login" ? (
+                    <p className="text-[11px] text-[#B42318]">{authError}</p>
+                  ) : null}
+
                   <button
                     type="submit"
-                    className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-[#1A1A4A] text-[14px] font-semibold text-white transition hover:bg-[#2A2A6A]"
+                    disabled={isSubmitting}
+                    className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-[#1A1A4A] text-[14px] font-semibold text-white transition hover:bg-[#2A2A6A] disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    Login
-                    <ArrowRightIcon />
+                    {isSubmitting ? "Logging in..." : "Login"}
+                    {!isSubmitting ? <ArrowRightIcon /> : null}
                   </button>
                 </form>
 
@@ -445,7 +507,6 @@ export default function LoginPage() {
                           }}
                           placeholder="Enter OTP to verify phone"
                           className={`${inputClass} pl-10 pr-3`}
-                          required
                         />
                       </div>
                       <button
@@ -580,16 +641,19 @@ export default function LoginPage() {
                     </span>
                   </label>
 
-                  {signupError ? (
-                    <p className="text-[11px] text-[#B42318]">{signupError}</p>
+                  {signupError || (authError && tab === "signup") ? (
+                    <p className="text-[11px] text-[#B42318]">
+                      {signupError || authError}
+                    </p>
                   ) : null}
 
                   <button
                     type="submit"
-                    className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-[#1A1A4A] text-[14px] font-semibold text-white transition hover:bg-[#2A2A6A]"
+                    disabled={isSubmitting}
+                    className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-[#1A1A4A] text-[14px] font-semibold text-white transition hover:bg-[#2A2A6A] disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    Create Account
-                    <ArrowRightIcon />
+                    {isSubmitting ? "Creating account..." : "Create Account"}
+                    {!isSubmitting ? <ArrowRightIcon /> : null}
                   </button>
                 </form>
 
@@ -737,7 +801,6 @@ function PhoneOtpFields({
               }
               placeholder="Enter OTP"
               className={`${inputClass} pl-10 pr-3`}
-              required
             />
           </div>
           <button

@@ -1,0 +1,433 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useMemo } from "react";
+import Header from "@/components/Header";
+import { experts as localExperts, type ExpertProfile } from "@/data/experts";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchExperts } from "@/store/slices/expertsSlice";
+import { mapExpertForUi, type UiExpert } from "@/services/expertsService";
+
+const heroFeatures = [
+  {
+    title: "Verified Experts",
+    desc: "Carefully selected & verified",
+    icon: <VerifiedIcon />,
+  },
+  {
+    title: "Trusted Guidance",
+    desc: "Safe, confidential & ethical sessions",
+    icon: <ShieldIcon />,
+  },
+  {
+    title: "Holistic Approach",
+    desc: "Mind, body & soul transformation",
+    icon: <LotusSmallIcon />,
+  },
+];
+
+const stats = [
+  { icon: <StatLotusIcon />, value: "300+", label: "Expert Guides" },
+  { icon: <StatLotusIcon />, value: "100+", label: "Healing Practices" },
+  { icon: <StatPeopleIcon />, value: "1,00,000+", label: "Happy Seekers" },
+  { icon: <StatGlobeIcon />, value: "20+", label: "Countries Served" },
+];
+
+function mapLocalExpertForUi(expert: ExpertProfile): UiExpert {
+  return {
+    id: expert.slug,
+    slug: expert.slug,
+    name: expert.name,
+    email: expert.email,
+    phone: expert.phone,
+    title: expert.role,
+    bio: expert.bio,
+    image: expert.image,
+    experience: expert.experience,
+    specialization: expert.specialization,
+    rating: expert.rating,
+    isVerified: true,
+    verificationStatus: "VERIFIED",
+    raw: expert as unknown as UiExpert["raw"],
+  };
+}
+
+export default function ExpertsPageClient() {
+  const dispatch = useAppDispatch();
+  const { items, status, error } = useAppSelector((s) => s.experts);
+
+  useEffect(() => {
+    if (status === "idle") dispatch(fetchExperts());
+  }, [status, dispatch]);
+
+  const experts = useMemo(() => {
+    const fromLocal = localExperts.map(mapLocalExpertForUi);
+    const fromApi = items.map(mapExpertForUi);
+
+    // Avoid duplicates if API later has the same person (by email/phone/name)
+    const localKeys = new Set(
+      fromLocal.flatMap((e) => [
+        e.email.toLowerCase(),
+        e.phone.replace(/\D/g, ""),
+        e.name.toLowerCase(),
+      ]),
+    );
+
+    const apiOnly = fromApi.filter((e) => {
+      const email = e.email.toLowerCase();
+      const phone = e.phone.replace(/\D/g, "");
+      const name = e.name.toLowerCase();
+      if (email && localKeys.has(email)) return false;
+      if (phone && localKeys.has(phone)) return false;
+      if (name && localKeys.has(name)) return false;
+      return true;
+    });
+
+    // Local featured experts (e.g. Jyoti) first, then API experts
+    return [...fromLocal, ...apiOnly];
+  }, [items]);
+
+  return (
+    <main className="min-h-screen bg-white text-[#1A1A4A]">
+      <Header />
+
+      <section className="relative overflow-hidden bg-white">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-6 px-3 pt-8 pb-10 sm:px-4 lg:grid-cols-[1fr_1.2fr] lg:gap-2 lg:px-5 lg:pt-10 lg:pb-12">
+          <div className="relative z-10 max-w-[520px] lg:pl-2">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C9A06A]">
+              OUR EXPERTS —
+            </p>
+            <h1
+              className="mt-3 text-[34px] font-semibold leading-[1.15] tracking-[-0.02em] text-[#3D3D8F] sm:text-[40px] lg:text-[44px]"
+              style={{ fontFamily: "var(--font-playfair), serif" }}
+            >
+              Guided by Experts.
+              <br />
+              Transformed by Wisdom.
+            </h1>
+            <div className="mt-4 flex items-center gap-3">
+              <span className="h-px w-10 bg-[#C9A06A]/70" />
+              <Image
+                src="/experts-page/lotus-gold.png"
+                alt=""
+                width={18}
+                height={18}
+                unoptimized
+              />
+              <span className="h-px w-10 bg-[#C9A06A]/70" />
+            </div>
+            <p className="mt-5 max-w-[460px] text-[14px] leading-[1.75] text-[#5C5C7A] sm:text-[15px]">
+              Connect with verified guides for clarity, healing, and
+              transformation — curated for your unique journey.
+            </p>
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-4">
+              {heroFeatures.map((f) => (
+                <div key={f.title} className="flex flex-col gap-2">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C9A06A]/35 text-[#C9A06A]">
+                    {f.icon}
+                  </span>
+                  <div>
+                    <p className="text-[12px] font-semibold text-[#1A1A4A] sm:text-[13px]">
+                      {f.title}
+                    </p>
+                    <p className="mt-0.5 text-[11px] leading-snug text-[#8A8AA8]">
+                      {f.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative mx-auto hidden h-[300px] w-full max-w-[520px] lg:block lg:h-[360px] lg:justify-self-end">
+            <Image
+              src="/experts-page/hero.png"
+              alt=""
+              fill
+              priority
+              className="object-contain object-center"
+              sizes="520px"
+            />
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-[28%] bg-gradient-to-r from-white via-white/80 to-transparent" />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#F8F9FC] px-4 py-12 sm:px-5 sm:py-14 lg:px-6 lg:py-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 sm:gap-4">
+              <span className="h-px w-12 bg-[#C9A06A] sm:w-16" />
+              <p className="text-[11px] font-semibold uppercase tracking-[0.26em] sm:text-[13px]">
+                <span className="text-[#C9A06A]">MEET OUR </span>
+                <span className="text-[#3D3D8F]">EXPERT TEAM</span>
+              </p>
+              <span className="h-px w-12 bg-[#3D3D8F] sm:w-16" />
+            </div>
+            <h2
+              className="mt-4 text-[34px] font-semibold leading-[1.12] text-[#3D3D8F] sm:text-[40px] lg:text-[44px]"
+              style={{
+                fontFamily: "var(--font-playfair), Georgia, serif",
+                color: "#3D3D8F",
+              }}
+            >
+              Experts Who Inspire Transformation
+            </h2>
+            <div className="mt-5 flex items-center justify-center gap-3 sm:gap-4">
+              <span className="h-px w-24 bg-[#C9A06A]/60 sm:w-32" />
+              <Image
+                src="/experts-page/lotus-gold.png"
+                alt=""
+                width={30}
+                height={30}
+                unoptimized
+                className="opacity-95"
+              />
+              <span className="h-px w-24 bg-[#C9A06A]/60 sm:w-32" />
+            </div>
+          </div>
+
+          {status === "loading" && experts.length === 0 && (
+            <p className="mt-10 text-center text-[14px] text-[#8A8AA8]">
+              Loading experts...
+            </p>
+          )}
+
+          {error && (
+            <p className="mt-4 text-center text-[13px] text-[#B42318]">
+              API: {error} — showing featured experts.
+            </p>
+          )}
+
+          <div className="mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+            {experts.map((expert) => (
+              <ExpertCard key={expert.id} expert={expert} />
+            ))}
+          </div>
+
+          {status !== "loading" && experts.length === 0 && (
+            <p className="mt-10 text-center text-[14px] text-[#8A8AA8]">
+              No experts available yet.
+            </p>
+          )}
+
+          <div className="expert-stats-bar mt-8 grid grid-cols-2 gap-x-6 gap-y-7 rounded-2xl border border-[#E8EAF4] bg-white px-5 py-7 shadow-[0_8px_30px_rgba(30,36,101,0.06)] sm:px-8 sm:py-8 lg:mt-10 lg:grid-cols-4 lg:gap-x-10">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex items-center gap-3.5">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#1A1A4A] sm:h-[60px] sm:w-[60px]">
+                  {stat.icon}
+                </div>
+                <div>
+                  <p className="text-[20px] font-semibold leading-none text-[#1E2465] sm:text-[22px]">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1.5 text-[12px] text-[#6B6B8A] sm:text-[13px]">
+                    {stat.label}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#1A1A4A]">
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 py-12 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-10 lg:py-16">
+          <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-10">
+            <div className="relative h-[150px] w-[130px] shrink-0 sm:h-[175px] sm:w-[155px] lg:h-[200px] lg:w-[175px]">
+              <Image
+                src="/experts-page/lotus-gold.png"
+                alt=""
+                fill
+                unoptimized
+                className="object-contain opacity-[0.28]"
+                sizes="(max-width: 1024px) 130px, 170px"
+              />
+            </div>
+            <div className="text-center lg:text-left">
+              <h2
+                className="text-[26px] font-semibold leading-tight text-white sm:text-[30px] lg:text-[34px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                Ready to Begin Your Journey?
+              </h2>
+              <p className="mt-3 max-w-[480px] text-[14px] leading-relaxed text-white sm:text-[15px] lg:text-[16px]">
+                Connect with our experts and take the first step towards
+                clarity, peace, and transformation.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/#book"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-[#E8C69F] via-[#C9A06A] to-[#B8925E] px-7 py-3.5 text-[14px] font-semibold text-[#1A1A4A] shadow-[0_8px_24px_rgba(201,160,106,0.35)] transition hover:brightness-105 sm:px-8 sm:py-4 sm:text-[15px]"
+          >
+            Connect with an Expert
+            <ArrowIcon />
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function ExpertCard({ expert }: { expert: UiExpert }) {
+  return (
+    <Link href={`/experts/${expert.slug}`} className="block h-full">
+      <article className="group flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_8px_28px_rgba(26,26,74,0.10)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_rgba(26,26,74,0.14)] sm:rounded-[20px]">
+        <div className="relative bg-[#F7F6FB] pb-5 pt-3">
+          <span className="absolute left-3 top-3 z-20 rounded-[3px] bg-[#3D3D8F] px-2 py-[4px] text-[7px] font-bold uppercase tracking-[0.1em] text-white sm:left-3.5 sm:top-3.5 sm:text-[7.5px]">
+            {expert.experience}
+          </span>
+          <div className="relative mx-auto h-[190px] w-full sm:h-[200px]">
+            <Image
+              src="/experts-page/frame.png"
+              alt=""
+              fill
+              className="z-0 scale-[1.35] object-contain object-center sm:scale-[1.4]"
+              sizes="(max-width: 768px) 90vw, 340px"
+            />
+            <div className="absolute inset-x-[4%] bottom-0 top-[4%] z-[1]">
+              <Image
+                src={expert.image}
+                alt={expert.name}
+                fill
+                unoptimized
+                className="object-contain object-bottom"
+                sizes="(max-width: 768px) 85vw, 320px"
+              />
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-1/2 z-30 flex h-[34px] w-[34px] -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border border-[#C9A06A] bg-[#3D3D8F] shadow-[0_3px_10px_rgba(0,0,0,0.22)] sm:h-[36px] sm:w-[36px]">
+            <CardLotusIcon />
+          </div>
+        </div>
+
+        <div className="relative flex flex-1 flex-col bg-[#1A1A4A] px-4 pb-4 pt-6 text-center sm:px-5 sm:pb-5 sm:pt-7">
+          <h3
+            className="text-[17px] font-semibold leading-tight text-white sm:text-[18px]"
+            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+          >
+            {expert.name}
+          </h3>
+          <p className="mt-1 text-[8px] font-semibold uppercase tracking-[0.16em] text-[#C9A06A] sm:text-[9px]">
+            {expert.title}
+          </p>
+          <p className="mx-auto mt-2.5 line-clamp-3 max-w-[250px] text-[11px] leading-[1.55] text-white/85 sm:text-[11.5px]">
+            {expert.bio || "Verified SoulSensei expert ready to guide your journey."}
+          </p>
+
+          <div className="my-3 flex items-center justify-center gap-2.5">
+            <span className="h-px w-12 bg-[#C9A06A]/50" />
+            <span className="h-[4px] w-[4px] rotate-45 bg-[#C9A06A]" />
+            <span className="h-px w-12 bg-[#C9A06A]/50" />
+          </div>
+
+          <div className="mx-auto w-full max-w-[230px] space-y-1.5 text-left">
+            <div className="flex items-start gap-2">
+              <span className="mt-0.5 shrink-0 text-[#C9A06A]">
+                <MiniLotusIcon />
+              </span>
+              <p className="text-[11px] leading-snug text-white/90">
+                <span className="font-semibold text-[#C9A06A]">Specialization:</span>{" "}
+                {expert.specialization}
+              </p>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="mt-0.5 shrink-0 text-[#C9A06A]">
+                <CalendarMiniIcon />
+              </span>
+              <p className="text-[11px] leading-snug text-white/90">
+                <span className="font-semibold text-[#C9A06A]">Experience:</span>{" "}
+                {expert.experience}
+              </p>
+            </div>
+          </div>
+
+          <span className="mt-4 inline-flex items-center justify-center gap-1.5 self-center rounded-full border border-white/75 px-5 py-1.5 text-[11px] font-medium text-white transition group-hover:bg-white/10 sm:mt-4 sm:px-5 sm:py-2 sm:text-[12px]">
+            View Profile
+            <ArrowIcon />
+          </span>
+        </div>
+      </article>
+    </Link>
+  );
+}
+
+function VerifiedIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 3l7 2.5v5.2c0 4.2-2.8 7.8-7 9.3-4.2-1.5-7-5.1-7-9.3V5.5L12 3Z" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M9.5 12l1.8 1.8L15 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+function ShieldIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 3.5l7 2.5v5.2c0 4.2-2.8 7.8-7 9.3-4.2-1.5-7-5.1-7-9.3V6L12 3.5Z" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+function LotusSmallIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 20c2.5-3 4-6 4-9a4 4 0 10-8 0c0 3 1.5 6 4 9Z" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M12 20c-3.5-2.2-6-5-6-8.5A3.5 3.5 0 0112 9" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M12 20c3.5-2.2 6-5 6-8.5A3.5 3.5 0 0012 9" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+function StatLotusIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 20c2.5-3 4-6 4-9a4 4 0 10-8 0c0 3 1.5 6 4 9Z" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+function StatPeopleIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M3.5 18c.8-2.6 2.8-4 5.5-4s4.7 1.4 5.5 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="17" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+function StatGlobeIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M4 12h16M12 4c2.5 2.5 3.5 5 3.5 8s-1 5.5-3.5 8c-2.5-2.5-3.5-5-3.5-8s1-5.5 3.5-8Z" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+function ArrowIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+function CardLotusIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 19c2-2.4 3.2-4.8 3.2-7.2a3.2 3.2 0 10-6.4 0c0 2.4 1.2 4.8 3.2 7.2Z" fill="#C9A06A" />
+    </svg>
+  );
+}
+function MiniLotusIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 19c2-2.4 3.2-4.8 3.2-7.2a3.2 3.2 0 10-6.4 0c0 2.4 1.2 4.8 3.2 7.2Z" fill="currentColor" />
+    </svg>
+  );
+}
+function CalendarMiniIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M8 4v4M16 4v4M4 11h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}

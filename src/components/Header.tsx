@@ -1,11 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { LogoIcon, SearchIcon, UserIcon } from "./Icons";
-import { sessionCategories } from "@/data/categories";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  fetchCategories,
+  mapCategoryForUi,
+} from "@/store/slices/categoriesSlice";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -18,9 +21,19 @@ const navItems = [
 
 export default function Header() {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
+  const { items: categoryItems, status: categoriesStatus } = useAppSelector(
+    (s) => s.categories,
+  );
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (categoriesStatus === "idle") {
+      dispatch(fetchCategories());
+    }
+  }, [categoriesStatus, dispatch]);
 
   useEffect(() => {
     setOpen(false);
@@ -42,11 +55,16 @@ export default function Header() {
     };
   }, []);
 
+  const categories = useMemo(
+    () => categoryItems.map(mapCategoryForUi),
+    [categoryItems],
+  );
+
   const filteredCategories = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return sessionCategories;
-    return sessionCategories.filter((c) => c.label.toLowerCase().includes(q));
-  }, [query]);
+    if (!q) return categories;
+    return categories.filter((c) => c.label.toLowerCase().includes(q));
+  }, [categories, query]);
 
   return (
     <header className="relative z-50 w-full bg-white">
@@ -133,8 +151,14 @@ export default function Header() {
                         role="listbox"
                         className="max-h-[320px] overflow-y-auto py-2"
                       >
+                        {categoriesStatus === "loading" &&
+                          filteredCategories.length === 0 && (
+                            <li className="px-4 py-6 text-center text-[13px] text-[#8A8AA8]">
+                              Loading categories...
+                            </li>
+                          )}
                         {filteredCategories.map((cat) => (
-                          <li key={cat.slug}>
+                          <li key={cat.id}>
                             <Link
                               href={`/categories/${cat.slug}`}
                               onClick={() => setOpen(false)}
@@ -144,11 +168,12 @@ export default function Header() {
                             </Link>
                           </li>
                         ))}
-                        {filteredCategories.length === 0 && (
-                          <li className="px-4 py-6 text-center text-[13px] text-[#8A8AA8]">
-                            No categories found
-                          </li>
-                        )}
+                        {categoriesStatus !== "loading" &&
+                          filteredCategories.length === 0 && (
+                            <li className="px-4 py-6 text-center text-[13px] text-[#8A8AA8]">
+                              No categories found
+                            </li>
+                          )}
                       </ul>
                     </div>
                   )}
@@ -225,7 +250,12 @@ function SearchIconSmall() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
       <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M16 16L20 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path
+        d="M16 16L20 20"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -233,7 +263,12 @@ function SearchIconSmall() {
 function CloseIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-      <path d="M3 3L9 9M9 3L3 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M3 3L9 9M9 3L3 9"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

@@ -52,6 +52,11 @@ const consultationTypes = [
 
 export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile }) {
   const firstName = expert.name.replace(/^Dr\.\s*/, "").split(" ")[0];
+  const enabledConsultations = expert.consultationTypes
+    ? consultationTypes.filter((type) =>
+        expert.consultationTypes!.includes(type.label),
+      )
+    : consultationTypes;
 
   return (
     <main className="min-h-screen bg-[#F8F9FC] text-[#1A1A4A]">
@@ -358,7 +363,7 @@ export default function ExpertProfileDetail({ expert }: { expert: ExpertProfile 
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-            {consultationTypes.map((type) => (
+            {enabledConsultations.map((type) => (
               <div
                 key={type.label}
                 className="flex min-h-[96px] items-center gap-4 rounded-2xl border border-[#E4E2EF] bg-white px-5 py-5 shadow-[0_2px_12px_rgba(26,26,74,0.04)]"

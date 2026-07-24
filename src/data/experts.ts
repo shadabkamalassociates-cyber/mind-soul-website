@@ -23,82 +23,74 @@ export type ExpertProfile = {
   about: string[];
   highlights: { title: string; desc: string }[];
   services: { title: string; desc: string }[];
+  /** Enabled consultation labels; if omitted, all default types show */
+  consultationTypes?: string[];
 };
 
 export const experts: ExpertProfile[] = [
   {
-    slug: "dr-ananya-sharma",
-    name: "Dr. Ananya Sharma",
-    role: "FOUNDER & SPIRITUAL GUIDE",
-    experience: "10+ YEARS EXPERIENCE",
-    bio: "A renowned spiritual guide with over a decade of experience helping seekers find inner peace, purpose, and profound transformation.",
-    specialization: "Spiritual Guidance",
-    experienceDetail: "12+ Years",
+    slug: "jyoti-rajput",
+    name: "Jyoti Rajput",
+    role: "HEAD HR | HEALING PRACTITIONER",
+    experience: "14 YEARS EXPERIENCE",
+    bio: "HR leader and healing practitioner with 14 years of experience, offering Theta Healing and Inner Child Healing for emotional balance and lasting transformation.",
+    specialization: "HR & Marketing",
+    experienceDetail: "14 Years",
     image: "/experts-page/expert-2-cutout.png",
-    titles: "Vedic Astrologer | Spiritual Guide | Life Coach",
-    profession: "Vedic Astrologer",
-    clients: "10,000+",
-    sessions: "25,000+",
-    rating: "4.9/5 (1200+)",
-    phone: "+91 98765 43210",
-    whatsapp: "+91 98765 43210",
-    email: "ananya@soulsensei.in",
-    location: "New Delhi, India",
-    languages: ["English", "Hindi", "Sanskrit", "Punjabi"],
-    education: ["MA in Astrology", "B.A. in Sanskrit"],
+    titles: "HEAD HR | Hypnosis Practitioner | Healing Guide",
+    profession: "HEAD HR",
+    clients: "—",
+    sessions: "—",
+    rating: "—",
+    phone: "+91 9548891040",
+    whatsapp: "+91 9548891040",
+    email: "09jyotirajput1@gmail.com",
+    location: "Bengaluru, India",
+    languages: ["Hindi", "English"],
+    education: ["MBA"],
     certifications: [
-      "Certified Vedic Astrologer",
-      "Numerology Expert",
-      "Tarot Card Reader",
+      "Advance course in Hypnosis",
+      "Wrist Watch Analysis",
     ],
-    specializations: [
-      "Career & Finance",
-      "Relationship & Marriage",
-      "Health & Wellness",
-      "Spiritual Growth",
-      "Life Purpose",
-    ],
+    specializations: ["HR & Marketing", "Theta Healing", "Inner Child Healing"],
     about: [
-      "Dr. Ananya Sharma is a renowned Vedic Astrologer and Spiritual Guide with over 12 years of experience in helping individuals navigate life's challenges through ancient wisdom and modern insights.",
-      "With a deep understanding of Vedic astrology, numerology, and spiritual counseling, Dr. Ananya has guided thousands of clients worldwide in finding clarity, purpose, and direction in their lives.",
-      "Her compassionate approach combines traditional Vedic principles with practical guidance, making complex astrological concepts accessible and actionable for everyone.",
-      "Dr. Ananya believes that astrology is not about predicting fate, but about understanding cosmic energies to make empowered choices and create the life you desire.",
+      "Jyoti Rajput brings 14 years of professional experience as HEAD HR, combining people leadership with deep interest in emotional healing and personal transformation.",
+      "Trained in advanced hypnosis and wrist watch analysis, she supports clients in releasing blocks, finding clarity, and rebuilding confidence through gentle healing practices.",
+      "Based in Bengaluru, she conducts sessions in Hindi and English, with a practical, compassionate approach shaped by years of working closely with people.",
     ],
     highlights: [
       {
-        title: "Why I Started Astrology",
-        desc: "To help people find clarity and purpose through ancient Vedic wisdom.",
+        title: "Why I Started Healing Work",
+        desc: "To help people release emotional blocks and reconnect with inner confidence, alongside a career built on understanding people.",
       },
       {
         title: "My Mission",
-        desc: "Empowering individuals to make conscious life choices with confidence.",
+        desc: "Support lasting emotional well-being through Theta Healing and Inner Child Healing, with clarity and care.",
       },
       {
         title: "My Approach",
-        desc: "Blending traditional Vedic principles with practical modern guidance.",
+        desc: "Gentle, practical healing grounded in real-world people experience from 14 years in HR leadership.",
       },
       {
         title: "What Makes Me Different",
-        desc: "Compassionate counseling combined with deep astrological expertise.",
+        desc: "A rare blend of corporate HR insight with hypnosis and energy-based healing for balanced transformation.",
       },
     ],
     services: [
       {
-        title: "Vedic Astrology Consultation",
-        desc: "In-depth analysis of your birth chart to provide personalized guidance on life path and destiny.",
+        title: "Theta Healing",
+        desc: "Experience the power of Theta Healing to release limiting beliefs, clear emotional blocks, and restore inner balance. This gentle energy healing technique promotes emotional well-being, mental clarity, self-empowerment, and a deeper connection with your true self, helping you create positive and lasting transformation.",
       },
       {
-        title: "Career & Finance Guidance",
-        desc: "Strategic astrological insights to help you make informed career and financial decisions.",
+        title: "Inner Child Healing",
+        desc: "Reconnect with your inner child to gently heal emotional wounds, release past pain, and let go of limiting beliefs formed in childhood. This transformative healing process nurtures self-love, emotional freedom, and inner peace, helping you build healthier relationships and live with greater confidence and joy.",
       },
-      {
-        title: "Relationship & Marriage Compatibility",
-        desc: "Comprehensive compatibility analysis for harmonious relationships and lasting partnerships.",
-      },
-      {
-        title: "Numerology Reading",
-        desc: "Discover your life path number and how it influences your destiny and decisions.",
-      },
+    ],
+    consultationTypes: [
+      "Video Call",
+      "Audio Call",
+      "Live Session",
+      "Recorded Session",
     ],
   },
   {
