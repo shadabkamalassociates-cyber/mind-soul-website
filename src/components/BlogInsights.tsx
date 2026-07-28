@@ -1,55 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
-
-type Article = {
-  id: string;
-  title: string;
-  date: string;
-  readTime: string;
-  image: string;
-};
+import Link from "next/link";
+import BlogCard from "@/components/BlogCard";
+import { blogArticles } from "@/data/blogs";
 
 const GAP = 16;
-
-const articles: Article[] = [
-  {
-    id: "1",
-    title: "10 Powerful Morning Rituals for Inner Peace",
-    date: "May 10, 2025",
-    readTime: "5 min read",
-    image: "/blog/blog-1.png",
-  },
-  {
-    id: "2",
-    title: "Understanding Your Chakras: A Complete Guide",
-    date: "May 8, 2025",
-    readTime: "7 min read",
-    image: "/blog/blog-2.png",
-  },
-  {
-    id: "3",
-    title: "How to Manifest Abundance in 21 Days",
-    date: "May 5, 2025",
-    readTime: "6 min read",
-    image: "/blog/blog-3.png",
-  },
-  {
-    id: "4",
-    title: "The Power of Forgiveness in Healing",
-    date: "May 3, 2025",
-    readTime: "4 min read",
-    image: "/blog/blog-4.png",
-  },
-  {
-    id: "5",
-    title: "Meditation Techniques for Beginners",
-    date: "May 1, 2025",
-    readTime: "5 min read",
-    image: "/blog/blog-5.png",
-  },
-];
 
 export default function BlogInsights() {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -81,12 +37,12 @@ export default function BlogInsights() {
           </div>
 
           <div className="hidden items-center gap-3 sm:flex">
-            <a
-              href="#all-articles"
+            <Link
+              href="/blogs"
               className="text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
             >
               View All Articles
-            </a>
+            </Link>
             <div className="flex items-center gap-2">
               <CarouselBtn direction="prev" onClick={() => scrollByCard(-1)} />
               <CarouselBtn direction="next" onClick={() => scrollByCard(1)} />
@@ -117,16 +73,20 @@ export default function BlogInsights() {
             ref={scrollerRef}
             className="blog-scroller flex gap-4 overflow-x-auto scroll-smooth"
           >
-            {articles.map((article) => (
-              <BlogCard key={article.id} article={article} />
+            {blogArticles.slice(0, 5).map((article) => (
+              <BlogCard
+                key={article.id}
+                article={article}
+                variant="overlay"
+              />
             ))}
           </div>
         </div>
 
         <div className="mt-5 flex items-center justify-between sm:hidden">
-          <a href="#all-articles" className="text-[13px] font-medium text-[#3D3D8F]">
+          <Link href="/blogs" className="text-[13px] font-medium text-[#3D3D8F]">
             View All Articles
-          </a>
+          </Link>
           <div className="flex items-center gap-2">
             <CarouselBtn direction="prev" onClick={() => scrollByCard(-1)} />
             <CarouselBtn direction="next" onClick={() => scrollByCard(1)} />
@@ -134,38 +94,6 @@ export default function BlogInsights() {
         </div>
       </div>
     </section>
-  );
-}
-
-function BlogCard({ article }: { article: Article }) {
-  return (
-    <article
-      data-blog-card
-      className="blog-card group relative flex shrink-0 flex-col overflow-hidden rounded-xl border border-[#E4E2EF] shadow-[0_4px_20px_rgba(26,26,74,0.06)]"
-    >
-      <div className="relative aspect-[3/3.6] w-full overflow-hidden">
-        <Image
-          src={article.image}
-          alt={article.title}
-          fill
-          className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
-          sizes="(max-width: 640px) 80vw, (max-width: 1280px) 33vw, 20vw"
-          quality={95}
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-transparent" />
-
-        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-3.5 sm:p-4">
-          <h3 className="text-[14px] font-semibold leading-snug text-white sm:text-[15px]">
-            {article.title}
-          </h3>
-          <p className="mt-1.5 text-[11px] text-white/75 sm:text-[12px]">
-            {article.date}
-            <span className="mx-1.5 text-white/40">•</span>
-            {article.readTime}
-          </p>
-        </div>
-      </div>
-    </article>
   );
 }
 

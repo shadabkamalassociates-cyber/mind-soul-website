@@ -5,13 +5,19 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LiveSessionCard from "@/components/LiveSessionCard";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchCategories,
   mapCategoryForUi,
 } from "@/store/slices/categoriesSlice";
+import { fetchExperts } from "@/store/slices/expertsSlice";
 import { fetchSessions } from "@/store/slices/sessionsSlice";
-import { mapSessionForUi } from "@/services/sessionsService";
+import { mapExpertForUi } from "@/services/expertsService";
+import {
+  mapSessionForUi,
+  type SessionUiContext,
+} from "@/services/sessionsService";
 
 const features = [
   {
@@ -40,13 +46,35 @@ export default function LiveSessionsPage() {
   const dispatch = useAppDispatch();
   const categoryState = useAppSelector((s) => s.categories);
   const sessionState = useAppSelector((s) => s.sessions);
+  const expertState = useAppSelector((s) => s.experts);
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
 
   useEffect(() => {
     if (categoryState.status === "idle") dispatch(fetchCategories());
     if (sessionState.status === "idle") dispatch(fetchSessions());
-  }, [categoryState.status, sessionState.status, dispatch]);
+    if (expertState.status === "idle") dispatch(fetchExperts());
+  }, [categoryState.status, sessionState.status, expertState.status, dispatch]);
+
+  const sessionUiContext = useMemo((): SessionUiContext => {
+    return {
+      categoryById: new Map(
+        categoryState.items.map((c) => {
+          const ui = mapCategoryForUi(c);
+          return [ui.id, ui.label];
+        }),
+      ),
+      expertById: new Map(
+        expertState.items.map((e) => {
+          const ui = mapExpertForUi(e);
+          return [
+            ui.id,
+            { name: ui.name, role: ui.title, avatar: ui.image },
+          ];
+        }),
+      ),
+    };
+  }, [categoryState.items, expertState.items]);
 
   const categories = useMemo(
     () => [
@@ -60,8 +88,9 @@ export default function LiveSessionsPage() {
   );
 
   const sessions = useMemo(
-    () => sessionState.items.map(mapSessionForUi),
-    [sessionState.items],
+    () =>
+      sessionState.items.map((s) => mapSessionForUi(s, sessionUiContext)),
+    [sessionState.items, sessionUiContext],
   );
 
   const filtered = useMemo(() => {
@@ -224,9 +253,9 @@ export default function LiveSessionsPage() {
             </Link>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+          <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {filtered.map((session) => (
-              <SessionCard key={session.slug} session={session} />
+              <LiveSessionCard key={session.slug} session={session} />
             ))}
           </div>
 
@@ -337,86 +366,6 @@ export default function LiveSessionsPage() {
   );
 }
 
-type SessionCardData = ReturnType<typeof mapSessionForUi>;
-
-function SessionCard({ session }: { session: SessionCardData }) {
-  return (
-    <Link href={`/live-sessions/${session.slug}`} className="block h-full">
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_6px_20px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(26,26,74,0.10)]">
-      <div className="relative h-[118px] w-full overflow-hidden sm:h-[128px]">
-        <Image
-          src={session.image || "/live-sessions/astrology-card.png"}
-          alt=""
-          fill
-          unoptimized
-          className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-          sizes="(max-width: 768px) 100vw, 33vw"
-        />
-        <span className="absolute left-2.5 top-2.5 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-white">
-          {session.category || "Session"}
-        </span>
-        <button
-          type="button"
-          aria-label="Save session"
-          className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-[#1A1A4A] shadow-sm transition hover:bg-white"
-        >
-          <HeartOutlineIcon />
-        </button>
-      </div>
-
-      <div className="flex flex-1 flex-col px-3.5 pb-3 pt-3 sm:px-4 sm:pb-3.5 sm:pt-3">
-        <h3
-          className="text-[14px] font-semibold leading-snug text-[#3D3D8F] sm:text-[15px]"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-        >
-          {session.title}
-        </h3>
-
-        <div className="mt-2 flex items-center gap-2">
-          <div className="relative h-7 w-7 overflow-hidden rounded-full bg-[#EEF0FA] ring-2 ring-white">
-            <Image
-              src={session.avatar}
-              alt={session.expert}
-              fill
-              unoptimized
-              className="object-cover object-top"
-              sizes="28px"
-            />
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-[11px] font-semibold text-[#1A1A4A]">
-              with {session.expert}
-            </p>
-            <p className="text-[10px] text-[#8A8AA8]">{session.role}</p>
-          </div>
-        </div>
-
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[#5C5C7A] sm:text-[11px]">
-          <span className="inline-flex items-center gap-1">
-            <CalendarIcon />
-            {session.date}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <ClockSmallIcon />
-            {session.time}
-          </span>
-        </div>
-
-        <div className="mt-2.5 flex items-center justify-between gap-2 border-t border-[#E8EAF4] pt-2.5">
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#5C5C7A]">
-            <HourglassIcon />
-            {session.duration}
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-md bg-[#3D3D8F] px-2.5 py-1.5 text-[11px] font-semibold text-white transition group-hover:bg-[#2F2F70]">
-            Book Now →
-          </span>
-        </div>
-      </div>
-    </article>
-    </Link>
-  );
-}
-
 function SearchIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -514,40 +463,6 @@ function HeartMiniIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M12 20S4.5 15 4.5 9.5C4.5 7 6.5 5 9 5C10.5 5 11.5 5.8 12 6.8C12.5 5.8 13.5 5 15 5C17.5 5 19.5 7 19.5 9.5C19.5 15 12 20 12 20Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function HeartOutlineIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M12 20S4.5 15 4.5 9.5C4.5 7 6.5 5 9 5C10.5 5 11.5 5.8 12 6.8C12.5 5.8 13.5 5 15 5C17.5 5 19.5 7 19.5 9.5C19.5 15 12 20 12 20Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden className="text-[#C9A06A]">
-      <rect x="5" y="6" width="14" height="13" rx="2" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M8 4V7M16 4V7M5 10H19" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function ClockSmallIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden className="text-[#C9A06A]">
-      <circle cx="12" cy="12" r="7.5" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M12 8.5V12.5L15 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function HourglassIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden className="text-[#C9A06A]">
-      <path d="M7 4H17M7 20H17M8 4C8 8 11 10 12 12C13 10 16 8 16 4M8 20C8 16 11 14 12 12C13 14 16 16 16 20" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

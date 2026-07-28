@@ -1,17 +1,22 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LiveSessionCard from "@/components/LiveSessionCard";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchCategories,
   mapCategoryForUi,
 } from "@/store/slices/categoriesSlice";
+import { fetchExperts } from "@/store/slices/expertsSlice";
 import { fetchSessionsByCategory } from "@/store/slices/sessionsSlice";
-import { mapSessionForUi } from "@/services/sessionsService";
+import { mapExpertForUi } from "@/services/expertsService";
+import {
+  mapSessionForUi,
+  type SessionUiContext,
+} from "@/services/sessionsService";
 
 export default function CategorySessionsClient({
   categoryId,
@@ -21,11 +26,13 @@ export default function CategorySessionsClient({
   const dispatch = useAppDispatch();
   const categoryState = useAppSelector((s) => s.categories);
   const sessionState = useAppSelector((s) => s.sessions);
+  const expertState = useAppSelector((s) => s.experts);
 
   useEffect(() => {
     if (categoryState.status === "idle") dispatch(fetchCategories());
+    if (expertState.status === "idle") dispatch(fetchExperts());
     dispatch(fetchSessionsByCategory(categoryId));
-  }, [categoryId, categoryState.status, dispatch]);
+  }, [categoryId, categoryState.status, expertState.status, dispatch]);
 
   const category = useMemo(() => {
     const found = categoryState.items
@@ -34,9 +41,30 @@ export default function CategorySessionsClient({
     return found ?? { id: categoryId, slug: categoryId, label: "Category" };
   }, [categoryState.items, categoryId]);
 
+  const sessionUiContext = useMemo((): SessionUiContext => {
+    return {
+      categoryById: new Map(
+        categoryState.items.map((c) => {
+          const ui = mapCategoryForUi(c);
+          return [ui.id, ui.label];
+        }),
+      ),
+      expertById: new Map(
+        expertState.items.map((e) => {
+          const ui = mapExpertForUi(e);
+          return [
+            ui.id,
+            { name: ui.name, role: ui.title, avatar: ui.image },
+          ];
+        }),
+      ),
+    };
+  }, [categoryState.items, expertState.items]);
+
   const sessions = useMemo(
-    () => sessionState.items.map(mapSessionForUi),
-    [sessionState.items],
+    () =>
+      sessionState.items.map((s) => mapSessionForUi(s, sessionUiContext)),
+    [sessionState.items, sessionUiContext],
   );
 
   return (
@@ -86,43 +114,7 @@ export default function CategorySessionsClient({
             sessions.length > 0 && (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
                 {sessions.map((session) => (
-                  <Link
-                    key={session.slug}
-                    href={`/live-sessions/${session.slug}`}
-                    className="block h-full"
-                  >
-                    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_6px_20px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_10px_28px_rgba(26,26,74,0.10)]">
-                      <div className="relative h-[118px] w-full overflow-hidden sm:h-[128px]">
-                        <Image
-                          src={
-                            session.image ||
-                            "/live-sessions/astrology-card.png"
-                          }
-                          alt=""
-                          fill
-                          unoptimized
-                          className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                        />
-                        <span className="absolute left-2.5 top-2.5 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-white">
-                          {category.label}
-                        </span>
-                      </div>
-                      <div className="flex flex-1 flex-col px-3.5 pb-3 pt-3 sm:px-4">
-                        <h3
-                          className="text-[14px] font-semibold leading-snug text-[#3D3D8F] sm:text-[15px]"
-                          style={{
-                            fontFamily: "var(--font-playfair), Georgia, serif",
-                          }}
-                        >
-                          {session.title}
-                        </h3>
-                        <p className="mt-2 text-[12px] text-[#8A8AA8]">
-                          {session.date} · {session.time}
-                        </p>
-                      </div>
-                    </article>
-                  </Link>
+                  <LiveSessionCard key={session.slug} session={session} />
                 ))}
               </div>
             )}
