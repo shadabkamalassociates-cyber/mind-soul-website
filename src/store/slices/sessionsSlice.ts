@@ -29,7 +29,7 @@ export const fetchSessions = createAsyncThunk(
   "sessions/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      return await sessionsService.fetchAllSessions();
+      return await sessionsService.fetchAllLiveSessions();
     } catch (err) {
       return rejectWithValue(toErrorMessage(err));
     }

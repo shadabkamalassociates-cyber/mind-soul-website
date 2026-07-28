@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AddToCartButton from "@/components/AddToCartButton";
 import type { RecordedVideo } from "@/types/recordedVideo";
 
 const tabs = [
@@ -341,12 +342,11 @@ export default function RecordedVideoDetailPage({
             ))}
             <div className="mt-4 rounded-xl border border-[#C9A06A]/30 bg-[#16172B] p-4">
               <p className="text-[22px] font-semibold text-white">{video.price}</p>
-              <button
-                type="button"
-                className="mt-3 flex w-full items-center justify-center rounded-lg bg-[#4A4AE2] py-3 text-[14px] font-semibold text-white transition hover:bg-[#3A3AD2]"
-              >
-                Book Now →
-              </button>
+              <AddToCartButton
+                sessionId={video.sessionId}
+                label="Book Now →"
+                variant="dark"
+              />
             </div>
           </aside>
         </div>

@@ -68,29 +68,33 @@ function BlogCardOverlay({
   className?: string;
 }) {
   return (
-    <Link href={`/blogs/${article.slug}`} className={className}>
-      <article
-        data-blog-card
-        className="blog-card group relative flex shrink-0 flex-col overflow-hidden rounded-xl border border-[#E4E2EF] shadow-[0_4px_20px_rgba(26,26,74,0.06)]"
-      >
+    <Link
+      href={`/blogs/${article.slug}`}
+      className={`group block h-full w-full ${className}`}
+    >
+      <article className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-[#E4E2EF] bg-[#1A1A4A] shadow-[0_4px_20px_rgba(26,26,74,0.06)] transition duration-300 hover:shadow-[0_10px_28px_rgba(26,26,74,0.14)]">
         <div className="relative aspect-[3/3.6] w-full overflow-hidden">
           <Image
             src={article.image}
             alt={article.title}
             fill
+            unoptimized
             className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
-            sizes="(max-width: 640px) 80vw, (max-width: 1280px) 33vw, 20vw"
+            sizes="(max-width: 640px) 78vw, (max-width: 1280px) 33vw, 20vw"
             quality={95}
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/92 via-black/40 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
 
-          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-3.5 sm:p-4">
-            <h3 className="text-[14px] font-semibold leading-snug text-white sm:text-[15px]">
+          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-4">
+            <h3
+              className="line-clamp-3 text-[14px] font-semibold leading-snug text-white sm:text-[15px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
               {article.title}
             </h3>
-            <p className="mt-1.5 text-[11px] text-white/75 sm:text-[12px]">
+            <p className="mt-2 text-[11px] text-white/80 sm:text-[12px]">
               {article.date}
-              <span className="mx-1.5 text-white/40">•</span>
+              <span className="mx-1.5 text-white/45">•</span>
               {article.readTime}
             </p>
           </div>

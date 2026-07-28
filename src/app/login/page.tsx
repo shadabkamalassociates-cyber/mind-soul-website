@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import LoginPage from "@/components/LoginPage";
 
 export const metadata: Metadata = {
@@ -8,5 +9,15 @@ export const metadata: Metadata = {
 };
 
 export default function LoginRoute() {
-  return <LoginPage />;
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-[#E8E9F0] text-[#8A8AA8]">
+          Loading...
+        </main>
+      }
+    >
+      <LoginPage />
+    </Suspense>
+  );
 }

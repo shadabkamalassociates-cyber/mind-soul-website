@@ -5,6 +5,8 @@ import sessionsReducer from "@/store/slices/sessionsSlice";
 import expertsReducer from "@/store/slices/expertsSlice";
 
 import recordedSessionsReducer from "@/store/slices/recordedSessionsSlice";
+import cartReducer from "@/store/slices/cartSlice";
+import blogsReducer from "@/store/slices/blogsSlice";
 
 export const makeStore = () =>
   configureStore({
@@ -14,6 +16,8 @@ export const makeStore = () =>
       sessions: sessionsReducer,
       recordedSessions: recordedSessionsReducer,
       experts: expertsReducer,
+      cart: cartReducer,
+      blogs: blogsReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

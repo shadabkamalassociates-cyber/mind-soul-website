@@ -9,6 +9,8 @@ import {
   fetchCategories,
   mapCategoryForUi,
 } from "@/store/slices/categoriesSlice";
+import { logout } from "@/store/slices/authSlice";
+import { fetchCart, resetCart } from "@/store/slices/cartSlice";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -27,6 +29,8 @@ export default function Header() {
   const { items: categoryItems, status: categoriesStatus } = useAppSelector(
     (s) => s.categories,
   );
+  const cartItems = useAppSelector((s) => s.cart.items);
+  const auth = useAppSelector((s) => s.auth);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -36,6 +40,12 @@ export default function Header() {
       dispatch(fetchCategories());
     }
   }, [categoriesStatus, dispatch]);
+
+  useEffect(() => {
+    if (auth.hydrated && auth.token) {
+      dispatch(fetchCart());
+    }
+  }, [auth.hydrated, auth.token, dispatch]);
 
   useEffect(() => {
     setOpen(false);
@@ -69,24 +79,24 @@ export default function Header() {
   }, [categories, query]);
 
   return (
-    <header className="relative z-50 w-full bg-white">
-      <div className="mx-auto flex h-[70px] max-w-[1280px] items-center justify-between px-6 lg:h-[78px] lg:px-10">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5">
+    <header className="relative z-50 w-full border-b border-[#EEF0FA] bg-white">
+      <div className="mx-auto flex h-[68px] w-full max-w-[1440px] items-center gap-3 px-4 sm:px-5 lg:h-[72px] lg:gap-4 lg:px-6">
+        <Link href="/" className="flex shrink-0 items-center gap-2">
           <LogoIcon className="shrink-0" variant="indigo" />
-          <div className="flex flex-col leading-none">
+          <div className="hidden flex-col leading-none sm:flex">
             <span
-              className="text-[22px] font-semibold tracking-[-0.01em] text-[#1A1A4A]"
+              className="text-[20px] font-semibold tracking-[-0.01em] text-[#1A1A4A] lg:text-[21px]"
               style={{ fontFamily: "var(--font-playfair), serif" }}
             >
               SoulSensei
             </span>
-            <span className="mt-1 text-[9px] font-medium uppercase tracking-[0.18em] text-[#5B5B9A]">
+            <span className="mt-0.5 text-[8px] font-medium uppercase tracking-[0.16em] text-[#5B5B9A] lg:text-[9px]">
               Awakening Within
             </span>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex xl:gap-8">
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-5 lg:flex xl:gap-6">
           {navItems.map((item) => {
             const isActive =
               item.href === "/about"
@@ -119,9 +129,9 @@ export default function Header() {
                     aria-expanded={open}
                     aria-haspopup="listbox"
                     onClick={() => setOpen((v) => !v)}
-                    className={`inline-flex items-center gap-1 text-[14px] font-medium transition-colors hover:text-[#3D3D8F] ${
+                    className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-[13.5px] font-medium transition-colors hover:text-[#3D3D8F] xl:text-[14px] ${
                       isActive || open
-                        ? "border-b-2 border-[#3D3D8F] pb-0.5 text-[#1A1A4A]"
+                        ? "text-[#3D3D8F]"
                         : "text-[#1A1A4A]"
                     }`}
                   >
@@ -193,9 +203,9 @@ export default function Header() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`text-[14px] font-medium transition-colors hover:text-[#3D3D8F] ${
+                className={`shrink-0 whitespace-nowrap text-[13.5px] font-medium transition-colors hover:text-[#3D3D8F] xl:text-[14px] ${
                   isActive
-                    ? "border-b-2 border-[#3D3D8F] pb-0.5 text-[#1A1A4A]"
+                    ? "text-[#3D3D8F]"
                     : "text-[#1A1A4A]"
                 }`}
               >
@@ -205,25 +215,51 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex shrink-0 items-center gap-3.5 sm:gap-4 lg:gap-5">
           <button
             type="button"
             aria-label="Search"
-            className="hidden p-1 text-[#1A1A4A] transition-colors hover:text-[#3D3D8F] sm:inline-flex"
+            className="hidden p-1.5 text-[#1A1A4A] transition-colors hover:text-[#3D3D8F] md:inline-flex"
           >
             <SearchIcon />
           </button>
           <Link
-            href="/login"
-            aria-label="Account"
-            className="hidden p-1 text-[#1A1A4A] transition-colors hover:text-[#3D3D8F] sm:inline-flex"
+            href="/cart"
+            aria-label="Cart"
+            className="relative hidden p-1.5 text-[#1A1A4A] transition-colors hover:text-[#3D3D8F] md:inline-flex"
           >
-            <UserIcon />
+            <CartIcon />
+            {cartItems.length > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#C9A06A] px-1 text-[9px] font-bold text-white">
+                {cartItems.length}
+              </span>
+            )}
           </Link>
+          {auth.token ? (
+            <button
+              type="button"
+              onClick={() => {
+                dispatch(logout());
+                dispatch(resetCart());
+              }}
+              aria-label="Logout"
+              className="hidden whitespace-nowrap px-0.5 text-[13px] font-medium text-[#1A1A4A] transition-colors hover:text-[#3D3D8F] md:inline-flex lg:text-[14px]"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              aria-label="Account"
+              className="hidden p-1.5 text-[#1A1A4A] transition-colors hover:text-[#3D3D8F] md:inline-flex"
+            >
+              <UserIcon />
+            </Link>
+          )}
 
           <Link
             href="/#start"
-            className="inline-flex items-center rounded-xl bg-[#3D3D8F] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#2F2F70] sm:px-6 sm:text-[14px]"
+            className="ml-1 inline-flex shrink-0 items-center whitespace-nowrap rounded-xl bg-[#3D3D8F] px-3.5 py-2 text-[12px] font-semibold text-white transition hover:bg-[#2F2F70] sm:ml-2 sm:px-4 sm:py-2.5 sm:text-[13px]"
           >
             Book Your Journey
           </Link>
@@ -276,6 +312,20 @@ function CloseIcon() {
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function CartIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M6 6H20L19 14H8L7 6H6M6 6L5 3H3M8 18C8.55228 18 9 17.5523 9 17C9 16.4477 8.55228 16 8 16C7.44772 16 7 16.4477 7 17C7 17.5523 7.44772 18 8 18ZM18 18C18.5523 18 19 17.5523 19 17C19 16.4477 18.5523 16 18 16C17.4477 16 17 16.4477 17 17C17 17.5523 17.4477 18 18 18Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

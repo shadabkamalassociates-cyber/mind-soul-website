@@ -73,12 +73,10 @@ export default function BlogInsights() {
             ref={scrollerRef}
             className="blog-scroller flex gap-4 overflow-x-auto scroll-smooth"
           >
-            {blogArticles.slice(0, 5).map((article) => (
-              <BlogCard
-                key={article.id}
-                article={article}
-                variant="overlay"
-              />
+            {blogArticles.map((article) => (
+              <div key={article.id} data-blog-card className="blog-card shrink-0">
+                <BlogCard article={article} variant="overlay" />
+              </div>
             ))}
           </div>
         </div>

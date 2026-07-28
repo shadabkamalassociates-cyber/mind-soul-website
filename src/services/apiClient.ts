@@ -1,8 +1,9 @@
-const BASE_URL =
+/** Production API — all requests go to backend.apnasmartgate.com */
+export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
-  (process.env.NODE_ENV === "development"
-    ? "/api"
-    : "https://backend.apnasmartgate.com/api");
+  "https://backend.apnasmartgate.com/api";
+
+const BASE_URL = API_BASE_URL;
 
 export class ApiError extends Error {
   status: number;
@@ -70,8 +71,21 @@ export function extractMessage(payload: unknown, fallback: string): string {
       }
     }
   }
-  if (typeof payload === "string" && payload.trim()) return payload;
+  if (typeof payload === "string" && payload.trim()) {
+    return sanitizeErrorText(payload);
+  }
   return fallback;
+}
+
+function sanitizeErrorText(text: string): string {
+  const preMatch = text.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
+  if (preMatch) {
+    return preMatch[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  }
+  if (/<!DOCTYPE html>|<html/i.test(text)) {
+    return "Server error. Please try again.";
+  }
+  return text.trim();
 }
 
 type RequestOptions = {

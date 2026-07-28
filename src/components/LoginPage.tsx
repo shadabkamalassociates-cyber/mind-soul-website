@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -61,6 +61,7 @@ function generatePassword(length = 12) {
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector((s) => s.auth.status);
   const authError = useAppSelector((s) => s.auth.error);
@@ -98,6 +99,12 @@ export default function LoginPage() {
   );
 
   const isSubmitting = authStatus === "loading";
+
+  function getReturnUrl() {
+    const returnUrl = searchParams.get("returnUrl");
+    if (returnUrl && returnUrl.startsWith("/")) return returnUrl;
+    return "/";
+  }
 
   function resetOtpState() {
     setOtpSent(false);
@@ -166,7 +173,7 @@ export default function LoginPage() {
       loginUser({ phone: digits, password }),
     );
     if (loginUser.fulfilled.match(result)) {
-      router.push("/");
+      router.push(getReturnUrl());
     }
   }
 
@@ -215,7 +222,7 @@ export default function LoginPage() {
       }),
     );
     if (signupUser.fulfilled.match(result)) {
-      router.push("/");
+      router.push(getReturnUrl());
     }
   }
 

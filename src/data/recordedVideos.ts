@@ -77,6 +77,7 @@ const defaultReviews = [
 function video(
   partial: Omit<
     RecordedVideo,
+    | "sessionId"
     | "lessons"
     | "lessonCount"
     | "reviewsList"
@@ -116,6 +117,7 @@ function video(
   const expert = experts[partial.expertIndex ?? 0];
   return {
     ...partial,
+    sessionId: partial.slug,
     lessons: partial.lessons ?? defaultLessons,
     lessonCount: partial.lessonCount ?? 12,
     reviewsList: partial.reviewsList ?? defaultReviews,

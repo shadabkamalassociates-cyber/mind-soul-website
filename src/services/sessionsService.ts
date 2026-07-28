@@ -1,5 +1,6 @@
 import type { CreateSessionPayload, Session } from "@/types/session";
 import type { RecordedVideo } from "@/types/recordedVideo";
+import type { LiveSession } from "@/data/liveSessions";
 import {
   apiDelete,
   apiGet,
@@ -128,6 +129,11 @@ export async function fetchAllSessions() {
   return extractList<Session>(res);
 }
 
+export async function fetchAllLiveSessions() {
+  const res = await apiGet("/sessions/fetch-all?session_type=LIVE", false);
+  return extractList<Session>(res);
+}
+
 export async function fetchAllRecordedSessions() {
   const res = await apiGet(
     "/sessions/fetch-all?session_type=RECORDED",
@@ -229,6 +235,7 @@ export function mapSessionForRecordedUi(
 
   return {
     slug: base.slug,
+    sessionId: base.id,
     title: base.title,
     subtitle: base.subtitle || description.slice(0, 120),
     description,
@@ -287,6 +294,50 @@ export function mapSessionForRecordedUi(
 }
 
 export type UiRecordedVideo = ReturnType<typeof mapSessionForRecordedUi>;
+
+export function mapSessionForDetailPage(
+  session: Session,
+  ctx?: SessionUiContext,
+): LiveSession {
+  const ui = mapSessionForUi(session, ctx);
+  const description = ui.description || ui.subtitle;
+  const price = ui.price.startsWith("₹") ? ui.price : `₹ ${ui.price}`;
+
+  return {
+    slug: ui.slug,
+    category: ui.category.toUpperCase(),
+    categoryId: ui.categoryId,
+    title: ui.title,
+    subtitle: ui.subtitle || description.slice(0, 160),
+    expert: ui.expert,
+    role: ui.role,
+    avatar: ui.avatar,
+    date: ui.date,
+    time: ui.time,
+    duration: ui.duration,
+    languages: String(session.language ?? "English"),
+    price,
+    rating: String(session.average_rating ?? "4.9"),
+    reviews: String(session.total_reviews ?? "0"),
+    experience: "10+ Years",
+    seatsLeft: session.max_participants ? String(session.max_participants) : "—",
+    bookings: "—",
+    sessionId: ui.id,
+    about: description
+      ? [
+          description,
+          "Join this live interactive session for practical guidance tailored to your journey.",
+        ]
+      : [
+          "Join this live interactive session for practical guidance tailored to your journey.",
+          "Designed for seekers who want clarity, confidence, and actionable wisdom from a verified SoulSensei expert.",
+        ],
+    quote: "Clarity begins the moment you listen within.",
+    quoteAttr: "SoulSensei",
+    topics: [ui.category, "Live Q&A", "Practical Guidance", "Personalized Insights"],
+    image: ui.image,
+  };
+}
 
 export type { Session };
 export type UiSession = ReturnType<typeof mapSessionForUi>;

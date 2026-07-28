@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AddToCartButton from "@/components/AddToCartButton";
 import type { LiveSession } from "@/data/liveSessions";
 
 const tabs = [
@@ -328,12 +329,11 @@ export default function SessionDetailPage({ session }: { session: LiveSession })
                 ))}
               </ul>
 
-              <Link
-                href={`/cart?session=${session.slug}`}
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3D3D8F] px-5 py-3.5 text-[14px] font-semibold text-white transition hover:bg-[#2F2F70]"
-              >
-                Book This Session →
-              </Link>
+              <AddToCartButton
+                sessionId={session.sessionId}
+                label="Book This Session →"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3D3D8F] px-5 py-3.5 text-[14px] font-semibold text-white transition hover:bg-[#2F2F70] disabled:opacity-60"
+              />
               <button
                 type="button"
                 className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#3D3D8F]/35 bg-white px-5 py-3 text-[13px] font-semibold text-[#3D3D8F] transition hover:bg-[#F4F2FA]"

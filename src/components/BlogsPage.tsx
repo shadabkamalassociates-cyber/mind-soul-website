@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchBlogCategories, fetchBlogs } from "@/store/slices/blogsSlice";
+import { mapBlogForUi } from "@/services/blogsService";
 import { blogArticles, getBlogCategories } from "@/data/blogs";
-
-const categories = [{ id: "all", label: "All" }, ...getBlogCategories().map((c) => ({ id: c, label: c }))];
 
 const heroFeatures = [
   {
@@ -27,18 +28,43 @@ const heroFeatures = [
   },
 ];
 
-const heroStats = [
-  { value: `${blogArticles.length}+`, label: "Articles" },
-  { value: `${getBlogCategories().length}`, label: "Topics" },
-  { value: "5 min", label: "Avg. Read" },
-];
-
 export default function BlogsPage() {
+  const dispatch = useAppDispatch();
+  const blogsState = useAppSelector((s) => s.blogs);
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
 
+  useEffect(() => {
+    if (blogsState.status === "idle") dispatch(fetchBlogs());
+    if (blogsState.categoriesStatus === "idle") dispatch(fetchBlogCategories());
+  }, [blogsState.status, blogsState.categoriesStatus, dispatch]);
+
+  const articles = useMemo(() => {
+    if (blogsState.items.length > 0) {
+      return blogsState.items.map((b) => mapBlogForUi(b));
+    }
+    return blogArticles;
+  }, [blogsState.items]);
+
+  const categories = useMemo(() => {
+    const apiCats = blogsState.categories
+      .map((c) => String(c.name ?? c.slug ?? ""))
+      .filter(Boolean);
+    const labels = apiCats.length > 0 ? apiCats : getBlogCategories();
+    return [{ id: "all", label: "All" }, ...labels.map((c) => ({ id: c, label: c }))];
+  }, [blogsState.categories]);
+
+  const heroStats = useMemo(
+    () => [
+      { value: `${articles.length}+`, label: "Articles" },
+      { value: `${Math.max(categories.length - 1, 1)}`, label: "Topics" },
+      { value: "5 min", label: "Avg. Read" },
+    ],
+    [articles.length, categories.length],
+  );
+
   const filtered = useMemo(() => {
-    return blogArticles.filter((article) => {
+    return articles.filter((article) => {
       const catOk = activeCategory === "all" || article.category === activeCategory;
       const q = query.trim().toLowerCase();
       const qOk =
@@ -48,7 +74,7 @@ export default function BlogsPage() {
         article.category.toLowerCase().includes(q);
       return catOk && qOk;
     });
-  }, [activeCategory, query]);
+  }, [articles, activeCategory, query]);
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">

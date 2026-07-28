@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import AddToCartButton from "@/components/AddToCartButton";
 import type { UiSession } from "@/services/sessionsService";
 
 const FALLBACK_AVATAR = "/experts-page/expert-1-cutout.png";
@@ -13,8 +14,8 @@ type LiveSessionCardProps = {
 
 export default function LiveSessionCard({ session }: LiveSessionCardProps) {
   return (
-    <Link href={`/live-sessions/${session.slug}`} className="block">
-      <article className="group flex flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_16px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(26,26,74,0.10)]">
+    <article className="group flex flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_16px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(26,26,74,0.10)]">
+      <Link href={`/live-sessions/${session.slug}`} className="block">
         <div className="relative aspect-[2/1] w-full overflow-hidden bg-gradient-to-br from-[#141432] via-[#1A1A4A] to-[#252560]">
           <Image
             src={session.image}
@@ -57,29 +58,27 @@ export default function LiveSessionCard({ session }: LiveSessionCardProps) {
               <p className="truncate text-[9px] text-[#8A8AA8]">{session.role}</p>
             </div>
           </div>
-
-          <div className="mt-1.5 flex items-center justify-between gap-2 border-t border-[#E8EAF4] pt-1.5">
-            <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 text-[9px] text-[#5C5C7A] sm:text-[10px]">
-              <span className="inline-flex shrink-0 items-center gap-1">
-                <CalendarIcon />
-                {session.date}
-              </span>
-              <span className="inline-flex shrink-0 items-center gap-1">
-                <ClockSmallIcon />
-                {session.time}
-              </span>
-              <span className="inline-flex shrink-0 items-center gap-1">
-                <HourglassIcon />
-                {session.duration}
-              </span>
-            </div>
-            <span className="inline-flex shrink-0 items-center rounded-md bg-[#3D3D8F] px-2.5 py-1 text-[10px] font-semibold text-white transition group-hover:bg-[#2F2F70] sm:text-[11px]">
-              Book Now →
-            </span>
-          </div>
         </div>
-      </article>
-    </Link>
+      </Link>
+
+      <div className="mt-auto flex items-center justify-between gap-2 border-t border-[#E8EAF4] px-3 pb-2.5 pt-1.5">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 text-[9px] text-[#5C5C7A] sm:text-[10px]">
+          <span className="inline-flex shrink-0 items-center gap-1">
+            <CalendarIcon />
+            {session.date}
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-1">
+            <ClockSmallIcon />
+            {session.time}
+          </span>
+        </div>
+        <AddToCartButton
+          sessionId={session.id}
+          label="Book Now →"
+          variant="inline"
+        />
+      </div>
+    </article>
   );
 }
 

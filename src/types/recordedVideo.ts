@@ -20,6 +20,7 @@ export type RecordedVideoReview = {
 
 export type RecordedVideo = {
   slug: string;
+  sessionId: string;
   title: string;
   subtitle: string;
   description: string;

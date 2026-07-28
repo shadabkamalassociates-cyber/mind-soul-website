@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import AddToCartButton from "@/components/AddToCartButton";
 import type { RecordedVideo } from "@/types/recordedVideo";
 
 type RecordedVideoCardProps = {
@@ -20,83 +23,73 @@ export default function RecordedVideoCard({
 function FeaturedCard({ video }: { video: RecordedVideo }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_20px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(26,26,74,0.10)]">
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F7F6FB]">
-        <Image
-          src={video.image}
-          alt={video.title}
-          fill
-          className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-          sizes="(max-width: 768px) 100vw, 33vw"
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 transition group-hover:opacity-100">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#3D3D8F] shadow-lg">
-            <PlayIcon />
+      <Link href={`/recorded-videos/${video.slug}`} className="block">
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#F7F6FB]">
+          <Image
+            src={video.image}
+            alt={video.title}
+            fill
+            className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 transition group-hover:opacity-100">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#3D3D8F] shadow-lg">
+              <PlayIcon />
+            </span>
+          </div>
+          {video.badge && (
+            <span className="absolute left-2.5 top-2.5 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
+              {video.badge}
+            </span>
+          )}
+          <span className="absolute bottom-2.5 right-2.5 rounded bg-black/75 px-2 py-0.5 text-[10px] font-medium text-white">
+            {video.duration}
           </span>
         </div>
-        {video.badge && (
-          <span className="absolute left-2.5 top-2.5 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
-            {video.badge}
-          </span>
-        )}
-        <button
-          type="button"
-          aria-label="Save video"
-          className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-[#1A1A4A] shadow-sm"
-        >
-          <HeartIcon />
-        </button>
-        <span className="absolute bottom-2.5 right-2.5 rounded bg-black/75 px-2 py-0.5 text-[10px] font-medium text-white">
-          {video.duration}
-        </span>
-      </div>
 
-      <div className="flex flex-1 flex-col px-3.5 pb-3.5 pt-3">
-        <h3
-          className="line-clamp-2 text-[14px] font-semibold leading-snug text-[#3D3D8F] sm:text-[15px]"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-        >
-          {video.title}
-        </h3>
-        <p className="mt-1 line-clamp-1 text-[11px] text-[#8A8AA8]">{video.subtitle}</p>
+        <div className="px-3.5 pt-3">
+          <h3
+            className="line-clamp-2 text-[14px] font-semibold leading-snug text-[#3D3D8F] sm:text-[15px]"
+            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+          >
+            {video.title}
+          </h3>
+          <p className="mt-1 line-clamp-1 text-[11px] text-[#8A8AA8]">{video.subtitle}</p>
 
-        <div className="mt-2.5 flex items-center gap-2">
-          <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-full bg-[#EEF0FA]">
-            <Image
-              src={video.expertAvatar}
-              alt={video.expert}
-              fill
-              unoptimized
-              className="object-cover object-top"
-              sizes="28px"
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[11px] font-semibold text-[#1A1A4A]">{video.expert}</p>
-            <div className="flex flex-wrap items-center gap-x-2 text-[10px] text-[#8A8AA8]">
-              <span className="inline-flex items-center gap-0.5">
-                <StarIcon />
-                {video.rating} ({video.reviews})
-              </span>
-              <span>{video.students} students</span>
+          <div className="mt-2.5 flex items-center gap-2">
+            <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-full bg-[#EEF0FA]">
+              <Image
+                src={video.expertAvatar}
+                alt={video.expert}
+                fill
+                unoptimized
+                className="object-cover object-top"
+                sizes="28px"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[11px] font-semibold text-[#1A1A4A]">{video.expert}</p>
+              <div className="flex flex-wrap items-center gap-x-2 text-[10px] text-[#8A8AA8]">
+                <span className="inline-flex items-center gap-0.5">
+                  <StarIcon />
+                  {video.rating} ({video.reviews})
+                </span>
+                <span>{video.students} students</span>
+              </div>
             </div>
           </div>
         </div>
+      </Link>
 
-        <div className="mt-3 flex items-center gap-2">
-          <Link
-            href={`/recorded-videos/${video.slug}`}
-            className="flex flex-1 items-center justify-center rounded-lg bg-[#3D3D8F] py-2.5 text-[12px] font-semibold text-white transition hover:bg-[#2F2F70]"
-          >
-            Book Now
-          </Link>
-          <button
-            type="button"
-            aria-label="Save"
-            className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-lg border border-[#E8EAF4] bg-white text-[#1A1A4A] transition hover:border-[#3D3D8F]/30"
-          >
-            <BookmarkIcon />
-          </button>
-        </div>
+      <div className="mt-auto flex items-center gap-2 px-3.5 pb-3.5">
+        <AddToCartButton sessionId={video.sessionId} label="Book Now" />
+        <button
+          type="button"
+          aria-label="Save"
+          className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-lg border border-[#E8EAF4] bg-white text-[#1A1A4A] transition hover:border-[#3D3D8F]/30"
+        >
+          <BookmarkIcon />
+        </button>
       </div>
     </article>
   );

@@ -10,12 +10,19 @@ import { blogArticles } from "@/data/blogs";
 
 type BlogDetailPageProps = {
   article: BlogArticle;
+  relatedArticles?: BlogArticle[];
 };
 
-export default function BlogDetailPage({ article }: BlogDetailPageProps) {
-  const related = blogArticles
-    .filter((a) => a.slug !== article.slug && a.category === article.category)
-    .slice(0, 3);
+export default function BlogDetailPage({
+  article,
+  relatedArticles = [],
+}: BlogDetailPageProps) {
+  const related =
+    relatedArticles.length > 0
+      ? relatedArticles
+      : blogArticles
+          .filter((a) => a.slug !== article.slug && a.category === article.category)
+          .slice(0, 3);
 
   const moreRelated =
     related.length < 3

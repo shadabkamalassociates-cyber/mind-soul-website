@@ -8,20 +8,9 @@ import {
   extractList,
 } from "@/services/apiClient";
 
-/**
- * Expert APIs (verified against backend):
- * GET    /experts/fetch-all
- * GET    /experts/fetch-by-id/:id
- * GET    /experts/fetch-verified-users   → { users: [] }
- * GET    /experts/fetch-blocked-users   → { users: [] }  (no :id)
- * PUT    /experts/update/:id
- * DELETE /experts/delete                body: [ids]
- * PATCH  /experts/block/:id             body: { user_id, reason }
- * PATCH  /experts/verify/:id            body: { user_id, status, reason }
- */
+
 
 export async function fetchAllExperts() {
-  // NOTE: plural /experts — /expert/fetch-all returns 404
   const res = await apiGet("/experts/fetch-all", false);
   return extractList<Expert>(res);
 }
