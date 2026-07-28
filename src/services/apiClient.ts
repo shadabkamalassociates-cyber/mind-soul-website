@@ -1,6 +1,8 @@
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
-  "https://backend.apnasmartgate.com/api";
+  (process.env.NODE_ENV === "development"
+    ? "/api"
+    : "https://backend.apnasmartgate.com/api");
 
 export class ApiError extends Error {
   status: number;

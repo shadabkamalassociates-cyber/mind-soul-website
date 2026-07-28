@@ -15,6 +15,7 @@ const navItems = [
   { label: "About", href: "/about" },
   { label: "Expert", href: "/experts" },
   { label: "Live Sessions", href: "/live-sessions" },
+  { label: "Recorded Videos", href: "/recorded-videos" },
   { label: "Blogs", href: "/blogs" },
   { label: "Categories", href: "/categories", hasDropdown: true },
   { label: "Contact", href: "/contact" },
@@ -94,10 +95,13 @@ export default function Header() {
                   ? pathname === "/experts" || pathname.startsWith("/experts/")
                   : item.href === "/contact"
                     ? pathname === "/contact"
-                    : item.href === "/live-sessions"
-                      ? pathname === "/live-sessions" ||
-                        pathname.startsWith("/live-sessions/")
-                      : item.href === "/blogs"
+                      : item.href === "/live-sessions"
+                        ? pathname === "/live-sessions" ||
+                          pathname.startsWith("/live-sessions/")
+                        : item.href === "/recorded-videos"
+                          ? pathname === "/recorded-videos" ||
+                            pathname.startsWith("/recorded-videos/")
+                          : item.href === "/blogs"
                         ? pathname === "/blogs" ||
                           pathname.startsWith("/blogs/")
                         : item.href === "/categories"

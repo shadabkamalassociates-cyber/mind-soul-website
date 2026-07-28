@@ -4,12 +4,15 @@ import categoriesReducer from "@/store/slices/categoriesSlice";
 import sessionsReducer from "@/store/slices/sessionsSlice";
 import expertsReducer from "@/store/slices/expertsSlice";
 
+import recordedSessionsReducer from "@/store/slices/recordedSessionsSlice";
+
 export const makeStore = () =>
   configureStore({
     reducer: {
       auth: authReducer,
       categories: categoriesReducer,
       sessions: sessionsReducer,
+      recordedSessions: recordedSessionsReducer,
       experts: expertsReducer,
     },
     middleware: (getDefaultMiddleware) =>
