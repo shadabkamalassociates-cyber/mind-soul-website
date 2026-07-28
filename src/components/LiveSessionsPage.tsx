@@ -6,18 +6,22 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LiveSessionCard from "@/components/LiveSessionCard";
+import RecordedVideoCard from "@/components/RecordedVideoCard";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchCategories,
   mapCategoryForUi,
 } from "@/store/slices/categoriesSlice";
 import { fetchExperts } from "@/store/slices/expertsSlice";
-import { fetchSessions } from "@/store/slices/sessionsSlice";
 import { mapExpertForUi } from "@/services/expertsService";
 import {
+  fetchAllLiveSessions,
+  fetchAllRecordedSessions,
+  mapSessionForRecordedUi,
   mapSessionForUi,
   type SessionUiContext,
 } from "@/services/sessionsService";
+import type { Session } from "@/types/session";
 
 const features = [
   {
@@ -45,16 +49,72 @@ const features = [
 export default function LiveSessionsPage() {
   const dispatch = useAppDispatch();
   const categoryState = useAppSelector((s) => s.categories);
-  const sessionState = useAppSelector((s) => s.sessions);
   const expertState = useAppSelector((s) => s.experts);
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
+  const [apiSessions, setApiSessions] = useState<Session[]>([]);
+  const [sessionsLoading, setSessionsLoading] = useState(true);
+  const [sessionsError, setSessionsError] = useState<string | null>(null);
+  const [recordedSessions, setRecordedSessions] = useState<Session[]>([]);
+  const [recordedLoading, setRecordedLoading] = useState(true);
+  const [recordedError, setRecordedError] = useState<string | null>(null);
 
   useEffect(() => {
     if (categoryState.status === "idle") dispatch(fetchCategories());
-    if (sessionState.status === "idle") dispatch(fetchSessions());
     if (expertState.status === "idle") dispatch(fetchExperts());
-  }, [categoryState.status, sessionState.status, expertState.status, dispatch]);
+  }, [categoryState.status, expertState.status, dispatch]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSessions() {
+      setSessionsLoading(true);
+      setSessionsError(null);
+      try {
+        const data = await fetchAllLiveSessions();
+        if (!cancelled) setApiSessions(data);
+      } catch (err) {
+        if (!cancelled) {
+          setSessionsError(
+            err instanceof Error ? err.message : "Failed to load sessions",
+          );
+        }
+      } finally {
+        if (!cancelled) setSessionsLoading(false);
+      }
+    }
+
+    loadSessions();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadRecordedSessions() {
+      setRecordedLoading(true);
+      setRecordedError(null);
+      try {
+        const data = await fetchAllRecordedSessions();
+        if (!cancelled) setRecordedSessions(data);
+      } catch (err) {
+        if (!cancelled) {
+          setRecordedError(
+            err instanceof Error ? err.message : "Failed to load recorded sessions",
+          );
+        }
+      } finally {
+        if (!cancelled) setRecordedLoading(false);
+      }
+    }
+
+    loadRecordedSessions();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const sessionUiContext = useMemo((): SessionUiContext => {
     return {
@@ -89,8 +149,14 @@ export default function LiveSessionsPage() {
 
   const sessions = useMemo(
     () =>
-      sessionState.items.map((s) => mapSessionForUi(s, sessionUiContext)),
-    [sessionState.items, sessionUiContext],
+      apiSessions
+        .filter(
+          (s) =>
+            String(s.session_type ?? "").toUpperCase() === "LIVE" &&
+            String(s.status ?? "").toUpperCase() !== "COMPLETED",
+        )
+        .map((s) => mapSessionForUi(s, sessionUiContext)),
+    [apiSessions, sessionUiContext],
   );
 
   const filtered = useMemo(() => {
@@ -106,9 +172,26 @@ export default function LiveSessionsPage() {
     });
   }, [sessions, activeCategory, query]);
 
-  const isLoading =
-    sessionState.status === "loading" ||
-    (sessionState.status === "idle" && sessions.length === 0);
+  const recordedVideos = useMemo(
+    () =>
+      recordedSessions.map((s) => mapSessionForRecordedUi(s, sessionUiContext)),
+    [recordedSessions, sessionUiContext],
+  );
+
+  const filteredRecorded = useMemo(() => {
+    return recordedVideos.filter((v) => {
+      const catOk = activeCategory === "all" || v.categoryId === activeCategory;
+      const q = query.trim().toLowerCase();
+      const qOk =
+        !q ||
+        v.title.toLowerCase().includes(q) ||
+        v.expert.toLowerCase().includes(q) ||
+        v.category.toLowerCase().includes(q);
+      return catOk && qOk;
+    });
+  }, [recordedVideos, activeCategory, query]);
+
+  const isLoading = sessionsLoading;
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -253,31 +336,85 @@ export default function LiveSessionsPage() {
             </Link>
           </div>
 
-          <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-            {filtered.map((session) => (
-              <LiveSessionCard key={session.slug} session={session} />
-            ))}
-          </div>
-
           {isLoading && (
             <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
               Loading sessions...
             </p>
           )}
 
-          {!isLoading && sessionState.error && (
+          {!isLoading && sessionsError && (
             <p className="py-16 text-center text-[14px] text-[#B42318]">
-              {sessionState.error}
+              {sessionsError}
             </p>
           )}
 
-          {!isLoading && !sessionState.error && filtered.length === 0 && (
+          {!isLoading && !sessionsError && filtered.length === 0 && (
             <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
               No sessions found. Try a different search or category.
             </p>
           )}
+
+          {!isLoading && !sessionsError && filtered.length > 0 && (
+            <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+              {filtered.map((session) => (
+                <LiveSessionCard key={session.slug} session={session} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+
+
+      {/* Recorded sessions */}
+      {/* <section className="bg-white">
+        <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+          <div className="mb-7 flex items-end justify-between gap-4">
+            <h2
+              className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[30px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
+              Recorded Sessions
+            </h2>
+            <Link
+              href="/recorded-videos"
+              className="shrink-0 text-[13px] font-semibold text-[#1A1A4A] hover:text-[#3D3D8F]"
+            >
+              View All Sessions →
+            </Link>
+          </div>
+
+          {recordedLoading && (
+            <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
+              Loading recorded sessions...
+            </p>
+          )}
+
+          {!recordedLoading && recordedError && (
+            <p className="py-16 text-center text-[14px] text-[#B42318]">
+              {recordedError}
+            </p>
+          )}
+
+          {!recordedLoading && !recordedError && filteredRecorded.length === 0 && (
+            <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
+              No recorded sessions found. Try a different search or category.
+            </p>
+          )}
+
+          {!recordedLoading && !recordedError && filteredRecorded.length > 0 && (
+            <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+              {filteredRecorded.map((video) => (
+                <RecordedVideoCard key={video.slug} video={video} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section> */}
+
+
+
+
 
       {/* Personalized CTA */}
       <section className="bg-white px-4 pb-8 sm:px-6 lg:px-8">

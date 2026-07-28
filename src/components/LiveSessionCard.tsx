@@ -28,6 +28,15 @@ export default function LiveSessionCard({ session }: LiveSessionCardProps) {
           <span className="absolute left-2 top-2 max-w-[calc(100%-2.75rem)] truncate rounded bg-[#C9A06A] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-[0.1em] text-white">
             {session.category}
           </span>
+          <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-md border border-white/10 bg-[#1A1A4A]/88 px-1.5 py-0.5 shadow-sm backdrop-blur-sm">
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="live-dot absolute inset-0 rounded-full bg-[#FF4D4D]" />
+              <span className="relative block h-2 w-2 rounded-full bg-[#FF4D4D]" />
+            </span>
+            <span className="text-[8px] font-bold uppercase tracking-[0.14em] text-white">
+              Live
+            </span>
+          </span>
           <button
             type="button"
             aria-label="Save session"

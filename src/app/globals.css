@@ -227,8 +227,12 @@ a {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: #d4af37;
+  background: #ff4d4d;
   animation: live-pulse 1.6s ease-out infinite;
+}
+
+.live-dot {
+  position: relative;
 }
 
 @keyframes live-pulse {

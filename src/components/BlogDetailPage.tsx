@@ -6,7 +6,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
 import type { BlogArticle } from "@/types/blog";
-import { blogArticles } from "@/data/blogs";
 
 type BlogDetailPageProps = {
   article: BlogArticle;
@@ -17,26 +16,7 @@ export default function BlogDetailPage({
   article,
   relatedArticles = [],
 }: BlogDetailPageProps) {
-  const related =
-    relatedArticles.length > 0
-      ? relatedArticles
-      : blogArticles
-          .filter((a) => a.slug !== article.slug && a.category === article.category)
-          .slice(0, 3);
-
-  const moreRelated =
-    related.length < 3
-      ? [
-          ...related,
-          ...blogArticles
-            .filter(
-              (a) =>
-                a.slug !== article.slug &&
-                !related.some((r) => r.slug === a.slug),
-            )
-            .slice(0, 3 - related.length),
-        ]
-      : related;
+  const moreRelated = relatedArticles.slice(0, 3);
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -74,6 +54,7 @@ export default function BlogDetailPage({
             src={article.image}
             alt={article.title}
             fill
+            unoptimized
             className="object-cover object-center"
             sizes="860px"
             priority

@@ -15,7 +15,71 @@ import {
 
 const DEFAULT_BLOG_IMAGE = "/live-sessions/astrology-card.png";
 
-function estimateReadTime(content: string): string {
+function htmlToPlainText(html: string) {
+  return html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(?:p|h[1-6]|div|li)>/gi, "\n\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/\s+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+}
+
+function contentToParagraphs(content: string) {
+  const trimmed = content.trim();
+  if (!trimmed) return [];
+
+  if (/<[a-z][\s\S]*>/i.test(trimmed)) {
+    return htmlToPlainText(trimmed)
+      .split(/\n{2,}/)
+      .map((part) => part.trim())
+      .filter(Boolean);
+  }
+
+  return trimmed
+    .split(/\n{2,}/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function readNestedName(value: unknown): string | undefined {
+  if (typeof value === "string" && value.trim()) return value.trim();
+  if (value && typeof value === "object") {
+    if ("name" in value) {
+      const name = (value as { name?: unknown }).name;
+      if (typeof name === "string" && name.trim()) return name.trim();
+    }
+    if ("full_name" in value) {
+      const fullName = (value as { full_name?: unknown }).full_name;
+      if (typeof fullName === "string" && fullName.trim()) return fullName.trim();
+    }
+  }
+  return undefined;
+}
+
+function resolveCategoryName(blog: ApiBlog, categoryName?: string) {
+  if (categoryName) return categoryName;
+  return (
+    readNestedName(blog.category) ??
+    (typeof blog.category_name === "string" ? blog.category_name : undefined) ??
+    "Insights"
+  );
+}
+
+function resolveAuthorName(blog: ApiBlog) {
+  return (
+    readNestedName(blog.author) ??
+    (typeof blog.author_name === "string" ? blog.author_name : undefined) ??
+    "SoulSensei Editorial"
+  );
+}
+
+function estimateReadTime(content: string) {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
   const mins = Math.max(1, Math.round(words / 200));
   return `${mins} min read`;
@@ -25,11 +89,9 @@ export function mapBlogForUi(
   blog: ApiBlog,
   categoryName?: string,
 ): BlogArticle {
-  const content = String(blog.content ?? "");
-  const paragraphs = content
-    .split(/\n{2,}/)
-    .map((p) => p.trim())
-    .filter(Boolean);
+  const rawContent = String(blog.content ?? "");
+  const plainContent = htmlToPlainText(rawContent);
+  const paragraphs = contentToParagraphs(rawContent);
 
   const published = blog.published_at
     ? new Date(String(blog.published_at))
@@ -40,7 +102,10 @@ export function mapBlogForUi(
     slug: String(blog.slug ?? blog.id ?? ""),
     title: String(blog.title ?? "Untitled"),
     excerpt: String(
-      blog.short_description ?? blog.meta_description ?? paragraphs[0] ?? "",
+      blog.short_description ??
+        blog.meta_description ??
+        paragraphs[0] ??
+        plainContent.slice(0, 220),
     ).slice(0, 220),
     date: published
       ? published.toLocaleDateString("en-IN", {
@@ -49,15 +114,20 @@ export function mapBlogForUi(
           year: "numeric",
         })
       : "Recently",
-    readTime: estimateReadTime(content || String(blog.short_description ?? "")),
+    readTime: estimateReadTime(plainContent || String(blog.short_description ?? "")),
     image: String(
       blog.featured_image ?? blog.banner_image ?? DEFAULT_BLOG_IMAGE,
     ),
-    category: categoryName ?? String(blog.category_name ?? "Insights"),
-    author: String(blog.author_name ?? "SoulSensei"),
+    category: resolveCategoryName(blog, categoryName),
+    author: resolveAuthorName(blog),
     content: paragraphs.length
       ? paragraphs
-      : [String(blog.short_description ?? (content || "Content coming soon."))],
+      : [
+          String(
+            blog.short_description ??
+              (plainContent.slice(0, 500) || "Content coming soon."),
+          ),
+        ],
   };
 }
 
@@ -66,8 +136,19 @@ export async function fetchAllBlogs() {
   return extractList<ApiBlog>(res);
 }
 
+export async function fetchBlogsByCategoryId(categoryId: string | number) {
+  const res = await apiGet(
+    `/blogs/get-all?category_id=${encodeURIComponent(String(categoryId))}`,
+    false,
+  );
+  return extractList<ApiBlog>(res);
+}
+
 export async function fetchBlogBySlug(slug: string) {
-  const res = await apiGet(`/blogs/fetch-by-slug/${slug}`, false);
+  const res = await apiGet(
+    `/blogs/get-all?slug=${encodeURIComponent(slug)}`,
+    false,
+  );
   return extractData<ApiBlog>(res);
 }
 

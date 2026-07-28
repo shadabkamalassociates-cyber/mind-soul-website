@@ -1,5 +1,6 @@
 import type { Expert } from "@/types/expert";
 import {
+  ApiError,
   apiDelete,
   apiGet,
   apiPatch,
@@ -21,8 +22,25 @@ export async function fetchExpertById(id: string | number) {
 }
 
 export async function fetchVerifiedExperts() {
-  const res = await apiGet("/experts/fetch-verified-users", false);
+  const res = await apiGet("/experts/fetch-all?status=VERIFIED", false);
   return extractList<Expert>(res);
+}
+
+export async function fetchExpertByIdFromAll(id: string | number) {
+  const res = await apiGet(
+    `/experts/fetch-all?id=${encodeURIComponent(String(id))}`,
+    false,
+  );
+  const list = extractList<Expert>(res);
+  const expert =
+    list.find((item) => String(item.id ?? item._id ?? "") === String(id)) ??
+    list[0];
+
+  if (!expert) {
+    throw new ApiError("Expert not found", 404);
+  }
+
+  return expert;
 }
 
 export async function fetchBlockedExperts(_id?: string | number) {

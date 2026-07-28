@@ -96,3 +96,18 @@ export async function signupUser(payload: SignupPayload) {
       typeof res.message === "string" ? res.message : "Registration successful",
   };
 }
+
+export async function sendOtp(phone: string) {
+  const res = await apiPost<{ success?: boolean; message?: string }>(
+    "/user/send-otp",
+    { phone: normalizePhone(phone) },
+    false,
+  );
+
+  return {
+    message:
+      typeof res.message === "string"
+        ? res.message
+        : "OTP sent successfully via WhatsApp.",
+  };
+}

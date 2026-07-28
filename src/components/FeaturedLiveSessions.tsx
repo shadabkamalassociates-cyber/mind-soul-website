@@ -56,6 +56,8 @@ export default function FeaturedLiveSessions() {
       sessionState.items.map((s) => mapSessionForUi(s, sessionUiContext)),
     [sessionState.items, sessionUiContext],
   );
+  
+  // console.log(sessions,"+++++++++++++++");
 
   const isLoading =
     sessionState.status === "loading" ||
@@ -99,6 +101,9 @@ export default function FeaturedLiveSessions() {
             </div>
           </div>
         </div>
+
+
+        
 
         <div className="relative">
           <button

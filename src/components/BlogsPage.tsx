@@ -5,10 +5,19 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchBlogCategories, fetchBlogs } from "@/store/slices/blogsSlice";
-import { mapBlogForUi } from "@/services/blogsService";
-import { blogArticles, getBlogCategories } from "@/data/blogs";
+import {
+  fetchAllBlogs,
+  fetchBlogCategories,
+  fetchBlogsByCategoryId,
+  mapBlogForUi,
+} from "@/services/blogsService";
+import { ApiError } from "@/services/apiClient";
+import type { BlogArticle } from "@/types/blog";
+
+type BlogCategoryFilter = {
+  id: string;
+  label: string;
+};
 
 const heroFeatures = [
   {
@@ -29,30 +38,99 @@ const heroFeatures = [
 ];
 
 export default function BlogsPage() {
-  const dispatch = useAppDispatch();
-  const blogsState = useAppSelector((s) => s.blogs);
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
+  const [articles, setArticles] = useState<BlogArticle[]>([]);
+  const [articlesLoading, setArticlesLoading] = useState(true);
+  const [articlesError, setArticlesError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<BlogCategoryFilter[]>([
+    { id: "all", label: "All" },
+  ]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (blogsState.status === "idle") dispatch(fetchBlogs());
-    if (blogsState.categoriesStatus === "idle") dispatch(fetchBlogCategories());
-  }, [blogsState.status, blogsState.categoriesStatus, dispatch]);
+    let cancelled = false;
 
-  const articles = useMemo(() => {
-    if (blogsState.items.length > 0) {
-      return blogsState.items.map((b) => mapBlogForUi(b));
+    async function loadCategories() {
+      setCategoriesLoading(true);
+      setCategoriesError(null);
+
+      try {
+        const data = await fetchBlogCategories();
+        if (cancelled) return;
+
+        const apiCategories = data
+          .map((category) => ({
+            id: String(category.id ?? category.slug ?? ""),
+            label: String(category.name ?? category.slug ?? "").trim(),
+          }))
+          .filter((category) => category.id && category.label);
+
+        setCategories([{ id: "all", label: "All" }, ...apiCategories]);
+      } catch (err) {
+        if (!cancelled) {
+          setCategoriesError(
+            err instanceof ApiError
+              ? err.message
+              : err instanceof Error
+                ? err.message
+                : "Failed to load categories",
+          );
+        }
+      } finally {
+        if (!cancelled) setCategoriesLoading(false);
+      }
     }
-    return blogArticles;
-  }, [blogsState.items]);
 
-  const categories = useMemo(() => {
-    const apiCats = blogsState.categories
-      .map((c) => String(c.name ?? c.slug ?? ""))
-      .filter(Boolean);
-    const labels = apiCats.length > 0 ? apiCats : getBlogCategories();
-    return [{ id: "all", label: "All" }, ...labels.map((c) => ({ id: c, label: c }))];
-  }, [blogsState.categories]);
+    loadCategories();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadBlogs() {
+      setArticlesLoading(true);
+      setArticlesError(null);
+
+      try {
+        const data =
+          activeCategory === "all"
+            ? await fetchAllBlogs()
+            : await fetchBlogsByCategoryId(activeCategory);
+
+        if (!cancelled) {
+          setArticles(data.map((blog) => mapBlogForUi(blog)));
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setArticles([]);
+          setArticlesError(
+            err instanceof ApiError
+              ? err.message
+              : err instanceof Error
+                ? err.message
+                : "Failed to load articles",
+          );
+        }
+      } finally {
+        if (!cancelled) setArticlesLoading(false);
+      }
+    }
+
+    loadBlogs();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCategory]);
+
+  const featuredArticles = articles.slice(0, 3);
+  const heroArticle = articles[0] ?? null;
 
   const heroStats = useMemo(
     () => [
@@ -64,17 +142,17 @@ export default function BlogsPage() {
   );
 
   const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return articles;
+
     return articles.filter((article) => {
-      const catOk = activeCategory === "all" || article.category === activeCategory;
-      const q = query.trim().toLowerCase();
-      const qOk =
-        !q ||
+      return (
         article.title.toLowerCase().includes(q) ||
         article.excerpt.toLowerCase().includes(q) ||
-        article.category.toLowerCase().includes(q);
-      return catOk && qOk;
+        article.category.toLowerCase().includes(q)
+      );
     });
-  }, [articles, activeCategory, query]);
+  }, [articles, query]);
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -152,32 +230,35 @@ export default function BlogsPage() {
             </div>
           </div>
 
-          <BlogHeroVisual />
+          <BlogHeroVisual featured={featuredArticles} />
 
+          {heroArticle && (
           <div className="relative mx-auto w-full max-w-[420px] lg:hidden">
             <div className="overflow-hidden rounded-2xl border border-[#E8EAF4] bg-white shadow-[0_12px_32px_rgba(26,26,74,0.08)]">
               <div className="relative h-[160px] w-full overflow-hidden">
                 <Image
-                  src={blogArticles[0].image}
-                  alt={blogArticles[0].title}
+                  src={heroArticle.image}
+                  alt={heroArticle.title}
                   fill
+                  unoptimized
                   className="object-cover object-center"
                   sizes="420px"
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A4A]/60 via-transparent to-transparent" />
                 <span className="absolute left-3 top-3 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-white">
-                  {blogArticles[0].category}
+                  {heroArticle.category}
                 </span>
                 <p
                   className="absolute inset-x-0 bottom-0 px-4 pb-3.5 text-[15px] font-semibold leading-snug text-white"
                   style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
                 >
-                  {blogArticles[0].title}
+                  {heroArticle.title}
                 </p>
               </div>
             </div>
           </div>
+          )}
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#E4E2EF] to-transparent" />
@@ -202,24 +283,32 @@ export default function BlogsPage() {
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2.5">
-            {categories.map((cat) => {
-              const active = activeCategory === cat.id;
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-medium transition sm:text-[13px] ${
-                    active
-                      ? "border-[#3D3D8F] bg-[#3D3D8F] text-white"
-                      : "border-[#D8DAE8] bg-white text-[#1A1A4A] hover:border-[#3D3D8F]/40"
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
+            {categoriesLoading && categories.length <= 1 ? (
+              <p className="text-[13px] text-[#8A8AA8]">Loading categories...</p>
+            ) : (
+              categories.map((cat) => {
+                const active = activeCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-medium transition sm:text-[13px] ${
+                      active
+                        ? "border-[#3D3D8F] bg-[#3D3D8F] text-white"
+                        : "border-[#D8DAE8] bg-white text-[#1A1A4A] hover:border-[#3D3D8F]/40"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })
+            )}
           </div>
+
+          {categoriesError && (
+            <p className="mt-2 text-[12px] text-[#B42318]">{categoriesError}</p>
+          )}
         </div>
       </section>
 
@@ -238,7 +327,17 @@ export default function BlogsPage() {
             </p>
           </div>
 
-          {filtered.length > 0 ? (
+          {articlesError && (
+            <p className="mb-4 text-center text-[13px] text-[#B42318]">
+              {articlesError}
+            </p>
+          )}
+
+          {articlesLoading ? (
+            <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
+              Loading articles...
+            </p>
+          ) : filtered.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
               {filtered.map((article) => (
                 <BlogCard key={article.slug} article={article} variant="listing" />
@@ -301,8 +400,12 @@ function SearchIcon() {
   );
 }
 
-function BlogHeroVisual() {
-  const featured = blogArticles.slice(0, 3);
+function BlogHeroVisual({ featured }: { featured: BlogArticle[] }) {
+  if (featured.length === 0) return null;
+
+  const first = featured[0]!;
+  const second = featured[1] ?? first;
+  const third = featured[2] ?? first;
 
   return (
     <div className="relative mx-auto hidden h-[360px] w-full max-w-[520px] lg:block lg:h-[400px] lg:justify-self-end">
@@ -320,15 +423,15 @@ function BlogHeroVisual() {
       <div className="absolute left-0 top-6 z-10 w-[58%] overflow-hidden rounded-2xl border border-white/80 bg-white shadow-[0_16px_40px_rgba(26,26,74,0.12)]">
         <div className="relative h-[130px] w-full overflow-hidden">
           <Image
-            src={featured[0].image}
-            alt={featured[0].title}
+            src={first.image}
+            alt={first.title}
             fill
             className="object-cover object-center"
             sizes="300px"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A4A]/50 to-transparent" />
           <span className="absolute left-3 top-3 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-white">
-            {featured[0].category}
+            {first.category}
           </span>
         </div>
         <div className="px-3.5 py-3">
@@ -336,10 +439,10 @@ function BlogHeroVisual() {
             className="line-clamp-2 text-[13px] font-semibold leading-snug text-[#3D3D8F]"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
           >
-            {featured[0].title}
+            {first.title}
           </p>
           <p className="mt-1 text-[10px] text-[#8A8AA8]">
-            {featured[0].readTime}
+            {first.readTime}
           </p>
         </div>
       </div>
@@ -347,14 +450,14 @@ function BlogHeroVisual() {
       <div className="absolute right-0 top-0 z-20 w-[52%] overflow-hidden rounded-2xl border border-white/80 bg-white shadow-[0_20px_48px_rgba(26,26,74,0.14)]">
         <div className="relative h-[120px] w-full overflow-hidden">
           <Image
-            src={featured[1].image}
-            alt={featured[1].title}
+            src={second.image}
+            alt={second.title}
             fill
             className="object-cover object-center"
             sizes="280px"
           />
           <span className="absolute left-3 top-3 rounded bg-[#3D3D8F] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.12em] text-white">
-            {featured[1].category}
+            {second.category}
           </span>
         </div>
         <div className="px-3.5 py-3">
@@ -362,7 +465,7 @@ function BlogHeroVisual() {
             className="line-clamp-2 text-[12px] font-semibold leading-snug text-[#3D3D8F]"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
           >
-            {featured[1].title}
+            {second.title}
           </p>
         </div>
       </div>
@@ -375,10 +478,10 @@ function BlogHeroVisual() {
           className="mt-1.5 line-clamp-2 text-[14px] font-semibold leading-snug text-white"
           style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
         >
-          {featured[2].title}
+          {third.title}
         </p>
         <p className="mt-2 text-[10px] text-white/70">
-          {featured[2].date} • {featured[2].readTime}
+          {third.date} • {third.readTime}
         </p>
       </div>
 

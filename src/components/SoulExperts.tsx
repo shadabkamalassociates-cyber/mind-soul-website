@@ -1,80 +1,66 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { StarIcon } from "@/components/Icons";
-
-type Expert = {
-  id: string;
-  name: string;
-  specialty: string;
-  experience: string;
-  rating: string;
-  reviews: string;
-  image: string;
-};
+import {
+  fetchVerifiedExperts,
+  mapExpertForUi,
+  type UiExpert,
+} from "@/services/expertsService";
+import { ApiError } from "@/services/apiClient";
 
 const GAP = 16;
 
-const experts: Expert[] = [
-  {
-    id: "1",
-    name: "Dr. Rashmi Muthukrishnan",
-    specialty: "Psychologist & Healer",
-    experience: "8+ Years",
-    rating: "4.9",
-    reviews: "2.3K",
-    image: "/sessions/session-1.jpg",
-  },
-  {
-    id: "2",
-    name: "Meenakshi Mishra",
-    specialty: "Tarot Reader & Healer",
-    experience: "10+ Years",
-    rating: "4.9",
-    reviews: "1.8K",
-    image: "/sessions/session-3.jpg",
-  },
-  {
-    id: "3",
-    name: "Sanjay Sethi",
-    specialty: "Energy Healer",
-    experience: "12+ Years",
-    rating: "4.8",
-    reviews: "1.6K",
-    image: "/sessions/session-2.jpg",
-  },
-  {
-    id: "4",
-    name: "Sukhaman Bajwa",
-    specialty: "Spiritual Coach",
-    experience: "9+ Years",
-    rating: "4.9",
-    reviews: "1.5K",
-    image: "/sessions/session-4.jpg",
-  },
-  {
-    id: "5",
-    name: "Swami Anant",
-    specialty: "Meditation Guru",
-    experience: "15+ Years",
-    rating: "4.9",
-    reviews: "2.7K",
-    image: "/sessions/session-5.jpg",
-  },
-  {
-    id: "6",
-    name: "Aparna Sharma",
-    specialty: "Astrologer",
-    experience: "7+ Years",
-    rating: "4.8",
-    reviews: "1.2K",
-    image: "/experts/expert-6.jpg",
-  },
-];
+function formatReviewCount(count: unknown) {
+  const value = Number(count) || 0;
+  if (value >= 1000) {
+    return `${(value / 1000).toFixed(1).replace(/\.0$/, "")}K`;
+  }
+  return String(value);
+}
 
 export default function SoulExperts() {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [experts, setExperts] = useState<UiExpert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadExperts() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const data = await fetchVerifiedExperts();
+        if (!cancelled) {
+          setExperts(data.map(mapExpertForUi));
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof ApiError
+              ? err.message
+              : err instanceof Error
+                ? err.message
+                : "Failed to load experts",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadExperts();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function scrollByCard(direction: -1 | 1) {
     const el = scrollerRef.current;
@@ -103,12 +89,12 @@ export default function SoulExperts() {
           </div>
 
           <div className="hidden items-center gap-3 sm:flex">
-            <a
-              href="#all-experts"
+            <Link
+              href="/experts"
               className="text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
             >
               View All Experts
-            </a>
+            </Link>
             <div className="flex items-center gap-2">
               <CarouselBtn direction="prev" onClick={() => scrollByCard(-1)} />
               <CarouselBtn direction="next" onClick={() => scrollByCard(1)} />
@@ -135,20 +121,40 @@ export default function SoulExperts() {
             <ChevronRight />
           </button>
 
-          <div
-            ref={scrollerRef}
-            className="expert-scroller flex gap-4 overflow-x-auto scroll-smooth"
-          >
-            {experts.map((expert) => (
-              <ExpertCard key={expert.id} expert={expert} />
-            ))}
-          </div>
+          {isLoading && (
+            <p className="py-12 text-center text-[14px] text-[#8A8AA8]">
+              Loading experts...
+            </p>
+          )}
+
+          {!isLoading && error && (
+            <p className="py-12 text-center text-[14px] text-[#B42318]">
+              {error}
+            </p>
+          )}
+
+          {!isLoading && !error && experts.length === 0 && (
+            <p className="py-12 text-center text-[14px] text-[#8A8AA8]">
+              No verified experts available yet. Check back soon.
+            </p>
+          )}
+
+          {!isLoading && !error && experts.length > 0 && (
+            <div
+              ref={scrollerRef}
+              className="expert-scroller flex gap-4 overflow-x-auto scroll-smooth"
+            >
+              {experts.map((expert) => (
+                <ExpertCard key={expert.id} expert={expert} />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-5 flex items-center justify-between sm:hidden">
-          <a href="#all-experts" className="text-[13px] font-medium text-[#3D3D8F]">
+          <Link href="/experts" className="text-[13px] font-medium text-[#3D3D8F]">
             View All Experts
-          </a>
+          </Link>
           <div className="flex items-center gap-2">
             <CarouselBtn direction="prev" onClick={() => scrollByCard(-1)} />
             <CarouselBtn direction="next" onClick={() => scrollByCard(1)} />
@@ -159,7 +165,9 @@ export default function SoulExperts() {
   );
 }
 
-function ExpertCard({ expert }: { expert: Expert }) {
+function ExpertCard({ expert }: { expert: UiExpert }) {
+  const reviews = formatReviewCount(expert.raw?.total_reviews);
+
   return (
     <article
       data-expert-card
@@ -170,6 +178,7 @@ function ExpertCard({ expert }: { expert: Expert }) {
           src={expert.image}
           alt={expert.name}
           fill
+          unoptimized
           className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
           sizes="(max-width: 640px) 78vw, (max-width: 900px) 50vw, 16vw"
           quality={90}
@@ -191,14 +200,14 @@ function ExpertCard({ expert }: { expert: Expert }) {
         <h3 className="text-[13px] font-semibold leading-snug text-[#3D3D8F] sm:text-[14px]">
           {expert.name}
         </h3>
-        <p className="mt-0.5 text-[11px] text-[#5C5C7A]">{expert.specialty}</p>
+        <p className="mt-0.5 text-[11px] text-[#5C5C7A]">{expert.title}</p>
 
         <div className="mt-2 flex items-center justify-between gap-2 text-[10px] text-[#5C5C7A] sm:text-[11px]">
           <span className="flex items-center gap-1">
             <StarIcon className="text-[#3D3D8F]" />
             <span className="text-[#3D3D8F]">
               {expert.rating}{" "}
-              <span className="text-[#8A8AA8]">({expert.reviews})</span>
+              <span className="text-[#8A8AA8]">({reviews})</span>
             </span>
           </span>
           <span className="flex items-center gap-1 text-[#3D3D8F]">

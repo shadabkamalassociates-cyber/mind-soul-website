@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
-import { experts as localExperts, type ExpertProfile } from "@/data/experts";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchExperts } from "@/store/slices/expertsSlice";
-import { mapExpertForUi, type UiExpert } from "@/services/expertsService";
+import {
+  fetchVerifiedExperts,
+  mapExpertForUi,
+  type UiExpert,
+} from "@/services/expertsService";
+import { ApiError } from "@/services/apiClient";
 
 const heroFeatures = [
   {
@@ -34,59 +36,46 @@ const stats = [
   { icon: <StatGlobeIcon />, value: "20+", label: "Countries Served" },
 ];
 
-function mapLocalExpertForUi(expert: ExpertProfile): UiExpert {
-  return {
-    id: expert.slug,
-    slug: expert.slug,
-    name: expert.name,
-    email: expert.email,
-    phone: expert.phone,
-    title: expert.role,
-    bio: expert.bio,
-    image: expert.image,
-    experience: expert.experience,
-    specialization: expert.specialization,
-    rating: expert.rating,
-    isVerified: true,
-    verificationStatus: "VERIFIED",
-    raw: expert as unknown as UiExpert["raw"],
-  };
-}
-
 export default function ExpertsPageClient() {
-  const dispatch = useAppDispatch();
-  const { items, status, error } = useAppSelector((s) => s.experts);
+  const [experts, setExperts] = useState<UiExpert[]>([]);
+  const [status, setStatus] = useState<"idle" | "loading" | "succeeded" | "failed">(
+    "idle",
+  );
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "idle") dispatch(fetchExperts());
-  }, [status, dispatch]);
+    let cancelled = false;
 
-  const experts = useMemo(() => {
-    const fromLocal = localExperts.map(mapLocalExpertForUi);
-    const fromApi = items.map(mapExpertForUi);
+    async function loadExperts() {
+      setStatus("loading");
+      setError(null);
 
-    // Avoid duplicates if API later has the same person (by email/phone/name)
-    const localKeys = new Set(
-      fromLocal.flatMap((e) => [
-        e.email.toLowerCase(),
-        e.phone.replace(/\D/g, ""),
-        e.name.toLowerCase(),
-      ]),
-    );
+      try {
+        const data = await fetchVerifiedExperts();
+        if (!cancelled) {
+          setExperts(data.map(mapExpertForUi));
+          setStatus("succeeded");
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof ApiError
+              ? err.message
+              : err instanceof Error
+                ? err.message
+                : "Failed to load experts",
+          );
+          setStatus("failed");
+        }
+      }
+    }
 
-    const apiOnly = fromApi.filter((e) => {
-      const email = e.email.toLowerCase();
-      const phone = e.phone.replace(/\D/g, "");
-      const name = e.name.toLowerCase();
-      if (email && localKeys.has(email)) return false;
-      if (phone && localKeys.has(phone)) return false;
-      if (name && localKeys.has(name)) return false;
-      return true;
-    });
+    loadExperts();
 
-    // Local featured experts (e.g. Jyoti) first, then API experts
-    return [...fromLocal, ...apiOnly];
-  }, [items]);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -196,7 +185,7 @@ export default function ExpertsPageClient() {
 
           {error && (
             <p className="mt-4 text-center text-[13px] text-[#B42318]">
-              API: {error} — showing featured experts.
+              {error}
             </p>
           )}
 

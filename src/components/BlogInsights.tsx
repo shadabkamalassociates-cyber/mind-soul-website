@@ -1,14 +1,50 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import BlogCard from "@/components/BlogCard";
-import { blogArticles } from "@/data/blogs";
+import { getBlogArticles } from "@/data/blogs";
+import { ApiError } from "@/services/apiClient";
+import type { BlogArticle } from "@/types/blog";
 
 const GAP = 16;
 
 export default function BlogInsights() {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [articles, setArticles] = useState<BlogArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadBlogs() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const data = await getBlogArticles();
+        if (!cancelled) setArticles(data);
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof ApiError
+              ? err.message
+              : err instanceof Error
+                ? err.message
+                : "Failed to load blog articles",
+          );
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+
+    loadBlogs();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function scrollByCard(direction: -1 | 1) {
     const el = scrollerRef.current;
@@ -22,7 +58,6 @@ export default function BlogInsights() {
   return (
     <section id="blog" className="relative w-full bg-white py-10 sm:py-12 lg:py-14">
       <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
-        {/* Header */}
         <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
           <div>
             <h2
@@ -50,7 +85,6 @@ export default function BlogInsights() {
           </div>
         </div>
 
-        {/* Cards */}
         <div className="relative">
           <button
             type="button"
@@ -69,16 +103,36 @@ export default function BlogInsights() {
             <ChevronRight />
           </button>
 
-          <div
-            ref={scrollerRef}
-            className="blog-scroller flex gap-4 overflow-x-auto scroll-smooth"
-          >
-            {blogArticles.map((article) => (
-              <div key={article.id} data-blog-card className="blog-card shrink-0">
-                <BlogCard article={article} variant="overlay" />
-              </div>
-            ))}
-          </div>
+          {isLoading && (
+            <p className="py-12 text-center text-[14px] text-[#8A8AA8]">
+              Loading articles...
+            </p>
+          )}
+
+          {!isLoading && error && (
+            <p className="py-12 text-center text-[14px] text-[#B42318]">
+              {error}
+            </p>
+          )}
+
+          {!isLoading && !error && articles.length === 0 && (
+            <p className="py-12 text-center text-[14px] text-[#8A8AA8]">
+              No blog articles available yet. Check back soon.
+            </p>
+          )}
+
+          {!isLoading && !error && articles.length > 0 && (
+            <div
+              ref={scrollerRef}
+              className="blog-scroller flex gap-4 overflow-x-auto scroll-smooth"
+            >
+              {articles.map((article) => (
+                <div key={article.id} data-blog-card className="blog-card shrink-0">
+                  <BlogCard article={article} variant="overlay" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-5 flex items-center justify-between sm:hidden">

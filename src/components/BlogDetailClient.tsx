@@ -1,52 +1,69 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import BlogDetailPage from "@/components/BlogDetailPage";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchBlogBySlug, fetchBlogs } from "@/store/slices/blogsSlice";
-import { mapBlogForUi } from "@/services/blogsService";
-import { blogArticles } from "@/data/blogs";
+import {
+  fetchAllBlogs,
+  fetchBlogBySlug,
+  mapBlogForUi,
+} from "@/services/blogsService";
+import type { BlogArticle } from "@/types/blog";
 
 export default function BlogDetailClient({ slug }: { slug: string }) {
-  const dispatch = useAppDispatch();
-  const blogsState = useAppSelector((s) => s.blogs);
+  const [article, setArticle] = useState<BlogArticle | null>(null);
+  const [relatedArticles, setRelatedArticles] = useState<BlogArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMissing, setIsMissing] = useState(false);
 
   useEffect(() => {
-    if (blogsState.status === "idle" && !blogsState.selected) {
-      dispatch(fetchBlogBySlug(slug));
-    }
-    if (blogsState.items.length === 0) {
-      dispatch(fetchBlogs());
-    }
-  }, [blogsState.status, blogsState.selected, blogsState.items.length, slug, dispatch]);
+    let cancelled = false;
 
-  const article = useMemo(() => {
-    if (blogsState.selected) {
-      return mapBlogForUi(blogsState.selected);
+    async function loadArticle() {
+      setIsLoading(true);
+      setIsMissing(false);
+      setArticle(null);
+      setRelatedArticles([]);
+
+      try {
+        const blog = await fetchBlogBySlug(slug);
+        if (cancelled) return;
+
+        const mapped = mapBlogForUi(blog);
+        setArticle(mapped);
+
+        try {
+          const allBlogs = await fetchAllBlogs();
+          if (cancelled) return;
+
+          const related = allBlogs
+            .filter(
+              (item) =>
+                item.slug !== slug &&
+                String(item.id ?? "") !== slug &&
+                String(item.id ?? "") !== String(blog.id ?? ""),
+            )
+            .map((item) => mapBlogForUi(item))
+            .filter((item) => item.category === mapped.category)
+            .slice(0, 3);
+
+          setRelatedArticles(related);
+        } catch {
+          if (!cancelled) setRelatedArticles([]);
+        }
+      } catch {
+        if (!cancelled) setIsMissing(true);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
     }
-    const fromList = blogsState.items.find(
-      (b) => b.slug === slug || String(b.id) === slug,
-    );
-    if (fromList) return mapBlogForUi(fromList);
-    return blogArticles.find((b) => b.slug === slug) ?? null;
-  }, [blogsState.selected, blogsState.items, slug]);
 
-  const relatedArticles = useMemo(() => {
-    const apiMapped = blogsState.items
-      .filter((b) => b.slug !== slug && String(b.id) !== slug)
-      .map((b) => mapBlogForUi(b));
-    const pool = apiMapped.length > 0 ? apiMapped : blogArticles;
-    if (!article) return pool.slice(0, 3);
-    return pool
-      .filter((a) => a.slug !== article.slug && a.category === article.category)
-      .slice(0, 3);
-  }, [blogsState.items, slug, article]);
+    loadArticle();
 
-  const isLoading =
-    blogsState.status === "loading" &&
-    !article &&
-    blogsState.items.length === 0;
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
   if (isLoading) {
     return (
@@ -56,7 +73,7 @@ export default function BlogDetailClient({ slug }: { slug: string }) {
     );
   }
 
-  if (!article) notFound();
+  if (isMissing || !article) notFound();
 
   return <BlogDetailPage article={article} relatedArticles={relatedArticles} />;
 }

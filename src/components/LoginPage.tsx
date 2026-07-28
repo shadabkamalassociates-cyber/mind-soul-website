@@ -12,6 +12,8 @@ import {
   loginUser,
   signupUser,
 } from "@/store/slices/authSlice";
+import { sendOtp as sendOtpRequest } from "@/services/authService";
+import { ApiError } from "@/services/apiClient";
 
 type Tab = "login" | "signup";
 
@@ -75,6 +77,7 @@ export default function LoginPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [otpMessage, setOtpMessage] = useState("");
+  const [otpSending, setOtpSending] = useState(false);
 
   // Login-only
   const [remember, setRemember] = useState(false);
@@ -111,6 +114,7 @@ export default function LoginPage() {
     setOtpVerified(false);
     setOtp("");
     setOtpMessage("");
+    setOtpSending(false);
   }
 
   function switchTab(next: Tab) {
@@ -121,7 +125,7 @@ export default function LoginPage() {
     dispatch(clearAuthError());
   }
 
-  function onSendOtp() {
+  async function onSendOtp() {
     const digits = phone.replace(/\D/g, "");
     if (digits.length < 10) {
       setOtpMessage("Enter a valid 10-digit phone number.");
@@ -129,10 +133,29 @@ export default function LoginPage() {
       setOtpVerified(false);
       return;
     }
-    setOtpSent(true);
-    setOtpVerified(false);
-    setOtp("");
-    setOtpMessage("OTP sent to your phone number.");
+
+    setOtpSending(true);
+    setOtpMessage("");
+
+    try {
+      const result = await sendOtpRequest(digits);
+      setOtpSent(true);
+      setOtpVerified(false);
+      setOtp("");
+      setOtpMessage(result.message);
+    } catch (err) {
+      setOtpSent(false);
+      setOtpVerified(false);
+      setOtpMessage(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Failed to send OTP. Please try again.",
+      );
+    } finally {
+      setOtpSending(false);
+    }
   }
 
   function onVerifyOtp() {
@@ -140,8 +163,8 @@ export default function LoginPage() {
       setOtpMessage("Send OTP first.");
       return;
     }
-    if (otp.trim().length < 4) {
-      setOtpMessage("Enter the OTP you received.");
+    if (otp.trim().length < 6) {
+      setOtpMessage("Enter the 6-digit OTP you received.");
       setOtpVerified(false);
       return;
     }
@@ -286,6 +309,7 @@ export default function LoginPage() {
                     otpSent={otpSent}
                     otpVerified={otpVerified}
                     otpMessage={otpMessage}
+                    otpSending={otpSending}
                     onPhoneChange={(value) => {
                       setPhone(value);
                       resetOtpState();
@@ -374,19 +398,19 @@ export default function LoginPage() {
                   </button>
                 </form>
 
-                <div className="my-3 flex items-center gap-3">
+                {/* <div className="my-3 flex items-center gap-3">
                   <span className="h-px flex-1 bg-[#E6E8F2]" />
                   <span className="text-[11px] text-[#8A8AA8]">
                     or continue with
                   </span>
                   <span className="h-px flex-1 bg-[#E6E8F2]" />
-                </div>
+                </div> */}
 
-                <div className="grid grid-cols-3 gap-2">
+                {/* <div className="grid grid-cols-3 gap-2">
                   <SocialButton label="Google" icon={<GoogleIcon />} />
                   <SocialButton label="Facebook" icon={<FacebookIcon />} />
                   <SocialButton label="Apple" icon={<AppleIcon />} />
-                </div>
+                </div> */}
 
                 <div className="mt-3 rounded-lg border border-[#E6E8F2] bg-[#F8F9FC] px-3.5 py-2.5">
                   <p className="text-[13px] font-semibold text-[#1A1A4A]">
@@ -488,9 +512,14 @@ export default function LoginPage() {
                       <button
                         type="button"
                         onClick={onSendOtp}
-                        className="h-9 shrink-0 rounded-lg bg-[#1A1A4A] px-2.5 text-[11px] font-semibold whitespace-nowrap text-white transition hover:bg-[#2A2A6A] sm:px-3 sm:text-[12px]"
+                        disabled={otpSending}
+                        className="h-9 shrink-0 rounded-lg bg-[#1A1A4A] px-2.5 text-[11px] font-semibold whitespace-nowrap text-white transition hover:bg-[#2A2A6A] disabled:cursor-not-allowed disabled:opacity-60 sm:px-3 sm:text-[12px]"
                       >
-                        {otpSent ? "Resend" : "Send OTP"}
+                        {otpSending
+                          ? "Sending..."
+                          : otpSent
+                            ? "Resend"
+                            : "Send OTP"}
                       </button>
                     </div>
                   </Field>
@@ -530,9 +559,10 @@ export default function LoginPage() {
                     </div>
                     {otpMessage ? (
                       <p
-                        className={`mt-1 text-[11px] ${
-                          otpVerified ? "text-[#1B7A4A]" : "text-[#6B6B88]"
-                        }`}
+                        className={`mt-1 text-[11px] ${getOtpMessageClass(
+                          otpVerified,
+                          otpSent,
+                        )}`}
                       >
                         {otpMessage}
                       </p>
@@ -748,6 +778,7 @@ function PhoneOtpFields({
   otpSent,
   otpVerified,
   otpMessage,
+  otpSending,
   onPhoneChange,
   onOtpChange,
   onSendOtp,
@@ -758,6 +789,7 @@ function PhoneOtpFields({
   otpSent: boolean;
   otpVerified: boolean;
   otpMessage: string;
+  otpSending: boolean;
   onPhoneChange: (value: string) => void;
   onOtpChange: (value: string) => void;
   onSendOtp: () => void;
@@ -785,9 +817,10 @@ function PhoneOtpFields({
           <button
             type="button"
             onClick={onSendOtp}
-            className="h-9 shrink-0 rounded-lg bg-[#1A1A4A] px-3 text-[12px] font-semibold text-white transition hover:bg-[#2A2A6A]"
+            disabled={otpSending}
+            className="h-9 shrink-0 rounded-lg bg-[#1A1A4A] px-3 text-[12px] font-semibold text-white transition hover:bg-[#2A2A6A] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {otpSent ? "Resend" : "Send OTP"}
+            {otpSending ? "Sending..." : otpSent ? "Resend" : "Send OTP"}
           </button>
         </div>
       </Field>
@@ -824,9 +857,10 @@ function PhoneOtpFields({
         </div>
         {otpMessage ? (
           <p
-            className={`mt-1 text-[11px] ${
-              otpVerified ? "text-[#1B7A4A]" : "text-[#6B6B88]"
-            }`}
+            className={`mt-1 text-[11px] ${getOtpMessageClass(
+              otpVerified,
+              otpSent,
+            )}`}
           >
             {otpMessage}
           </p>
@@ -834,6 +868,12 @@ function PhoneOtpFields({
       </Field>
     </>
   );
+}
+
+function getOtpMessageClass(otpVerified: boolean, otpSent: boolean) {
+  if (otpVerified) return "text-[#1B7A4A]";
+  if (otpSent) return "text-[#6B6B88]";
+  return "text-[#B42318]";
 }
 
 function Field({

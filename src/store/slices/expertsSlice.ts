@@ -46,7 +46,7 @@ export const fetchExpertById = createAsyncThunk(
   "experts/fetchById",
   async (id: string | number, { rejectWithValue }) => {
     try {
-      return await expertsService.fetchExpertById(id);
+      return await expertsService.fetchExpertByIdFromAll(id);
     } catch (err) {
       return rejectWithValue(toErrorMessage(err));
     }

@@ -1,7 +1,10 @@
-/** Production API — all requests go to backend.apnasmartgate.com */
-export const API_BASE_URL =
+const REMOTE_API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
   "https://backend.apnasmartgate.com/api";
+
+/** Browser requests use the Next.js /api proxy to avoid CORS. */
+export const API_BASE_URL =
+  typeof window !== "undefined" ? "/api" : REMOTE_API_BASE_URL;
 
 const BASE_URL = API_BASE_URL;
 
