@@ -97,16 +97,20 @@ export function mapBlogForUi(
     ? new Date(String(blog.published_at))
     : null;
 
+  const shortDescription = String(blog.short_description ?? "").trim();
+  const categoryRef = blog.category;
+
   return {
     id: String(blog.id ?? blog.slug ?? ""),
     slug: String(blog.slug ?? blog.id ?? ""),
     title: String(blog.title ?? "Untitled"),
     excerpt: String(
-      blog.short_description ??
-        blog.meta_description ??
-        paragraphs[0] ??
+      shortDescription ||
+        blog.meta_description ||
+        paragraphs[0] ||
         plainContent.slice(0, 220),
     ).slice(0, 220),
+    shortDescription,
     date: published
       ? published.toLocaleDateString("en-IN", {
           day: "numeric",
@@ -114,20 +118,27 @@ export function mapBlogForUi(
           year: "numeric",
         })
       : "Recently",
-    readTime: estimateReadTime(plainContent || String(blog.short_description ?? "")),
+    readTime: estimateReadTime(plainContent || shortDescription),
     image: String(
       blog.featured_image ?? blog.banner_image ?? DEFAULT_BLOG_IMAGE,
     ),
     category: resolveCategoryName(blog, categoryName),
+    categorySlug:
+      typeof categoryRef === "object" && categoryRef?.slug
+        ? String(categoryRef.slug)
+        : undefined,
     author: resolveAuthorName(blog),
     content: paragraphs.length
       ? paragraphs
       : [
           String(
-            blog.short_description ??
+            shortDescription ||
               (plainContent.slice(0, 500) || "Content coming soon."),
           ),
         ],
+    htmlContent: rawContent,
+    views: typeof blog.views === "number" ? blog.views : undefined,
+    isFeatured: Boolean(blog.is_featured),
   };
 }
 

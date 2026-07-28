@@ -62,7 +62,7 @@ export default function BlogsPage() {
 
         const apiCategories = data
           .map((category) => ({
-            id: String(category.id ?? category.slug ?? ""),
+            id: String(category.id ?? category.uuid ?? category.slug ?? ""),
             label: String(category.name ?? category.slug ?? "").trim(),
           }))
           .filter((category) => category.id && category.label);

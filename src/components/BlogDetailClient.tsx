@@ -67,8 +67,19 @@ export default function BlogDetailClient({ slug }: { slug: string }) {
 
   if (isLoading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-white text-[#8A8AA8]">
-        Loading article...
+      <main className="min-h-screen bg-white">
+        <div className="mx-auto max-w-[860px] px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
+          <div className="h-4 w-28 animate-pulse rounded bg-[#E8EAF4]" />
+          <div className="mt-6 h-5 w-24 animate-pulse rounded bg-[#E8EAF4]" />
+          <div className="mt-4 h-12 w-full max-w-[640px] animate-pulse rounded bg-[#E8EAF4]" />
+          <div className="mt-4 h-4 w-72 animate-pulse rounded bg-[#E8EAF4]" />
+          <div className="mt-8 aspect-[16/9] w-full animate-pulse rounded-2xl bg-[#E8EAF4]" />
+          <div className="mt-8 space-y-3">
+            <div className="h-4 w-full animate-pulse rounded bg-[#E8EAF4]" />
+            <div className="h-4 w-full animate-pulse rounded bg-[#E8EAF4]" />
+            <div className="h-4 w-4/5 animate-pulse rounded bg-[#E8EAF4]" />
+          </div>
+        </div>
       </main>
     );
   }
