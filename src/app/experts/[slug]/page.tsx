@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import ExpertProfileClient from "@/components/ExpertProfileClient";
 import { experts, getExpertBySlug } from "@/data/experts";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ slug: string }>;
 };

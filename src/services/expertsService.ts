@@ -27,20 +27,32 @@ export async function fetchVerifiedExperts() {
 }
 
 export async function fetchExpertByIdFromAll(id: string | number) {
+  try {
+    return await fetchExpertById(id);
+  } catch (err) {
+    if (!(err instanceof ApiError) || err.status !== 404) {
+      throw err;
+    }
+  }
+
   const res = await apiGet(
     `/experts/fetch-all?id=${encodeURIComponent(String(id))}`,
     false,
   );
   const list = extractList<Expert>(res);
-  const expert =
+  const fromList =
     list.find((item) => String(item.id ?? item._id ?? "") === String(id)) ??
     list[0];
 
-  if (!expert) {
-    throw new ApiError("Expert not found", 404);
+  if (fromList) return fromList;
+
+  // fetch-all?id= returns data as a single object, not an array
+  const single = extractData<Expert>(res);
+  if (single && typeof single === "object" && (single.id ?? single._id)) {
+    return single;
   }
 
-  return expert;
+  throw new ApiError("Expert not found", 404);
 }
 
 export async function fetchBlockedExperts(_id?: string | number) {

@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import type { ExpertProfile } from "@/data/experts";
+import { experts as staticExperts } from "@/data/experts";
 import { fetchExpertByIdFromAll } from "@/services/expertsService";
 import { ApiError } from "@/services/apiClient";
 import type { Expert } from "@/types/expert";
@@ -96,8 +97,101 @@ function ExpertProfileDetailLoader({ expertId }: { expertId: string }) {
   return <ExpertProfileDetailView expert={expert} />;
 }
 
+function parseListField(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.map(String).map((s) => s.trim()).filter(Boolean);
+  }
+  if (typeof value === "string" && value.trim()) {
+    return value
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function findStaticExpertMatch(expert: Expert): ExpertProfile | undefined {
+  const email = String(expert.email ?? "").trim().toLowerCase();
+  if (email) {
+    const byEmail = staticExperts.find(
+      (item) => item.email.trim().toLowerCase() === email,
+    );
+    if (byEmail) return byEmail;
+  }
+
+  const apiName = [expert.first_name, expert.last_name]
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+  if (!apiName) return undefined;
+
+  return staticExperts.find(
+    (item) =>
+      item.name.replace(/\s+/g, " ").trim().toLowerCase() === apiName,
+  );
+}
+
+function buildAboutParagraphs(expert: Expert, name: string): string[] {
+  const rawParts = [expert.about, expert.bio, expert.why_started, expert.mission]
+    .filter((v): v is string => typeof v === "string" && v.trim())
+    .flatMap((text) =>
+      text
+        .split(/\r?\n\r?\n+/)
+        .map((p) => p.replace(/\r\n/g, " ").replace(/\s+/g, " ").trim())
+        .filter(Boolean),
+    );
+
+  const seen = new Set<string>();
+  const unique: string[] = [];
+  for (const para of rawParts) {
+    const key = para.toLowerCase().slice(0, 120);
+    if (!seen.has(key)) {
+      seen.add(key);
+      unique.push(para);
+    }
+  }
+
+  if (unique.length > 0) return unique;
+
+  return [
+    `${name} is a verified SoulSensei expert dedicated to helping seekers with clarity and transformation.`,
+  ];
+}
+
+function mapExpertServices(
+  expert: Expert,
+  staticMatch?: ExpertProfile,
+): { title: string; desc: string }[] {
+  if (staticMatch?.services.length) {
+    return staticMatch.services;
+  }
+
+  const titles = [
+    ...parseListField(expert.certifications),
+    ...parseListField(expert.specialization),
+  ];
+
+  const seen = new Set<string>();
+  const services: { title: string; desc: string }[] = [];
+
+  for (const title of titles) {
+    const key = title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    services.push({
+      title,
+      desc: `Personalized ${title} sessions designed to support your healing, clarity, and transformation.`,
+    });
+  }
+
+  return services;
+}
+
 function mapApiExpertToProfile(expert: Expert): ExpertProfile {
-  const id = String(expert.id ?? "");
+  const id = String(expert.id ?? expert._id ?? "");
   const name =
     [expert.first_name, expert.last_name].filter(Boolean).join(" ") ||
     String(expert.name ?? "Expert");
@@ -120,19 +214,8 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
       ? [expert.certifications]
       : [];
 
-  const specializations =
-    typeof expert.specialization === "string" && expert.specialization
-      ? [expert.specialization]
-      : [];
-
-  const aboutParts = [
-    expert.about,
-    expert.bio,
-    expert.why_started,
-    expert.mission,
-  ]
-    .filter((v) => typeof v === "string" && v.trim())
-    .map(String);
+  const specializations = parseListField(expert.specialization);
+  const staticMatch = findStaticExpertMatch(expert);
 
   return {
     slug: id,
@@ -179,7 +262,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
       aboutParts.length > 0
         ? aboutParts
         : [
-            `${name} is a verified Cosmicguruji expert dedicated to helping seekers with clarity and transformation.`,
+            `${name} is a verified SoulSensei expert dedicated to helping seekers with clarity and transformation.`,
           ],
     highlights: [
       {
@@ -205,16 +288,8 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
         ),
       },
     ],
-    services: [
-      {
-        title: "1:1 Consultation",
-        desc: "Personalized guidance session tailored to your goals and questions.",
-      },
-      {
-        title: "Live Session",
-        desc: "Join interactive live sessions for real-time insight and support.",
-      },
-    ],
+    services: mapExpertServices(expert, staticMatch),
+    consultationTypes: staticMatch?.consultationTypes,
   };
 }
 
@@ -410,8 +485,8 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
               </div>
 
               <div className="mt-5 space-y-4 text-[13px] leading-[1.85] text-[#4A4A6A] sm:text-[14px]">
-                {expert.about.map((para) => (
-                  <p key={para.slice(0, 40)}>{para}</p>
+                {expert.about.map((para, index) => (
+                  <p key={`about-${index}`}>{para}</p>
                 ))}
               </div>
 
@@ -494,61 +569,47 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
         </div>
       </section>
 
-      {/* Services Offered */}
-      <section className="bg-white py-8 sm:py-10">
-        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2
-              className="text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-            >
-              Services Offered
-            </h2>
-            <div className="mt-4 flex items-center justify-center gap-3 sm:gap-4">
-              <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
-              <Image src="/experts-page/lotus-gold.png" alt="" width={20} height={20} unoptimized />
-              <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
+      {expert.services.length > 0 && (
+        <section className="bg-white py-8 sm:py-10">
+          <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h2
+                className="text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                Services Offered
+              </h2>
+              <div className="mt-4 flex items-center justify-center gap-3 sm:gap-4">
+                <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
+                <Image src="/experts-page/lotus-gold.png" alt="" width={20} height={20} unoptimized />
+                <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
+              </div>
+            </div>
+
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+              {expert.services.map((service, index) => (
+                <article
+                  key={`${service.title}-${index}`}
+                  className="relative rounded-2xl border border-[#E4E2EF] bg-white px-4 pb-5 pt-12 text-center shadow-[0_2px_16px_rgba(26,26,74,0.05)]"
+                >
+                  <div className="absolute left-1/2 top-0 flex h-[68px] w-[68px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#3D3D8F] text-white shadow-[0_6px_20px_rgba(26,26,74,0.22)]">
+                    <ServiceCardIcon index={index} />
+                  </div>
+                  <h3
+                    className="text-[15px] font-semibold leading-snug text-[#3D3D8F] sm:text-[16px]"
+                    style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                  >
+                    {service.title}
+                  </h3>
+                  <p className="mx-auto mt-2.5 max-w-[220px] text-[12px] leading-[1.65] text-[#5C5C7A]">
+                    {service.desc}
+                  </p>
+                </article>
+              ))}
             </div>
           </div>
-
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            {expert.services.map((service, index) => (
-              <article
-                key={service.title}
-                className="relative rounded-2xl border border-[#E4E2EF] bg-white px-4 pb-5 pt-12 text-center shadow-[0_2px_16px_rgba(26,26,74,0.05)]"
-              >
-                <div className="absolute left-1/2 top-0 flex h-[68px] w-[68px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#3D3D8F] text-white shadow-[0_6px_20px_rgba(26,26,74,0.22)]">
-                  <ServiceCardIcon index={index} />
-                </div>
-                <h3
-                  className="text-[15px] font-semibold leading-snug text-[#3D3D8F] sm:text-[16px]"
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                >
-                  {service.title}
-                </h3>
-                <p className="mx-auto mt-2.5 max-w-[220px] text-[12px] leading-[1.65] text-[#5C5C7A]">
-                  {service.desc}
-                </p>
-                <button
-                  type="button"
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#3D3D8F] px-5 py-2 text-[12px] font-medium text-[#3D3D8F] transition hover:bg-[#3D3D8F] hover:text-white"
-                >
-                  Know More <ArrowIcon />
-                </button>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            <Link
-              href="/#book"
-              className="inline-flex items-center gap-2 rounded-full bg-[#3D3D8F] px-8 py-3 text-[13px] font-semibold text-white transition hover:bg-[#2F2F70]"
-            >
-              View All Services <ArrowIcon />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Consultation Types */}
       <section className="bg-white py-12 sm:py-14">
