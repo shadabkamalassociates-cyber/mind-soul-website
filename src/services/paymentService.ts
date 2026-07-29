@@ -1,8 +1,9 @@
-import type { AddToCartPayload, Cart, CartItem } from "@/types/cart";
+import type { AddToCartPayload, Cart, CartItem, UpdateCartItemPayload } from "@/types/cart";
 import {
   apiDelete,
   apiGet,
   apiPost,
+  apiPut,
   extractData,
   extractList,
 } from "@/services/apiClient";
@@ -54,12 +55,20 @@ function normalizeCartItems(payload: unknown): CartItem[] {
 
 export function normalizeCart(payload: unknown): Cart {
   const data = extractData<unknown>(payload);
-  const source = data ?? payload;
+  let source: unknown = data ?? payload;
+
+  // add-to-cart returns { cart: {...}, item: {...} }
+  if (source && typeof source === "object" && !Array.isArray(source)) {
+    const wrapper = source as Record<string, unknown>;
+    if (wrapper.cart && typeof wrapper.cart === "object") {
+      source = wrapper.cart;
+    }
+  }
 
   if (source && typeof source === "object" && !Array.isArray(source)) {
     const obj = source as Record<string, unknown>;
     const items = normalizeCartItems(
-      obj.items ?? obj.cart_items ?? obj.cartItems ?? obj.cart ?? obj,
+      obj.items ?? obj.cart_items ?? obj.cartItems ?? obj,
     );
     return {
       ...(obj as Cart),
@@ -95,25 +104,48 @@ export function getCartSessionId(item: CartItem): string {
 
 export async function fetchCart() {
   const res = await apiGet("/payment/fetch-cart");
+  console.log(res,"------------------");
   return normalizeCart(res);
 }
 
 export async function addToCart(body: AddToCartPayload) {
-  const res = await apiPost("/payment/cart/add", body);
+  const res = await apiPost("/payment/cart/add", {
+    session_id: body.session_id,
+    quantity: body.quantity ?? 1,
+    discount: body.discount ?? 0,
+    metadata: body.metadata ?? null,
+  });
   const normalized = normalizeCart(res);
   if ((normalized.items ?? []).length > 0) return normalized;
   // Add endpoint may return success without items — fetch full cart
   return fetchCart();
 }
 
+export async function updateCartItem(
+  itemId: string | number,
+  body: UpdateCartItemPayload,
+) {
+  const res = await apiPut(`/payment/cart/item/${itemId}`, body);
+  return normalizeCart(res);
+}
+
+/** Removes a cart line via PUT /payment/cart/item/:id with quantity 0. */
 export async function removeCartItem(itemId: string | number) {
-  const res = await apiDelete(`/payment/cart/item/${itemId}`);
-  const normalized = normalizeCart(res);
-  if ((normalized.items ?? []).length > 0) return normalized;
-  return fetchCart();
+  return updateCartItem(itemId, { quantity: 0 });
 }
 
 export async function clearCart() {
-  const res = await apiPost("/payment/cart/clear");
+  const res = await apiDelete("/payment/cart/clear");
   return normalizeCart(res);
+}
+
+export type SessionPurchaseRecord = {
+  session_id?: string | number;
+  payment_status?: string | null;
+  purchase_status?: string | null;
+};
+
+export async function fetchMyPurchases() {
+  const res = await apiGet("/payment/my-purchases", true);
+  return extractList<SessionPurchaseRecord>(res);
 }

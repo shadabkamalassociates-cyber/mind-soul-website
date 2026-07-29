@@ -40,7 +40,7 @@ export default function WhySoulSensei() {
                 className="text-[13px] font-medium leading-none text-[#3D3D8F] sm:text-[14px]"
                 style={{ fontFamily: "var(--font-cormorant), serif" }}
               >
-                Why SoulSensei?
+                Why Cosmicguruji?
               </p>
               <h2
                 className="mt-1.5 text-[20px] font-medium leading-[1.15] text-[#1A1A4A] sm:text-[21px] lg:text-[22px] xl:text-[23px]"

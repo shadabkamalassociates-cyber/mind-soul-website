@@ -18,7 +18,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "SoulSensei | Awaken. Heal. Transform.",
+  title: "Cosmicguruji | Awaken. Heal. Transform.",
   description:
     "Join thousands on a journey of self-discovery, healing and spiritual growth with our transformational sessions.",
 };

@@ -16,8 +16,7 @@ const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Expert", href: "/experts" },
-  { label: "Live Sessions", href: "/live-sessions" },
-  { label: "Recorded Videos", href: "/recorded-videos" },
+  { label: "Sessions", href: "/live-sessions" },
   { label: "Blogs", href: "/blogs" },
   { label: "Categories", href: "/categories", hasDropdown: true },
   { label: "Contact", href: "/contact" },
@@ -82,15 +81,16 @@ export default function Header() {
     <header className="relative z-50 w-full border-b border-[#EEF0FA] bg-white">
       <div className="mx-auto flex h-[68px] w-full max-w-[1440px] items-center gap-3 px-4 sm:px-5 lg:h-[72px] lg:gap-4 lg:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2">
-          <LogoIcon className="shrink-0" variant="indigo" />
+          <img src="https://res.cloudinary.com/dgnztzmzp/image/upload/v1785323232/logo_-_icon_fbp439.png" alt="Cosmicguruji" className="w-12 h-12" />
+          {/* <LogoIcon className="shrink-0" variant="indigo" /> */}
           <div className="hidden flex-col leading-none sm:flex">
             <span
               className="text-[20px] font-semibold tracking-[-0.01em] text-[#1A1A4A] lg:text-[21px]"
               style={{ fontFamily: "var(--font-playfair), serif" }}
             >
-              SoulSensei
+              Cosmicguruji
             </span>
-            <span className="mt-0.5 text-[8px] font-medium uppercase tracking-[0.16em] text-[#5B5B9A] lg:text-[9px]">
+            <span className="mt-2 text-[8px] font-medium uppercase tracking-[0.16em] text-[#5B5B9A] lg:text-[9px]">
               Awakening Within
             </span>
           </div>
@@ -107,11 +107,10 @@ export default function Header() {
                     ? pathname === "/contact"
                       : item.href === "/live-sessions"
                         ? pathname === "/live-sessions" ||
-                          pathname.startsWith("/live-sessions/")
-                        : item.href === "/recorded-videos"
-                          ? pathname === "/recorded-videos" ||
-                            pathname.startsWith("/recorded-videos/")
-                          : item.href === "/blogs"
+                          pathname.startsWith("/live-sessions/") ||
+                          pathname === "/recorded-videos" ||
+                          pathname.startsWith("/recorded-videos/")
+                        : item.href === "/blogs"
                         ? pathname === "/blogs" ||
                           pathname.startsWith("/blogs/")
                         : item.href === "/categories"

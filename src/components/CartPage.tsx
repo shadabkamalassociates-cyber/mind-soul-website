@@ -3,15 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  checkoutCart,
+  clearCartItems,
   clearPurchaseMessage,
+  fetchCart,
   removeCartItem,
 } from "@/store/slices/cartSlice";
 import { mapCartItemsForUi } from "@/lib/cartUi";
+import { purchaseSessionWithRazorpay } from "@/services/purchaseService";
+import { ApiError } from "@/services/apiClient";
 
 function formatInr(n: number): string {
   return `₹${n.toLocaleString("en-IN")}`;
@@ -31,11 +34,23 @@ export default function CartPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const cartState = useAppSelector((s) => s.cart);
+  const token = useAppSelector((s) => s.auth.token);
+  const hydrated = useAppSelector((s) => s.auth.hydrated);
   const sessionsState = useAppSelector((s) => s.sessions);
   const recordedState = useAppSelector((s) => s.recordedSessions);
 
   const [couponOpen, setCouponOpen] = useState(false);
   const [coupon, setCoupon] = useState("");
+  const [removingId, setRemovingId] = useState<string | null>(null);
+  const [isPaying, setIsPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+  const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (hydrated && token) {
+      void dispatch(fetchCart());
+    }
+  }, [dispatch, hydrated, token]);
 
   const allSessions = useMemo(
     () => [...sessionsState.items, ...recordedState.items],
@@ -51,40 +66,78 @@ export default function CartPage() {
       ),
     [cartState.items, allSessions, cartState.sessionSnapshots],
   );
-
-  const sessionPrice = lines.reduce(
-    (sum, line) => sum + line.price * line.quantity,
-    0,
-  );
+  const sessionPrice =
+    cartState.subtotal > 0
+      ? cartState.subtotal
+      : lines.reduce((sum, line) => sum + line.price * line.quantity, 0);
   const taxesAndFees =
     cartState.total > cartState.subtotal && cartState.subtotal > 0
       ? Math.round(cartState.total - cartState.subtotal)
       : Math.round(sessionPrice * 0.18);
-  const toBePaid = sessionPrice + taxesAndFees;
+  const toBePaid = cartState.total > 0 ? cartState.total : sessionPrice + taxesAndFees;
 
   const isLoading =
-    cartState.status === "loading" || cartState.actionStatus === "loading";
+    !hydrated ||
+    (Boolean(token) && cartState.status === "loading") ||
+    (Boolean(token) && cartState.status === "idle");
   const isEmpty =
+    hydrated &&
     !isLoading &&
-    cartState.items.length === 0 &&
-    cartState.purchaseStatus !== "succeeded";
-  const isPaying = cartState.purchaseStatus === "loading";
+    cartState.status === "succeeded" &&
+    lines.length === 0 &&
+    !purchaseMessage;
+  const isCheckoutComplete = Boolean(purchaseMessage);
 
   async function handleRemove(cartItemId: string, sessionId: string) {
-    await dispatch(removeCartItem({ itemId: cartItemId, sessionId }));
+    setRemovingId(cartItemId);
+    try {
+      await dispatch(removeCartItem({ itemId: cartItemId, sessionId })).unwrap();
+    } finally {
+      setRemovingId(null);
+    }
   }
 
   async function handlePayNow() {
+    if (lines.length === 0) return;
+
+    setIsPaying(true);
+    setPayError(null);
+    setPurchaseMessage(null);
     dispatch(clearPurchaseMessage());
-    await dispatch(
-      checkoutCart({
-        coupon_code: coupon.trim() || null,
-        notes: null,
-      }),
-    );
+
+    try {
+      for (const line of lines) {
+        await purchaseSessionWithRazorpay({
+          session_id: line.sessionId,
+          payment_type: "full",
+          quantity: line.quantity,
+          coupon_code: coupon.trim() || null,
+          notes: null,
+        });
+      }
+
+      try {
+        await dispatch(clearCartItems()).unwrap();
+      } catch {
+        // verify-payment already removes paid sessions; full clear is best-effort
+        void dispatch(fetchCart());
+      }
+
+      setPurchaseMessage("Payment successful! Your session purchase is confirmed.");
+    } catch (err) {
+      setPayError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Payment failed",
+      );
+    } finally {
+      setIsPaying(false);
+    }
   }
 
-  if (isEmpty && cartState.purchaseStatus !== "succeeded") {
+  if (isEmpty && !isCheckoutComplete) {
     return (
       <main className="min-h-screen bg-[#F8F9FC] text-[#1A1A4A]">
         <Header />
@@ -115,13 +168,7 @@ export default function CartPage() {
                 href="/live-sessions"
                 className="rounded-full bg-[#3D3D8F] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#2F2F70]"
               >
-                Live Sessions
-              </Link>
-              <Link
-                href="/recorded-videos"
-                className="rounded-full border border-[#3D3D8F]/30 bg-white px-5 py-2.5 text-[13px] font-semibold text-[#3D3D8F] transition hover:border-[#3D3D8F] hover:bg-[#F0F1FA]"
-              >
-                Recorded Videos
+                Browse Sessions
               </Link>
             </div>
           </div>
@@ -144,15 +191,15 @@ export default function CartPage() {
           Your cart
         </button>
 
-        {cartState.purchaseStatus === "succeeded" && cartState.purchaseMessage && (
+        {purchaseMessage && (
           <div className="mb-5 rounded-xl border border-[#86EFAC] bg-[#F0FDF4] px-4 py-3 text-[14px] text-[#166534]">
-            {cartState.purchaseMessage}
+            {purchaseMessage}
           </div>
         )}
 
-        {cartState.error && !isEmpty && (
+        {(payError || cartState.error) && !isEmpty && (
           <div className="mb-5 rounded-xl border border-[#FCA5A5] bg-[#FEF2F2] px-4 py-3 text-[14px] text-[#B91C1C]">
-            {cartState.error}
+            {payError ?? cartState.error}
           </div>
         )}
 
@@ -215,11 +262,18 @@ export default function CartPage() {
                         <button
                           type="button"
                           aria-label="Remove from cart"
-                          disabled={cartState.actionStatus === "loading"}
+                          disabled={
+                            cartState.actionStatus === "loading" ||
+                            removingId === line.cartItemId
+                          }
                           onClick={() => void handleRemove(line.cartItemId, line.sessionId)}
                           className="rounded-lg p-2 text-[#8A8AA8] transition hover:bg-[#F0F1FA] hover:text-[#3D3D8F] disabled:opacity-50"
                         >
-                          <TrashIcon />
+                          {removingId === line.cartItemId ? (
+                            <span className="text-[11px] font-medium">...</span>
+                          ) : (
+                            <TrashIcon />
+                          )}
                         </button>
                       </div>
                     </div>

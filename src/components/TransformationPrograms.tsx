@@ -195,7 +195,7 @@ function MembershipCard() {
 
         <div className="relative z-10 flex h-full flex-col px-4 pb-4 pt-4 sm:px-5 sm:pb-5 sm:pt-5">
           <h3 className="max-w-[160px] text-[15px] font-semibold leading-[1.2] text-white sm:text-[16px]">
-            Become a SoulSensei Plus
+            Become a Cosmicguruji Plus
           </h3>
 
           <ul className="mt-4 flex flex-col gap-2">
@@ -259,7 +259,7 @@ function HowSoulSenseiWorks() {
           className="text-[24px] font-medium leading-none text-[#3D3D8F] sm:text-[28px]"
           style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
         >
-          How SoulSensei Works
+          How Cosmicguruji Works
         </h3>
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">

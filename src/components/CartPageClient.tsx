@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import CartPage from "@/components/CartPage";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addCartItem, fetchCart } from "@/store/slices/cartSlice";
+import { addCartItem } from "@/store/slices/cartSlice";
 import { fetchSessions } from "@/store/slices/sessionsSlice";
 import { fetchRecordedSessions } from "@/store/slices/recordedSessionsSlice";
 
@@ -27,11 +27,6 @@ export default function CartPageClient({ sessionSlug }: { sessionSlug?: string }
       return;
     }
 
-    // Sync cart from API only when local cart is empty (avoid wiping freshly added items)
-    if (cartState.items.length === 0 && cartState.actionStatus !== "loading") {
-      dispatch(fetchCart());
-    }
-
     if (sessionsState.status === "idle") dispatch(fetchSessions());
     if (recordedState.status === "idle") dispatch(fetchRecordedSessions());
   }, [
@@ -40,8 +35,6 @@ export default function CartPageClient({ sessionSlug }: { sessionSlug?: string }
     dispatch,
     router,
     sessionSlug,
-    cartState.items.length,
-    cartState.actionStatus,
     sessionsState.status,
     recordedState.status,
   ]);

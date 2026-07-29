@@ -15,8 +15,8 @@ const quickContacts = [
   },
   {
     label: "Email Us",
-    value: "support@soulsensei.in",
-    href: "mailto:support@soulsensei.in",
+    value: "support@cosmicguruji.com",
+    href: "mailto:support@cosmicguruji.com",
     icon: <MailIcon />,
   },
   {
@@ -42,7 +42,7 @@ const contactInfo = [
   },
   {
     title: "Email",
-    value: "support@soulsensei.in",
+    value: "support@soulsensei. in",
     note: "We reply within 24 hours",
     icon: <MailIcon />,
   },

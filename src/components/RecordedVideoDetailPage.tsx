@@ -42,7 +42,7 @@ export default function RecordedVideoDetailPage({
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-2 px-4 py-3 text-[12px] text-white/60 sm:px-6 lg:px-8">
           <Link href="/" className="hover:text-white">Home</Link>
           <span>/</span>
-          <Link href="/recorded-videos" className="hover:text-white">Recorded Videos</Link>
+          <Link href="/live-sessions#recorded-sessions" className="hover:text-white">Sessions</Link>
           <span>/</span>
           <span className="line-clamp-1 font-medium text-white">{video.title}</span>
         </div>
@@ -394,7 +394,7 @@ export default function RecordedVideoDetailPage({
             Transform Your Life With Consistent Practice
           </h2>
           <Link
-            href="/recorded-videos"
+            href="/live-sessions#recorded-sessions"
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#E8C69F] via-[#C9A06A] to-[#B8925E] px-6 py-3 text-[14px] font-semibold text-[#1A1A4A] transition hover:brightness-105"
           >
             Explore More Recordings →

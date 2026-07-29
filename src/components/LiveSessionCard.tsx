@@ -83,6 +83,8 @@ export default function LiveSessionCard({ session }: LiveSessionCardProps) {
         </div>
         <AddToCartButton
           sessionId={session.id}
+          quantity={1}
+          discount={0}
           label="Book Now →"
           variant="inline"
         />

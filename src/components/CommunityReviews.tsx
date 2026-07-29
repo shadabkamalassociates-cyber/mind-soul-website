@@ -12,7 +12,7 @@ type Review = {
 const reviews: Review[] = [
   {
     id: "1",
-    text: "SoulSensei has completely transformed my life. The experts are genuinely caring and the sessions are life-changing.",
+    text: "Cosmicguruji has completely transformed my life. The experts are genuinely caring and the sessions are life-changing.",
     name: "Priya Sharma",
     location: "Mumbai",
     image: "/experts/expert-1.jpg",

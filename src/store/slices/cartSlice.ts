@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { CartItem } from "@/types/cart";
-import type { CheckoutPayload } from "@/types/purchase";
 import type { Session } from "@/types/session";
 import * as paymentService from "@/services/paymentService";
 import * as purchaseService from "@/services/purchaseService";
@@ -101,6 +100,7 @@ export const addCartItem = createAsyncThunk(
       session_id: string;
       quantity?: number;
       discount?: number;
+      metadata?: Record<string, unknown> | null;
       sessionSnapshot?: Session;
     },
     { rejectWithValue },
@@ -110,6 +110,7 @@ export const addCartItem = createAsyncThunk(
         session_id: payload.session_id,
         quantity: payload.quantity ?? 1,
         discount: payload.discount ?? 0,
+        metadata: payload.metadata ?? null,
       });
       return {
         cart,
@@ -127,7 +128,7 @@ export const removeCartItem = createAsyncThunk(
   "cart/removeItem",
   async (
     payload: { itemId: string; sessionId?: string },
-    { rejectWithValue, getState },
+    { rejectWithValue },
   ) => {
     try {
       const { itemId, sessionId } = payload;
@@ -140,16 +141,12 @@ export const removeCartItem = createAsyncThunk(
       const cart = await paymentService.removeCartItem(itemId);
       return { cart, localRemove: false as const };
     } catch (err) {
-      const state = getState() as { cart: CartState };
-      if (payload.sessionId || payload.itemId.startsWith("local-")) {
+      if (payload.itemId.startsWith("local-")) {
         return {
           localRemove: true,
           sessionId:
             payload.sessionId ?? payload.itemId.replace("local-", ""),
         };
-      }
-      if (state.cart.items.length > 0) {
-        return rejectWithValue(toErrorMessage(err));
       }
       return rejectWithValue(toErrorMessage(err));
     }
@@ -178,18 +175,26 @@ export const checkoutCart = createAsyncThunk(
       const items = state.cart.items;
       if (items.length === 0) throw new Error("Your cart is empty");
 
-      const purchase = await purchaseService.checkoutCart({
-        payment_type: "full",
-        coupon_code: payload.coupon_code ?? null,
-        notes: payload.notes ?? null,
-      } satisfies CheckoutPayload);
+      for (const item of items) {
+        const sessionId = paymentService.getCartSessionId(item);
+        if (!sessionId) continue;
+
+        await purchaseService.purchaseSessionWithRazorpay({
+          session_id: sessionId,
+          payment_type: "full",
+          quantity: Number(item.quantity ?? 1),
+          coupon_code: payload.coupon_code ?? null,
+          notes: payload.notes ?? null,
+        });
+      }
 
       try {
         await paymentService.clearCart();
       } catch {
         // cart clear is best-effort after successful purchase
       }
-      return purchase;
+
+      return { message: "Payment successful! Your session purchase is confirmed." };
     } catch (err) {
       return rejectWithValue(toErrorMessage(err));
     }
@@ -231,12 +236,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         state.status = "succeeded";
-        applyCartState(state, action.payload, true);
-        if (state.items.length === 0 && Object.keys(state.sessionSnapshots).length > 0) {
-          for (const [sessionId, session] of Object.entries(state.sessionSnapshots)) {
-            ensureOptimisticItem(state, sessionId, 1);
-          }
-        }
+        applyCartState(state, action.payload);
       })
       .addCase(fetchCart.rejected, (state, action) => {
         state.status = "failed";
@@ -253,11 +253,6 @@ const cartSlice = createSlice({
           state.sessionSnapshots[action.payload.session_id] =
             action.payload.sessionSnapshot;
         }
-        ensureOptimisticItem(
-          state,
-          action.payload.session_id,
-          action.payload.quantity,
-        );
       })
       .addCase(addCartItem.rejected, (state, action) => {
         state.actionStatus = "failed";
@@ -297,9 +292,11 @@ const cartSlice = createSlice({
         state.error = null;
         state.purchaseMessage = null;
       })
-      .addCase(checkoutCart.fulfilled, (state) => {
+      .addCase(checkoutCart.fulfilled, (state, action) => {
         state.purchaseStatus = "succeeded";
-        state.purchaseMessage = "Payment successful! Your session purchase is confirmed.";
+        state.purchaseMessage =
+          (action.payload as { message?: string } | undefined)?.message ??
+          "Payment successful! Your session purchase is confirmed.";
         state.items = [];
         state.sessionSnapshots = {};
         state.subtotal = 0;

@@ -8,6 +8,9 @@ type AddToCartButtonProps = {
   className?: string;
   redirect?: boolean;
   variant?: "primary" | "dark" | "inline";
+  quantity?: number;
+  discount?: number;
+  metadata?: Record<string, unknown> | null;
 };
 
 export default function AddToCartButton({
@@ -16,6 +19,9 @@ export default function AddToCartButton({
   className,
   redirect = true,
   variant = "primary",
+  quantity = 1,
+  discount = 0,
+  metadata = null,
 }: AddToCartButtonProps) {
   const { addToCart, loading } = useAddToCart();
 
@@ -33,7 +39,7 @@ export default function AddToCartButton({
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        void addToCart(sessionId, { redirect });
+        void addToCart(sessionId, { redirect, quantity, discount, metadata });
       }}
       className={className ?? baseClass}
     >

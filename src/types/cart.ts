@@ -25,4 +25,11 @@ export type AddToCartPayload = {
   session_id: string;
   quantity: number;
   discount?: number;
+  metadata?: Record<string, unknown> | null;
+};
+
+export type UpdateCartItemPayload = {
+  quantity?: number;
+  discount?: number;
+  metadata?: unknown;
 };

@@ -8,19 +8,27 @@ import type { RecordedVideo } from "@/types/recordedVideo";
 type RecordedVideoCardProps = {
   video: RecordedVideo;
   variant?: "featured" | "continue" | "popular" | "recent";
+  isPurchased?: boolean;
 };
 
 export default function RecordedVideoCard({
   video,
   variant = "featured",
+  isPurchased = false,
 }: RecordedVideoCardProps) {
   if (variant === "continue") return <ContinueCard video={video} />;
-  if (variant === "popular") return <PopularCard video={video} />;
-  if (variant === "recent") return <RecentCard video={video} />;
-  return <FeaturedCard video={video} />;
+  if (variant === "popular") return <PopularCard video={video} isPurchased={isPurchased} />;
+  if (variant === "recent") return <RecentCard video={video} isPurchased={isPurchased} />;
+  return <FeaturedCard video={video} isPurchased={isPurchased} />;
 }
 
-function FeaturedCard({ video }: { video: RecordedVideo }) {
+function FeaturedCard({
+  video,
+  isPurchased,
+}: {
+  video: RecordedVideo;
+  isPurchased: boolean;
+}) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_20px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(26,26,74,0.10)]">
       <Link href={`/recorded-videos/${video.slug}`} className="block">
@@ -32,16 +40,29 @@ function FeaturedCard({ video }: { video: RecordedVideo }) {
             className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 transition group-hover:opacity-100">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#3D3D8F] shadow-lg">
-              <PlayIcon />
-            </span>
-          </div>
+          {!isPurchased ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-[#1A1A4A]/35">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-[#3D3D8F] shadow-lg">
+                <LockIcon />
+              </span>
+            </div>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 transition group-hover:opacity-100">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#3D3D8F] shadow-lg">
+                <PlayIcon />
+              </span>
+            </div>
+          )}
           {video.badge && (
             <span className="absolute left-2.5 top-2.5 rounded bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
               {video.badge}
             </span>
           )}
+          {isPurchased ? (
+            <span className="absolute right-2.5 top-2.5 rounded bg-[#3D3D8F] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
+              Owned
+            </span>
+          ) : null}
           <span className="absolute bottom-2.5 right-2.5 rounded bg-black/75 px-2 py-0.5 text-[10px] font-medium text-white">
             {video.duration}
           </span>
@@ -82,7 +103,16 @@ function FeaturedCard({ video }: { video: RecordedVideo }) {
       </Link>
 
       <div className="mt-auto flex items-center gap-2 px-3.5 pb-3.5">
-        <AddToCartButton sessionId={video.sessionId} label="Book Now" />
+        {isPurchased ? (
+          <Link
+            href={`/recorded-videos/${video.slug}`}
+            className="flex flex-1 items-center justify-center rounded-lg bg-[#3D3D8F] py-2.5 text-[12px] font-semibold text-white transition hover:bg-[#2F2F70]"
+          >
+            Watch Now
+          </Link>
+        ) : (
+          <AddToCartButton sessionId={video.sessionId} label="Book Now" />
+        )}
         <button
           type="button"
           aria-label="Save"
@@ -124,7 +154,13 @@ function ContinueCard({ video }: { video: RecordedVideo }) {
   );
 }
 
-function PopularCard({ video }: { video: RecordedVideo }) {
+function PopularCard({
+  video,
+  isPurchased = false,
+}: {
+  video: RecordedVideo;
+  isPurchased?: boolean;
+}) {
   return (
     <Link href={`/recorded-videos/${video.slug}`} className="block h-full">
       <article className="group overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_16px_rgba(26,26,74,0.05)] transition hover:-translate-y-0.5">
@@ -149,12 +185,27 @@ function PopularCard({ video }: { video: RecordedVideo }) {
   );
 }
 
-function RecentCard({ video }: { video: RecordedVideo }) {
+function RecentCard({
+  video,
+  isPurchased,
+}: {
+  video: RecordedVideo;
+  isPurchased: boolean;
+}) {
   return (
     <Link href={`/recorded-videos/${video.slug}`} className="block h-full">
       <article className="group overflow-hidden rounded-lg border border-[#E8EAF4] bg-white shadow-[0_2px_12px_rgba(26,26,74,0.05)] transition hover:-translate-y-0.5">
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           <Image src={video.image} alt={video.title} fill className="object-cover" sizes="200px" />
+          {!isPurchased ? (
+            <span className="absolute left-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white/95 text-[#3D3D8F] shadow">
+              <LockIcon />
+            </span>
+          ) : (
+            <span className="absolute left-2 top-2 rounded bg-[#3D3D8F] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-[0.08em] text-white">
+              Owned
+            </span>
+          )}
           <span className="absolute bottom-1.5 right-1.5 rounded bg-black/75 px-1.5 py-0.5 text-[8px] text-white">
             {video.duration}
           </span>
@@ -165,9 +216,26 @@ function RecentCard({ video }: { video: RecordedVideo }) {
             <StarIcon />
             {video.rating} · {video.students}
           </div>
+          {!isPurchased ? (
+            <p className="mt-1 text-[9px] font-medium text-[#6B4EFF]">Payment required</p>
+          ) : null}
         </div>
       </article>
     </Link>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M8 10V8C8 5.8 9.8 4 12 4C14.2 4 16 5.8 16 8V10"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 

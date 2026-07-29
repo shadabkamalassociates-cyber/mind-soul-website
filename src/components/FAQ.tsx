@@ -12,15 +12,15 @@ type FaqItem = {
 const faqs: FaqItem[] = [
   {
     id: "1",
-    question: "What is SoulSensei?",
+    question: "What is Cosmicguruji?",
     answer:
-      "SoulSensei is India's trusted platform for spiritual growth, healing and self-discovery. We connect you with verified experts for live sessions in meditation, tarot, reiki, astrology and more.",
+      "Cosmicguruji is India's trusted platform for spiritual growth, healing and self-discovery. We connect you with verified experts for live sessions in meditation, tarot, reiki, astrology and more.",
   },
   {
     id: "2",
-    question: "How can SoulSensei help you in your journey?",
+    question: "How can Cosmicguruji help you in your journey?",
     answer:
-      "Through curated live sessions, transformation programs and one-on-one guidance, SoulSensei helps you heal emotional blocks, find clarity and grow with expert support at every step.",
+      "Through curated live sessions, transformation programs and one-on-one guidance, Cosmicguruji helps you heal emotional blocks, find clarity and grow with expert support at every step.",
   },
   {
     id: "3",

@@ -142,6 +142,14 @@ export async function fetchAllRecordedSessions() {
   return extractList<Session>(res);
 }
 
+export async function fetchAllOneOnOneSessions() {
+  const res = await apiGet(
+    "/sessions/fetch-all?session_type=ONE_ON_ONE",
+    false,
+  );
+  return extractList<Session>(res);
+}
+
 export async function fetchSessionsByCategory(categoryId: string | number) {
   const res = await apiGet(
     `/sessions/fetch-by-category/${categoryId}`,
@@ -175,12 +183,8 @@ export async function deleteSessions(ids: Array<string | number>) {
 }
 
 export async function fetchSessionById(id: string | number) {
-  // No dedicated fetch-by-id in API list — fall back to list filter
-  const all = await fetchAllSessions();
-  const found = all.find(
-    (s) => String(s.id ?? s._id) === String(id) || s.slug === String(id),
-  );
-  return found ?? null;
+  const res = await apiGet(`/sessions/fetch/${id}`, true);
+  return extractData<Session>(res);
 }
 
 export function mapSessionForUi(session: Session, ctx?: SessionUiContext) {

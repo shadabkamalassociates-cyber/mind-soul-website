@@ -41,10 +41,10 @@ function session(
     languages: "English, Hindi",
     about: [
       "Join this live interactive session for practical guidance tailored to your journey. Ask questions in real time and leave with clear next steps.",
-      "Designed for seekers who want clarity, confidence, and actionable wisdom from a verified SoulSensei expert.",
+      "Designed for seekers who want clarity, confidence, and actionable wisdom from a verified Cosmicguruji expert.",
     ],
     quote: "Clarity begins the moment you listen within.",
-    quoteAttr: "SoulSensei",
+    quoteAttr: "Cosmicguruji",
     topics: [
       "Core Concepts Overview",
       "Practical Tools & Techniques",

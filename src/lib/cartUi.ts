@@ -60,6 +60,23 @@ function resolveSession(
   );
 }
 
+function formatApiSchedule(startTime?: unknown) {
+  if (!startTime) return undefined;
+  const start = new Date(String(startTime));
+  if (Number.isNaN(start.getTime())) return undefined;
+  return {
+    date: start.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+    time: start.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+  };
+}
+
 export function mapCartItemForUi(
   item: CartItem,
   sessions: Session[],
@@ -78,6 +95,7 @@ export function mapCartItemForUi(
       : `/live-sessions/${slug}`;
 
   const cartItemId = getCartItemId(item) || `local-${sessionId}`;
+  const apiSchedule = formatApiSchedule(item.start_time);
 
   return {
     cartItemId,
@@ -90,27 +108,37 @@ export function mapCartItemForUi(
           item.session?.thumbnail ??
           "/live-sessions/astrology-card.png",
       ),
-    price: parsePrice(item.price ?? matched?.price ?? ui?.price),
+    price: parsePrice(
+      item.unit_price ?? item.final_price ?? item.price ?? matched?.price ?? ui?.price,
+    ),
     quantity: Number(item.quantity ?? 1),
     expert:
       ui?.expert ??
       String(
-        item.session?.expert_name ??
+        item.expert_first_name || item.expert_last_name
+          ? [item.expert_first_name, item.expert_last_name].filter(Boolean).join(" ")
+          : item.session?.expert_name ??
           [item.session?.expert_first_name, item.session?.expert_last_name]
             .filter(Boolean)
             .join(" ") ??
-          "SoulSensei Expert",
+          "Cosmicguruji Expert",
       ),
     duration:
       ui?.duration ??
       String(
-        matched?.duration_minutes ? `${matched.duration_minutes} min` : "—",
+        item.duration_minutes
+          ? `${item.duration_minutes} min`
+          : matched?.duration_minutes
+            ? `${matched.duration_minutes} min`
+            : "—",
       ),
-    language: String(matched?.language ?? item.session?.language ?? "English"),
+    language: String(
+      item.language ?? matched?.language ?? item.session?.language ?? "English",
+    ),
     sessionType,
     detailHref,
-    date: ui?.date,
-    time: ui?.time,
+    date: ui?.date ?? apiSchedule?.date,
+    time: ui?.time ?? apiSchedule?.time,
   };
 }
 

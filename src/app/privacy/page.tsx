@@ -4,8 +4,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | SoulSensei",
-  description: "Learn how SoulSensei collects, uses, and protects your personal information.",
+  title: "Privacy Policy | Cosmicguruji",
+  description: "Learn how Cosmicguruji collects, uses, and protects your personal information.",
 };
 
 export default function PrivacyPage() {
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-[18px] font-semibold text-[#3D3D8F]">1. Introduction</h2>
             <p className="mt-2">
-              SoulSensei (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) respects your privacy. This
+              Cosmicguruji (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) respects your privacy. This
               Privacy Policy explains how we collect, use, store, and share
               information when you use our website, apps, and services.
             </p>
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
             <p className="mt-2">
               We do not sell your personal data. We may share limited information
               with verified experts for booked sessions, payment processors, and
-              service providers who help us operate SoulSensei — all under
+              service providers who help us operate Cosmicguruji — all under
               appropriate confidentiality obligations.
             </p>
           </section>
@@ -80,10 +80,10 @@ export default function PrivacyPage() {
               data, and you can unsubscribe from marketing emails at any time.
               Contact us at{" "}
               <a
-                href="mailto:support@soulsensei.com"
+                href="mailto:support@cosmicguruji.com"
                 className="font-medium text-[#3D3D8F] underline"
               >
-                support@soulsensei.com
+                support@cosmicguruji.com
               </a>
               .
             </p>
@@ -94,10 +94,10 @@ export default function PrivacyPage() {
             <p className="mt-2">
               For privacy-related questions, email{" "}
               <a
-                href="mailto:support@soulsensei.com"
+                href="mailto:support@cosmicguruji.com"
                 className="font-medium text-[#3D3D8F] underline"
               >
-                support@soulsensei.com
+                support@cosmicguruji.com
               </a>
               .
             </p>

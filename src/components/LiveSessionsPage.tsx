@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LiveSessionCard from "@/components/LiveSessionCard";
 import RecordedVideoCard from "@/components/RecordedVideoCard";
+import { usePurchasedSessionIds } from "@/hooks/usePurchasedSessionIds";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchCategories,
@@ -16,11 +17,13 @@ import { fetchExperts } from "@/store/slices/expertsSlice";
 import { mapExpertForUi } from "@/services/expertsService";
 import {
   fetchAllLiveSessions,
+  fetchAllOneOnOneSessions,
   fetchAllRecordedSessions,
   mapSessionForRecordedUi,
   mapSessionForUi,
   type SessionUiContext,
 } from "@/services/sessionsService";
+import type { UiExpert } from "@/services/expertsService";
 import type { Session } from "@/types/session";
 
 const features = [
@@ -50,6 +53,7 @@ export default function LiveSessionsPage() {
   const dispatch = useAppDispatch();
   const categoryState = useAppSelector((s) => s.categories);
   const expertState = useAppSelector((s) => s.experts);
+  const { purchasedSessionIds } = usePurchasedSessionIds();
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
   const [apiSessions, setApiSessions] = useState<Session[]>([]);
@@ -58,6 +62,9 @@ export default function LiveSessionsPage() {
   const [recordedSessions, setRecordedSessions] = useState<Session[]>([]);
   const [recordedLoading, setRecordedLoading] = useState(true);
   const [recordedError, setRecordedError] = useState<string | null>(null);
+  const [oneOnOneSessions, setOneOnOneSessions] = useState<Session[]>([]);
+  const [oneOnOneLoading, setOneOnOneLoading] = useState(true);
+  const [oneOnOneError, setOneOnOneError] = useState<string | null>(null);
 
   useEffect(() => {
     if (categoryState.status === "idle") dispatch(fetchCategories());
@@ -111,6 +118,34 @@ export default function LiveSessionsPage() {
     }
 
     loadRecordedSessions();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadOneOnOneSessions() {
+      setOneOnOneLoading(true);
+      setOneOnOneError(null);
+      try {
+        const data = await fetchAllOneOnOneSessions();
+        if (!cancelled) setOneOnOneSessions(data);
+      } catch (err) {
+        if (!cancelled) {
+          setOneOnOneError(
+            err instanceof Error
+              ? err.message
+              : "Failed to load one-on-one sessions",
+          );
+        }
+      } finally {
+        if (!cancelled) setOneOnOneLoading(false);
+      }
+    }
+
+    loadOneOnOneSessions();
     return () => {
       cancelled = true;
     };
@@ -191,7 +226,44 @@ export default function LiveSessionsPage() {
     });
   }, [recordedVideos, activeCategory, query]);
 
+  const oneOnOne = useMemo(
+    () =>
+      oneOnOneSessions
+        .filter(
+          (s) => String(s.session_type ?? "").toUpperCase() === "ONE_ON_ONE",
+        )
+        .map((s) => mapSessionForUi(s, sessionUiContext)),
+    [oneOnOneSessions, sessionUiContext],
+  );
+
+  const filteredOneOnOne = useMemo(() => {
+    return oneOnOne.filter((s) => {
+      const catOk = activeCategory === "all" || s.categoryId === activeCategory;
+      const q = query.trim().toLowerCase();
+      const qOk =
+        !q ||
+        s.title.toLowerCase().includes(q) ||
+        s.expert.toLowerCase().includes(q) ||
+        s.category.toLowerCase().includes(q);
+      return catOk && qOk;
+    });
+  }, [oneOnOne, activeCategory, query]);
+
+  const oneOnOneExperts = useMemo(() => {
+    return expertState.items.map(mapExpertForUi).filter((expert) => {
+      const q = query.trim().toLowerCase();
+      if (!q) return true;
+      return (
+        expert.name.toLowerCase().includes(q) ||
+        expert.title.toLowerCase().includes(q) ||
+        expert.specialization.toLowerCase().includes(q)
+      );
+    });
+  }, [expertState.items, query]);
+
   const isLoading = sessionsLoading;
+  const isRecordedLoading = recordedLoading;
+  const isOneOnOneLoading = oneOnOneLoading;
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -205,18 +277,17 @@ export default function LiveSessionsPage() {
               className="text-[40px] font-semibold leading-[1.1] text-[#3D3D8F] sm:text-[48px] lg:text-[52px]"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
-              Live Sessions
+              Sessions
             </h1>
             <p
               className="mt-3 text-[18px] font-medium text-[#C9A06A] sm:text-[20px]"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
-              Real-time Guidance. Real Transformation.
+              Live, Recorded & One-on-One Guidance
             </p>
             <p className="mt-4 max-w-[520px] text-[14px] leading-[1.75] text-[#5C5C7A] sm:text-[15px]">
-              Join live interactive sessions with verified experts. Get
-              real-time guidance, ask questions, and experience profound
-              transformation from the comfort of your home.
+              Join live group sessions, learn from premium recordings, or book a
+              private one-on-one session with a verified SoulSensei expert.
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-4">
@@ -318,27 +389,24 @@ export default function LiveSessionsPage() {
         </div>
       </section>
 
-      {/* Upcoming sessions */}
-      <section className="bg-white">
+      {/* Live sessions */}
+      <section id="live-sessions" className="bg-white">
         <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-          <div className="mb-7 flex items-end justify-between gap-4">
+          <div className="mb-7">
             <h2
               className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[30px]"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
-              Upcoming Live Sessions
+              Live Sessions
             </h2>
-            <Link
-              href="#sessions"
-              className="shrink-0 text-[13px] font-semibold text-[#1A1A4A] hover:text-[#3D3D8F]"
-            >
-              View All Sessions →
-            </Link>
+            <p className="mt-2 max-w-[640px] text-[14px] leading-relaxed text-[#5C5C7A]">
+              Join interactive live classes with verified experts in real time.
+            </p>
           </div>
 
           {isLoading && (
             <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
-              Loading sessions...
+              Loading live sessions...
             </p>
           )}
 
@@ -350,7 +418,7 @@ export default function LiveSessionsPage() {
 
           {!isLoading && !sessionsError && filtered.length === 0 && (
             <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
-              No sessions found. Try a different search or category.
+              No live sessions found. Try a different search or category.
             </p>
           )}
 
@@ -364,57 +432,114 @@ export default function LiveSessionsPage() {
         </div>
       </section>
 
-
-
       {/* Recorded sessions */}
-      {/* <section className="bg-white">
+      <section id="recorded-sessions" className="border-t border-[#E8EAF4] bg-[#F8F9FC]">
         <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-          <div className="mb-7 flex items-end justify-between gap-4">
+          <div className="mb-7">
             <h2
               className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[30px]"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Recorded Sessions
             </h2>
-            <Link
-              href="/recorded-videos"
-              className="shrink-0 text-[13px] font-semibold text-[#1A1A4A] hover:text-[#3D3D8F]"
-            >
-              View All Sessions →
-            </Link>
+            <p className="mt-2 max-w-[640px] text-[14px] leading-relaxed text-[#5C5C7A]">
+              Watch premium recordings anytime with lifetime access and HD quality.
+            </p>
           </div>
 
-          {recordedLoading && (
+          {isRecordedLoading && (
             <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
               Loading recorded sessions...
             </p>
           )}
 
-          {!recordedLoading && recordedError && (
+          {!isRecordedLoading && recordedError && (
             <p className="py-16 text-center text-[14px] text-[#B42318]">
               {recordedError}
             </p>
           )}
 
-          {!recordedLoading && !recordedError && filteredRecorded.length === 0 && (
+          {!isRecordedLoading && !recordedError && filteredRecorded.length === 0 && (
             <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
               No recorded sessions found. Try a different search or category.
             </p>
           )}
 
-          {!recordedLoading && !recordedError && filteredRecorded.length > 0 && (
+          {!isRecordedLoading && !recordedError && filteredRecorded.length > 0 && (
             <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
               {filteredRecorded.map((video) => (
-                <RecordedVideoCard key={video.slug} video={video} />
+                <RecordedVideoCard
+                  key={video.slug}
+                  video={video}
+                  variant="featured"
+                  isPurchased={purchasedSessionIds.has(video.sessionId)}
+                />
               ))}
             </div>
           )}
         </div>
-      </section> */}
+      </section>
 
+      {/* One-on-one sessions */}
+      <section id="one-on-one-sessions" className="border-t border-[#E8EAF4] bg-white">
+        <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+          <div className="mb-7">
+            <h2
+              className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[30px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
+              One-on-One Sessions
+            </h2>
+            <p className="mt-2 max-w-[640px] text-[14px] leading-relaxed text-[#5C5C7A]">
+              Book a private session for personalised guidance tailored to your journey.
+            </p>
+          </div>
 
+          {isOneOnOneLoading && (
+            <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
+              Loading one-on-one sessions...
+            </p>
+          )}
 
+          {!isOneOnOneLoading && oneOnOneError && (
+            <p className="py-16 text-center text-[14px] text-[#B42318]">
+              {oneOnOneError}
+            </p>
+          )}
 
+          {!isOneOnOneLoading && !oneOnOneError && filteredOneOnOne.length > 0 && (
+            <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+              {filteredOneOnOne.map((session) => (
+                <LiveSessionCard key={session.slug} session={session} />
+              ))}
+            </div>
+          )}
+
+          {!isOneOnOneLoading &&
+            !oneOnOneError &&
+            filteredOneOnOne.length === 0 &&
+            oneOnOne.length > 0 && (
+              <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
+                No one-on-one sessions found. Try a different search or category.
+              </p>
+            )}
+
+          {!isOneOnOneLoading &&
+            !oneOnOneError &&
+            oneOnOne.length === 0 &&
+            (oneOnOneExperts.length > 0 ? (
+              <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+                {oneOnOneExperts.map((expert) => (
+                  <OneOnOneExpertCard key={expert.id} expert={expert} />
+                ))}
+              </div>
+            ) : (
+              <p className="py-16 text-center text-[14px] text-[#8A8AA8]">
+                No one-on-one sessions available yet.
+              </p>
+            ))}
+        </div>
+      </section>
 
       {/* Personalized CTA */}
       <section className="bg-white px-4 pb-8 sm:px-6 lg:px-8">
@@ -469,7 +594,7 @@ export default function LiveSessionsPage() {
                 className="text-[20px] font-semibold text-[#3D3D8F] sm:text-[22px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
-                Never Miss a Live Session
+                Never Miss a Session
               </h3>
               <p className="mt-1 text-[13px] text-[#5C5C7A]">
                 Subscribe to get weekly updates on upcoming sessions and
@@ -500,6 +625,54 @@ export default function LiveSessionsPage() {
 
       <Footer />
     </main>
+  );
+}
+
+function OneOnOneExpertCard({ expert }: { expert: UiExpert }) {
+  return (
+    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_20px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(26,26,74,0.10)]">
+      <div className="relative bg-[#F7F6FB] px-4 pb-4 pt-5">
+        <span className="absolute left-3 top-3 rounded bg-[#6B4EFF] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white">
+          1-on-1
+        </span>
+        <div className="relative mx-auto mt-4 h-[180px] w-full">
+          <Image
+            src={expert.image}
+            alt={expert.name}
+            fill
+            unoptimized
+            className="object-contain object-bottom"
+            sizes="320px"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-2 text-center">
+        <h3
+          className="text-[16px] font-semibold text-[#1A1A4A]"
+          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+        >
+          {expert.name}
+        </h3>
+        <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#C9A06A]">
+          {expert.title}
+        </p>
+        <p className="mx-auto mt-2 line-clamp-2 max-w-[260px] text-[12px] leading-relaxed text-[#5C5C7A]">
+          {expert.bio || "Private personalised guidance from a verified expert."}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-[11px] text-[#8A8AA8]">
+          <span>{expert.experience}</span>
+          <span>·</span>
+          <span>{expert.specialization}</span>
+        </div>
+        <Link
+          href={`/experts/${expert.slug}`}
+          className="mt-4 inline-flex items-center justify-center rounded-lg bg-[#3D3D8F] px-4 py-2.5 text-[12px] font-semibold text-white transition hover:bg-[#2F2F70]"
+        >
+          Book One-on-One
+        </Link>
+      </div>
+    </article>
   );
 }
 

@@ -147,7 +147,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
     bio: String(
       expert.bio ||
         expert.about ||
-        "Verified SoulSensei expert ready to guide your journey.",
+        "Verified Cosmicguruji expert ready to guide your journey.",
     ),
     specialization: String(expert.specialization || "Guidance"),
     experienceDetail:
@@ -159,7 +159,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
       expert.professional_title ||
         expert.profession ||
         expert.role ||
-        "SoulSensei Expert",
+        "Cosmicguruji Expert",
     ),
     profession: String(expert.profession || expert.role || "Expert"),
     clients: "—",
@@ -179,7 +179,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
       aboutParts.length > 0
         ? aboutParts
         : [
-            `${name} is a verified SoulSensei expert dedicated to helping seekers with clarity and transformation.`,
+            `${name} is a verified Cosmicguruji expert dedicated to helping seekers with clarity and transformation.`,
           ],
     highlights: [
       {

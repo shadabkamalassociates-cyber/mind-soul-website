@@ -87,10 +87,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-4">
             <Link href="/" className="inline-flex items-center gap-2.5">
-              <LogoIcon className="shrink-0" variant="indigo" />
+              <img src="https://res.cloudinary.com/dgnztzmzp/image/upload/v1785323232/logo_-_icon_fbp439.png" alt="Cosmicguruji" className="w-12 h-12" />
+              {/* <LogoIcon className="shrink-0" variant="indigo" /> */}
               <div className="flex flex-col leading-none">
                 <span className="text-[20px] font-semibold text-[#1A1A4A]">
-                  SoulSensei
+                  Cosmicguruji
                 </span>
                 <span className="mt-[3px] text-[8.5px] font-medium tracking-[0.2em] text-[#5B5B9A] uppercase">
                   Awaken. Heal. Transform.
@@ -212,8 +213,9 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col items-center gap-4 pt-5 text-[11px] text-[#5C5C7A] sm:flex-row sm:justify-between sm:gap-3 sm:text-[12px]">
           <div className="flex items-center gap-2">
-            <LogoIcon className="h-5 w-5 scale-75" variant="indigo" />
-            <span>© 2025 SoulSensei. All rights reserved.</span>
+            <img src="https://res.cloudinary.com/dgnztzmzp/image/upload/v1785323232/logo_-_icon_fbp439.png" alt="Cosmicguruji" className="w-5 h-5" />
+            {/* <LogoIcon className="h-5 w-5 scale-75" variant="indigo" /> */}
+            <span>© 2025 Cosmicguruji. All rights reserved.</span>
           </div>
 
           <div className="flex items-center gap-1.5">

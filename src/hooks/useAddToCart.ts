@@ -8,6 +8,7 @@ import { addCartItem } from "@/store/slices/cartSlice";
 type AddToCartOptions = {
   quantity?: number;
   discount?: number;
+  metadata?: Record<string, unknown> | null;
   redirect?: boolean;
 };
 
@@ -55,6 +56,7 @@ export function useAddToCart() {
             session_id: sessionId,
             quantity: options?.quantity ?? 1,
             discount: options?.discount ?? 0,
+            metadata: options?.metadata ?? null,
             sessionSnapshot,
           }),
         ).unwrap();

@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RecordedVideoCard from "@/components/RecordedVideoCard";
+import { usePurchasedSessionIds } from "@/hooks/usePurchasedSessionIds";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchRecordedSessions } from "@/store/slices/recordedSessionsSlice";
 import { mapSessionForRecordedUi } from "@/services/sessionsService";
@@ -19,6 +21,7 @@ const heroFeatures = [
 export default function RecordedVideosPage() {
   const dispatch = useAppDispatch();
   const recordedState = useAppSelector((s) => s.recordedSessions);
+  const { purchasedSessionIds } = usePurchasedSessionIds();
 
   useEffect(() => {
     if (recordedState.status === "idle") {
@@ -125,7 +128,12 @@ export default function RecordedVideosPage() {
             </h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6 lg:gap-5">
               {recent.map((v) => (
-                <RecordedVideoCard key={`recent-${v.slug}`} video={v} variant="recent" />
+                <RecordedVideoCard
+                  key={`recent-${v.slug}`}
+                  video={v}
+                  variant="recent"
+                  isPurchased={purchasedSessionIds.has(v.sessionId)}
+                />
               ))}
             </div>
           </div>
@@ -144,7 +152,12 @@ export default function RecordedVideosPage() {
           {!isLoading && !recordedState.error && videos.length > 0 ? (
             <div className="mx-auto grid w-full max-w-[1080px] gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
               {videos.map((v) => (
-                <RecordedVideoCard key={v.slug} video={v} variant="featured" />
+                <RecordedVideoCard
+                  key={v.slug}
+                  video={v}
+                  variant="featured"
+                  isPurchased={purchasedSessionIds.has(v.sessionId)}
+                />
               ))}
             </div>
           ) : !isLoading && !recordedState.error ? (

@@ -126,7 +126,7 @@ export default function Home() {
       </div>
 
       <FeaturedLiveSessions />
-      <SoulExperts />
+      {/* <SoulExperts /> */}
       <WhySoulSensei />
       <TransformationPrograms />
       <UpcomingRetreats />
