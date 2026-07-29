@@ -258,12 +258,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
     education,
     certifications,
     specializations,
-    about:
-      aboutParts.length > 0
-        ? aboutParts
-        : [
-            `${name} is a verified SoulSensei expert dedicated to helping seekers with clarity and transformation.`,
-          ],
+    about: buildAboutParagraphs(expert, name),
     highlights: [
       {
         title: "Why I Started",
