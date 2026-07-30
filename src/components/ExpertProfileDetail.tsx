@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ExpertReviewsSection from "@/components/ExpertReviewsSection";
 import type { ExpertProfile } from "@/data/experts";
 import { experts as staticExperts } from "@/data/experts";
 import {
@@ -139,7 +140,7 @@ function findStaticExpertMatch(expert: Expert): ExpertProfile | undefined {
 
 function buildAboutParagraphs(expert: Expert, name: string): string[] {
   const rawParts = [expert.about, expert.bio, expert.why_started, expert.mission]
-    .filter((v): v is string => typeof v === "string" && v.trim())
+    .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
     .flatMap((text) =>
       text
         .split(/\r?\n\r?\n+/)
@@ -659,6 +660,11 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
           </div>
         </div>
       </section>
+
+      <ExpertReviewsSection
+        expertSlug={expert.slug}
+        ratingLabel={expert.rating}
+      />
 
       {/* CTA Banner */}
       <section className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 lg:px-8">
