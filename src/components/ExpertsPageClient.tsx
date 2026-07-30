@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import {
   fetchVerifiedExperts,
+  getExpertCardBio,
   mapExpertForUi,
   type UiExpert,
 } from "@/services/expertsService";
@@ -189,7 +191,7 @@ export default function ExpertsPageClient() {
             </p>
           )}
 
-          <div className="mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          <div className="mt-10 grid auto-rows-fr gap-7 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {experts.map((expert) => (
               <ExpertCard key={expert.id} expert={expert} />
             ))}
@@ -221,50 +223,107 @@ export default function ExpertsPageClient() {
         </div>
       </section>
 
-      <section className="bg-[#1A1A4A]">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 py-12 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-10 lg:py-16">
-          <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-10">
-            <div className="relative h-[150px] w-[130px] shrink-0 sm:h-[175px] sm:w-[155px] lg:h-[200px] lg:w-[175px]">
-              <Image
-                src="/experts-page/lotus-gold.png"
-                alt=""
-                fill
-                unoptimized
-                className="object-contain opacity-[0.28]"
-                sizes="(max-width: 1024px) 130px, 170px"
-              />
-            </div>
-            <div className="text-center lg:text-left">
-              <h2
-                className="text-[26px] font-semibold leading-tight text-white sm:text-[30px] lg:text-[34px]"
-                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+      {/* CTA — zen banner (matches About page design) */}
+      <section className="bg-white px-4 py-12 sm:px-6 sm:py-14 lg:px-10 lg:py-16">
+        <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-[28px] bg-[#F7F5FC]">
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 75% at 28% 50%, rgba(255,255,255,0.95) 0%, rgba(247,245,252,0.45) 55%, transparent 78%)",
+            }}
+          />
+
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] lg:block xl:w-[36%]">
+            <Image
+              src="/about/cta-right.png"
+              alt=""
+              fill
+              unoptimized
+              className="object-cover object-[right_center] opacity-90"
+              sizes="40vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#F7F5FC]/25 to-[#F7F5FC]" />
+            <div className="absolute inset-y-0 left-0 w-[55%] bg-gradient-to-l from-transparent to-[#F7F5FC]" />
+          </div>
+
+          <div className="relative z-10 flex max-w-[580px] flex-col items-start px-6 py-14 text-left sm:px-10 sm:py-16 lg:max-w-[52%] lg:px-14 lg:py-[72px]">
+            <h2
+              className="text-[28px] font-semibold leading-[1.25] text-[#3D3D8F] sm:text-[34px] lg:text-[36px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
+              Ready to begin your journey?
+            </h2>
+            <p className="mt-4 max-w-[420px] text-[14px] leading-[1.7] text-[#3A3A4A] sm:text-[15px]">
+              Create an account to explore professionals, read verified reviews,
+              and book your first session.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-start gap-3.5">
+              <Link
+                href="/#start"
+                className="inline-flex min-w-[140px] items-center justify-center rounded-xl bg-[#3D3D8F] px-7 py-3.5 text-[14px] font-semibold text-white shadow-[0_8px_24px_rgba(61,61,143,0.28)] transition hover:bg-[#2F2F75] hover:shadow-[0_10px_28px_rgba(61,61,143,0.35)]"
               >
-                Ready to Begin Your Journey?
-              </h2>
-              <p className="mt-3 max-w-[480px] text-[14px] leading-relaxed text-white sm:text-[15px] lg:text-[16px]">
-                Connect with our experts and take the first step towards
-                clarity, peace, and transformation.
-              </p>
+                Get Started
+              </Link>
+              <Link
+                href="/experts"
+                className="inline-flex min-w-[140px] items-center justify-center rounded-xl border-[1.5px] border-[#3D3D8F] bg-white/80 px-7 py-3.5 text-[14px] font-semibold text-[#3D3D8F] backdrop-blur-sm transition hover:bg-[#3D3D8F] hover:text-white"
+              >
+                Explore Experts
+              </Link>
             </div>
           </div>
-          <Link
-            href="/#book"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-[#E8C69F] via-[#C9A06A] to-[#B8925E] px-7 py-3.5 text-[14px] font-semibold text-[#1A1A4A] shadow-[0_8px_24px_rgba(201,160,106,0.35)] transition hover:brightness-105 sm:px-8 sm:py-4 sm:text-[15px]"
-          >
-            Connect with an Expert
-            <ArrowIcon />
-          </Link>
         </div>
       </section>
+
+      <section className="relative overflow-hidden bg-[#1A1A4A]">
+        <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[min(42%,360px)] lg:block">
+          <Image
+            src="/about/cta-left.png"
+            alt=""
+            fill
+            unoptimized
+            className="object-cover object-[left_center] opacity-90"
+            sizes="360px"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#1A1A4A]/35 to-[#1A1A4A]" />
+        </div>
+
+        <div className="relative z-10 mx-auto flex max-w-[1200px] flex-col items-start justify-between gap-6 px-6 py-8 sm:px-8 sm:py-9 lg:flex-row lg:items-center lg:px-10">
+          <div className="lg:pl-[min(34%,280px)]">
+            <p className="text-[16px] font-medium text-white sm:text-[17px]">
+              Need help finding the right expert?
+            </p>
+            <Link
+              href="/contact"
+              className="mt-1 inline-block text-[13px] text-white/70 underline underline-offset-2 transition hover:text-white"
+            >
+              Visit Contact Page
+            </Link>
+          </div>
+          <a
+            href="https://cosmicguruji.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[14px] text-white/80 transition hover:text-white"
+          >
+            https://cosmicguruji.com/
+          </a>
+        </div>
+      </section>
+
+      <Footer />
     </main>
   );
 }
 
 function ExpertCard({ expert }: { expert: UiExpert }) {
+  const bio = getExpertCardBio(expert.bio);
+
   return (
     <Link href={`/experts/${expert.slug}`} className="block h-full">
       <article className="group flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_8px_28px_rgba(26,26,74,0.10)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_rgba(26,26,74,0.14)] sm:rounded-[20px]">
-        <div className="relative bg-[#F7F6FB] pb-5 pt-3">
+        <div className="relative shrink-0 bg-[#F7F6FB] pb-5 pt-3">
           <span className="absolute left-3 top-3 z-20 rounded-[3px] bg-[#3D3D8F] px-2 py-[4px] text-[7px] font-bold uppercase tracking-[0.1em] text-white sm:left-3.5 sm:top-3.5 sm:text-[7.5px]">
             {expert.experience}
           </span>
@@ -293,53 +352,71 @@ function ExpertCard({ expert }: { expert: UiExpert }) {
         </div>
 
         <div className="relative flex flex-1 flex-col bg-[#1A1A4A] px-4 pb-4 pt-6 text-center sm:px-5 sm:pb-5 sm:pt-7">
-          <h3
-            className="text-[17px] font-semibold leading-tight text-white sm:text-[18px]"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-          >
-            {expert.name}
-          </h3>
-          <p className="mt-1 text-[8px] font-semibold uppercase tracking-[0.16em] text-[#C9A06A] sm:text-[9px]">
-            {expert.title}
-          </p>
-          <p className="mx-auto mt-2.5 line-clamp-3 max-w-[250px] text-[11px] leading-[1.55] text-white/85 sm:text-[11.5px]">
-            {expert.bio || "Verified SoulSensei expert ready to guide your journey."}
+          <div className="shrink-0">
+            <h3
+              className="text-[17px] font-semibold leading-tight text-white sm:text-[18px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
+              {expert.name}
+            </h3>
+            <p className="mt-1 text-[8px] font-semibold uppercase tracking-[0.16em] text-[#C9A06A] sm:text-[9px]">
+              {expert.title}
+            </p>
+          </div>
+
+          <p className="mx-auto mt-2.5 line-clamp-3 min-h-[2.5rem] max-w-[250px] text-[11px] leading-[1.55] text-white/85 sm:min-h-[2.75rem] sm:text-[11.5px]">
+            {bio}
           </p>
 
-          <div className="my-3 flex items-center justify-center gap-2.5">
+          <div className="my-3 flex shrink-0 items-center justify-center gap-2.5">
             <span className="h-px w-12 bg-[#C9A06A]/50" />
             <span className="h-[4px] w-[4px] rotate-45 bg-[#C9A06A]" />
             <span className="h-px w-12 bg-[#C9A06A]/50" />
           </div>
 
-          <div className="mx-auto w-full max-w-[230px] space-y-1.5 text-left">
-            <div className="flex items-start gap-2">
-              <span className="mt-0.5 shrink-0 text-[#C9A06A]">
-                <MiniLotusIcon />
-              </span>
-              <p className="text-[11px] leading-snug text-white/90">
-                <span className="font-semibold text-[#C9A06A]">Specialization:</span>{" "}
-                {expert.specialization}
-              </p>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="mt-0.5 shrink-0 text-[#C9A06A]">
-                <CalendarMiniIcon />
-              </span>
-              <p className="text-[11px] leading-snug text-white/90">
-                <span className="font-semibold text-[#C9A06A]">Experience:</span>{" "}
-                {expert.experience}
-              </p>
-            </div>
+          <div className="mx-auto flex w-fit max-w-[240px] flex-col gap-2 sm:max-w-[250px]">
+            <ExpertCardDetailRow
+              label="Specialization"
+              value={expert.specialization}
+              icon={<MiniLotusIcon />}
+            />
+            <ExpertCardDetailRow
+              label="Experience"
+              value={expert.experience}
+              icon={<CalendarMiniIcon />}
+            />
           </div>
 
-          <span className="mt-4 inline-flex items-center justify-center gap-1.5 self-center rounded-full border border-white/75 px-5 py-1.5 text-[11px] font-medium text-white transition group-hover:bg-white/10 sm:mt-4 sm:px-5 sm:py-2 sm:text-[12px]">
-            View Profile
-            <ArrowIcon />
-          </span>
+          <div className="mt-auto pt-4">
+            <span className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/75 px-5 py-1.5 text-[11px] font-medium text-white transition group-hover:bg-white/10 sm:px-5 sm:py-2 sm:text-[12px]">
+              View Profile
+              <ArrowIcon />
+            </span>
+          </div>
         </div>
       </article>
     </Link>
+  );
+}
+
+function ExpertCardDetailRow({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string;
+  icon: ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-2 text-left">
+      <span className="mt-0.5 flex h-3 w-3 shrink-0 items-center justify-center text-[#C9A06A]">
+        {icon}
+      </span>
+      <p className="min-w-0 text-[11px] leading-snug text-white/90">
+        <span className="font-semibold text-[#C9A06A]">{label}:</span> {value}
+      </p>
+    </div>
   );
 }
 

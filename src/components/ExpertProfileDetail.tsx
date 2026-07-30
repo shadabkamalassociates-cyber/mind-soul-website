@@ -8,7 +8,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import type { ExpertProfile } from "@/data/experts";
 import { experts as staticExperts } from "@/data/experts";
-import { fetchExpertByIdFromAll } from "@/services/expertsService";
+import {
+  fetchExpertByIdFromAll,
+  resolveExpertSpecialization,
+} from "@/services/expertsService";
 import { ApiError } from "@/services/apiClient";
 import type { Expert } from "@/types/expert";
 
@@ -214,8 +217,13 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
       ? [expert.certifications]
       : [];
 
+  const resolvedSpecialization = resolveExpertSpecialization(expert);
   const specializations = parseListField(expert.specialization);
   const staticMatch = findStaticExpertMatch(expert);
+  const displaySpecializations =
+    specializations.length > 0
+      ? specializations
+      : (staticMatch?.specializations ?? parseListField(resolvedSpecialization));
 
   return {
     slug: id,
@@ -232,7 +240,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
         expert.about ||
         "Verified Cosmicguruji expert ready to guide your journey.",
     ),
-    specialization: String(expert.specialization || "Guidance"),
+    specialization: resolvedSpecialization,
     experienceDetail:
       expert.experience_years != null
         ? `${expert.experience_years}+ Years`
@@ -257,7 +265,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
     languages,
     education,
     certifications,
-    specializations,
+    specializations: displaySpecializations,
     about: buildAboutParagraphs(expert, name),
     highlights: [
       {
