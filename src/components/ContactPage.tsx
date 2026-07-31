@@ -6,54 +6,6 @@ import { useState, type FormEvent, type ReactNode } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const quickContacts = [
-  {
-    label: "Call Us",
-    value: "+91 98765 43210",
-    href: "tel:+919876543210",
-    icon: <PhoneIcon />,
-  },
-  {
-    label: "Email Us",
-    value: "cosmicgurujii@gmail.com",
-    href: "mailto:cosmicgurujii@gmail.com",
-    icon: <MailIcon />,
-  },
-  {
-    label: "WhatsApp Us",
-    value: "+91 98765 43210",
-    href: "https://wa.me/919876543210",
-    icon: <WhatsAppIcon />,
-  },
-];
-
-const contactInfo = [
-  {
-    title: "Phone",
-    value: "+91 98765 43210",
-    note: "Mon - Sat: 9:00 AM - 8:00 PM",
-    icon: <PhoneIcon />,
-  },
-  {
-    title: "WhatsApp",
-    value: "+91 98765 43210",
-    note: "Mon - Sat: 9:00 AM - 8:00 PM",
-    icon: <WhatsAppIcon />,
-  },
-  {
-    title: "Email",
-    value: "cosmicgurujii@gmail.com",
-    note: "We reply within 24 hours",
-    icon: <MailIcon />,
-  },
-  {
-    title: "Office Address",
-    value: "Cosmicguruji Wellness Pvt. Ltd.",
-    note: "A-42, Sector 62, Noida,\nUttar Pradesh 201301, India",
-    icon: <LocationIcon />,
-  },
-];
-
 const quickLinks = [
   { label: "Book a Session", href: "/#book" },
   { label: "Become an Expert", href: "/experts" },
@@ -82,17 +34,17 @@ export default function ContactPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#EEF0FA]">
-        <div className="relative mx-auto max-w-[1400px] px-4 pt-12 pb-10 sm:px-6 sm:pt-14 sm:pb-12 lg:px-8 lg:pt-16">
-          <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.95fr] lg:gap-10">
+        <div className="relative mx-auto max-w-[1400px] px-4 pt-8 pb-6 sm:px-6 sm:pt-9 sm:pb-7 lg:px-8 lg:pt-10 lg:pb-8">
+          <div className="grid items-center gap-5 lg:grid-cols-[1fr_0.95fr] lg:gap-8">
             <div className="relative z-10 max-w-[560px]">
               <h1
-                className="text-[40px] font-semibold leading-[1.1] text-[#3D3D8F] sm:text-[48px] lg:text-[52px]"
+                className="text-[34px] font-semibold leading-[1.1] text-[#3D3D8F] sm:text-[40px] lg:text-[44px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Contact Us
               </h1>
 
-              <div className="mt-4 flex items-center gap-3">
+              <div className="mt-3 flex items-center gap-3">
                 <span className="h-px w-10 bg-[#C9A06A]/70" />
                 <Image
                   src="/experts-page/lotus-gold.png"
@@ -104,33 +56,13 @@ export default function ContactPage() {
                 <span className="h-px w-10 bg-[#C9A06A]/70" />
               </div>
 
-              <p className="mt-5 text-[14px] leading-[1.75] text-[#5C5C7A] sm:text-[15px]">
+              <p className="mt-3 max-w-[480px] text-[14px] leading-[1.65] text-[#5C5C7A] sm:text-[15px]">
                 We&apos;re here to help you on your journey towards healing,
                 growth, and transformation
               </p>
-
-              <div className="mt-8 flex flex-wrap gap-8 sm:gap-10">
-                {quickContacts.map((item) => (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    target={item.href.startsWith("http") ? "_blank" : undefined}
-                    rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-                    className="flex flex-col items-center text-center transition hover:opacity-90"
-                  >
-                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#1A1A4A] shadow-[0_2px_10px_rgba(26,26,74,0.06)] sm:h-16 sm:w-16">
-                      {item.icon}
-                    </span>
-                    <p className="mt-2.5 text-[12px] font-semibold text-[#1A1A4A] sm:text-[13px]">
-                      {item.value}
-                    </p>
-                    <p className="mt-0.5 text-[11px] text-[#8A8AA8]">{item.label}</p>
-                  </a>
-                ))}
-              </div>
             </div>
 
-            <div className="relative mx-auto hidden h-[300px] w-full max-w-[480px] bg-transparent lg:block lg:h-[360px] lg:justify-self-end">
+            <div className="relative mx-auto hidden h-[220px] w-full max-w-[400px] bg-transparent lg:block lg:h-[260px] lg:justify-self-end">
               <Image
                 src="/contact-mandala-gold.png"
                 alt=""
@@ -146,7 +78,7 @@ export default function ContactPage() {
 
         {/* Breadcrumb */}
         <div className="border-y border-[#E0E2F0] bg-[#E8EAF6]">
-          <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 py-3 text-[12px] text-[#5C5C7A] sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-[1400px] items-center gap-2 px-4 py-2.5 text-[12px] text-[#5C5C7A] sm:px-6 lg:px-8">
             <HomeMiniIcon />
             <Link href="/" className="hover:text-[#1A1A4A]">
               Home
@@ -157,25 +89,27 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Form + Contact Info */}
+      {/* Contact Form */}
       <section className="bg-[#F8F9FC]">
-        <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
-            {/* Form */}
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-7 shadow-[0_8px_30px_rgba(26,26,74,0.06)] sm:px-8 sm:py-8">
-              <h2
-                className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[28px]"
-                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-              >
-                Send Us a Message
-              </h2>
-              <p className="mt-2 text-[13px] leading-relaxed text-[#5C5C7A] sm:text-[14px]">
-                Have a question or need assistance? Fill out the form and our
-                team will get back to you.
-              </p>
+        <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-11">
+          <div className="mx-auto max-w-[680px]">
+            <div className="overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_6px_24px_rgba(26,26,74,0.05)]">
+              <div className="h-0.5 bg-gradient-to-r from-[#3D3D8F] via-[#C9A06A] to-[#3D3D8F]" />
+              <div className="px-5 py-5 sm:px-6 sm:py-6">
+                <div>
+                  <h2
+                    className="text-[22px] font-semibold text-[#3D3D8F] sm:text-[24px]"
+                    style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                  >
+                    Send Us a Message
+                  </h2>
+                  <p className="mt-1.5 text-[13px] leading-snug text-[#5C5C7A]">
+                    Fill out the form below and we&apos;ll get back to you within 24 hours.
+                  </p>
+                </div>
 
-              <form onSubmit={onSubmit} className="mt-7 space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <form onSubmit={onSubmit} className="contact-form mt-5 space-y-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Full Name *">
                     <input
                       required
@@ -194,7 +128,7 @@ export default function ContactPage() {
                   </Field>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Phone Number *">
                     <input
                       required
@@ -225,13 +159,14 @@ export default function ContactPage() {
                 <Field label="Your Message *">
                   <textarea
                     required
-                    rows={5}
+                    rows={3}
                     placeholder="Write your message here..."
-                    className="contact-input min-h-[130px] resize-y"
+                    className="contact-input min-h-[88px] resize-y"
                   />
                 </Field>
 
-                <label className="flex items-start gap-2.5 pt-1 text-[12px] leading-relaxed text-[#5C5C7A] sm:text-[13px]">
+                <div className="flex flex-col gap-3 pt-0.5 sm:flex-row sm:items-center sm:justify-between">
+                <label className="flex items-start gap-2 text-[12px] leading-snug text-[#5C5C7A]">
                   <input
                     type="checkbox"
                     checked={agreed}
@@ -252,62 +187,30 @@ export default function ContactPage() {
                   </span>
                 </label>
 
+                <p className="flex shrink-0 items-center gap-1.5 text-[11px] text-[#8A8AA8] sm:text-[12px]">
+                  <span className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#E8F6EE] text-[#2F9B63]">
+                    <CheckMiniIcon />
+                  </span>
+                  Your info is safe with us.
+                </p>
+                </div>
+
                 <button
                   type="submit"
-                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#3D3D8F] px-6 py-3.5 text-[14px] font-semibold text-white transition hover:bg-[#2F2F70]"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#3D3D8F] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[#2F2F70]"
                 >
                   Send Message
                   <ArrowIcon />
                 </button>
-
-                <p className="flex items-center justify-center gap-2 pt-1 text-[12px] text-[#5C5C7A]">
-                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#E8F6EE] text-[#2F9B63]">
-                    <CheckMiniIcon />
-                  </span>
-                  Your information is safe with us.
-                </p>
               </form>
-            </div>
-
-            {/* Contact Information */}
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-7 shadow-[0_8px_30px_rgba(26,26,74,0.06)] sm:px-7 sm:py-8">
-              <h2
-                className="text-[26px] font-semibold text-[#3D3D8F] sm:text-[28px]"
-                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-              >
-                Contact Information
-              </h2>
-              <p className="mt-2 text-[13px] leading-relaxed text-[#5C5C7A] sm:text-[14px]">
-                Reach out to us through any of the following channels.
-              </p>
-
-              <div className="mt-7 space-y-5">
-                {contactInfo.map((item) => (
-                  <div key={item.title} className="flex gap-3.5">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EEF0FA] text-[#1A1A4A]">
-                      {item.icon}
-                    </span>
-                    <div>
-                      <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
-                        {item.title}
-                      </p>
-                      <p className="mt-1 text-[14px] font-semibold text-[#1A1A4A]">
-                        {item.value}
-                      </p>
-                      <p className="mt-0.5 whitespace-pre-line text-[12px] leading-relaxed text-[#5C5C7A]">
-                        {item.note}
-                      </p>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
 
-          {/* Three info cards */}
-          <div className="mt-8 grid gap-5 md:grid-cols-3 lg:mt-10 lg:gap-6">
+          {/* Info cards */}
+          <div className="mx-auto mt-8 grid max-w-[1100px] gap-5 md:grid-cols-3 lg:mt-10 lg:gap-6">
             {/* Office Hours */}
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] sm:px-6">
+            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] transition hover:border-[#D8DAEA] hover:shadow-[0_8px_28px_rgba(26,26,74,0.08)] sm:px-6">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3D3D8F] text-white">
                 <ClockIcon />
               </span>
@@ -334,7 +237,7 @@ export default function ContactPage() {
             </div>
 
             {/* Quick Links */}
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] sm:px-6">
+            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] transition hover:border-[#D8DAEA] hover:shadow-[0_8px_28px_rgba(26,26,74,0.08)] sm:px-6">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3D3D8F] text-white">
                 <PeopleIcon />
               </span>
@@ -360,7 +263,7 @@ export default function ContactPage() {
             </div>
 
             {/* FAQs */}
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] sm:px-6">
+            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_6px_24px_rgba(26,26,74,0.05)] transition hover:border-[#D8DAEA] hover:shadow-[0_8px_28px_rgba(26,26,74,0.08)] sm:px-6">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#3D3D8F] text-white">
                 <FaqIcon />
               </span>
@@ -434,50 +337,11 @@ export default function ContactPage() {
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[12px] font-semibold text-[#1A1A4A]">
+      <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.04em] text-[#5C5C7A]">
         {label}
       </span>
       {children}
     </label>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M8.5 4.5H7C5.9 4.5 5 5.4 5 6.5V7.5C5 14.4 10.6 20 17.5 20H18.5C19.6 20 20.5 19.1 20.5 18V16.5L17.2 15.4L15.5 17.2C13.2 16 11 13.8 9.8 11.5L11.6 9.8L10.5 6.5H8.5V4.5Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function MailIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M4.5 7L12 12.5L19.5 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function WhatsAppIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M12 4.5C7.9 4.5 4.5 7.8 4.5 11.8C4.5 13.2 4.9 14.5 5.6 15.6L4.5 19.5L8.5 18.4C9.6 19 10.8 19.4 12 19.4C16.1 19.4 19.5 16.1 19.5 12C19.5 7.9 16.1 4.5 12 4.5Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.2 10.2C9.5 11.6 10.8 13.1 12.4 13.8L13.8 12.6C14 12.4 14.3 12.4 14.5 12.6L16 13.6C16.2 13.8 16.2 14.1 16.1 14.3C15.5 15.2 14.4 15.7 13.2 15.5C10.5 15 8.2 12.6 7.8 9.9C7.7 8.7 8.2 7.6 9.1 7C9.3 6.9 9.6 6.9 9.8 7.1L10.8 8.6C11 8.8 11 9.1 10.8 9.3L9.2 10.2Z"
-        fill="currentColor"
-      />
-    </svg>
   );
 }
 
