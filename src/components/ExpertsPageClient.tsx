@@ -323,19 +323,19 @@ function ExpertCard({ expert }: { expert: UiExpert }) {
   return (
     <Link href={`/experts/${expert.slug}`} className="block h-full">
       <article className="group flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_8px_28px_rgba(26,26,74,0.10)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_36px_rgba(26,26,74,0.14)] sm:rounded-[20px]">
-        <div className="relative shrink-0 bg-[#F7F6FB] pb-5 pt-3">
+        <div className="relative shrink-0 bg-[#F7F6FB] pt-3">
           <span className="absolute left-3 top-3 z-20 rounded-[3px] bg-[#3D3D8F] px-2 py-[4px] text-[7px] font-bold uppercase tracking-[0.1em] text-white sm:left-3.5 sm:top-3.5 sm:text-[7.5px]">
             {expert.experience}
           </span>
-          <div className="relative mx-auto h-[190px] w-full sm:h-[200px]">
+          <div className="relative mx-auto h-[215px] w-full sm:h-[225px]">
             <Image
               src="/experts-page/frame.png"
               alt=""
               fill
-              className="z-0 scale-[1.35] object-contain object-center sm:scale-[1.4]"
+              className="z-0 scale-[1.38] object-contain object-center sm:scale-[1.42]"
               sizes="(max-width: 768px) 90vw, 340px"
             />
-            <div className="absolute inset-x-[4%] bottom-0 top-[4%] z-[1]">
+            <div className="absolute inset-x-[3%] bottom-0 top-[6%] z-[1] sm:top-[5%]">
               <Image
                 src={expert.image}
                 alt={expert.name}
@@ -346,12 +346,9 @@ function ExpertCard({ expert }: { expert: UiExpert }) {
               />
             </div>
           </div>
-          <div className="absolute bottom-0 left-1/2 z-30 flex h-[34px] w-[34px] -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full border border-[#C9A06A] bg-[#3D3D8F] shadow-[0_3px_10px_rgba(0,0,0,0.22)] sm:h-[36px] sm:w-[36px]">
-            <CardLotusIcon />
-          </div>
         </div>
 
-        <div className="relative flex flex-1 flex-col bg-[#1A1A4A] px-4 pb-4 pt-6 text-center sm:px-5 sm:pb-5 sm:pt-7">
+        <div className="relative flex flex-1 flex-col bg-[#1A1A4A] px-4 pb-4 pt-4 text-center sm:px-5 sm:pb-5">
           <div className="shrink-0">
             <h3
               className="text-[17px] font-semibold leading-tight text-white sm:text-[18px]"
@@ -472,13 +469,6 @@ function ArrowIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function CardLotusIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M12 19c2-2.4 3.2-4.8 3.2-7.2a3.2 3.2 0 10-6.4 0c0 2.4 1.2 4.8 3.2 7.2Z" fill="#C9A06A" />
     </svg>
   );
 }
