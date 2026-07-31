@@ -15,8 +15,8 @@ const quickContacts = [
   },
   {
     label: "Email Us",
-    value: "support@cosmicguruji.com",
-    href: "mailto:support@cosmicguruji.com",
+    value: "cosmicgurujii@gmail.com",
+    href: "mailto:cosmicgurujii@gmail.com",
     icon: <MailIcon />,
   },
   {
@@ -42,13 +42,13 @@ const contactInfo = [
   },
   {
     title: "Email",
-    value: "support@soulsensei. in",
+    value: "cosmicgurujii@gmail.com",
     note: "We reply within 24 hours",
     icon: <MailIcon />,
   },
   {
     title: "Office Address",
-    value: "SoulSensei Wellness Pvt. Ltd.",
+    value: "Cosmicguruji Wellness Pvt. Ltd.",
     note: "A-42, Sector 62, Noida,\nUttar Pradesh 201301, India",
     icon: <LocationIcon />,
   },

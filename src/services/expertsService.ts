@@ -142,20 +142,18 @@ export async function fetchExpertByIdFromAll(id: string | number) {
     `/experts/fetch-all?id=${encodeURIComponent(String(id))}`,
     false,
   );
-  const list = extractList<Expert>(res);
-  const fromList =
-    list.find((item) => String(item.id ?? item._id ?? "") === String(id)) ??
-    list[0];
+  const expert = extractData<Expert | null>(res);
 
-  if (fromList) return fromList;
-
-  // fetch-all?id= returns data as a single object, not an array
-  const single = extractData<Expert>(res);
-  if (single && typeof single === "object" && (single.id ?? single._id)) {
-    return single;
+  if (!expert || typeof expert !== "object") {
+    throw new ApiError("Expert not found", 404);
   }
 
-  throw new ApiError("Expert not found", 404);
+  const expertId = String(expert.id ?? expert._id ?? "");
+  if (expertId && expertId !== String(id)) {
+    throw new ApiError("Expert not found", 404);
+  }
+
+  return expert;
 }
 
 export async function fetchBlockedExperts(_id?: string | number) {

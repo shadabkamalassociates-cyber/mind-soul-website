@@ -17,13 +17,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const expert = getExpertBySlug(slug);
   if (expert) {
     return {
-      title: `${expert.name} | SoulSensei Experts`,
+      title: `${expert.name} | cosmicgurujii Experts`,
       description: expert.bio,
     };
   }
   return {
-    title: "Expert Profile | SoulSensei",
-    description: "View expert profile on SoulSensei.",
+    title: "Expert Profile | cosmicgurujii",
+    description: "View expert profile on cosmicgurujii.",
   };
 }
 

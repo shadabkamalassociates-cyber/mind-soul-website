@@ -215,8 +215,38 @@ function formatExpertLocation(
 function mapApiExpertToProfile(expert: Expert): ExpertProfile {
   const id = String(expert.id ?? expert._id ?? "");
   const name =
-    [expert.first_name, expert.last_name].filter(Boolean).join(" ") ||
-    String(expert.name ?? "Expert");
+    [expert.first_name, expert.last_name]
+      .filter(Boolean)
+      .map((part) => String(part).trim())
+      .filter(Boolean)
+      .join(" ") ||
+    String(expert.name ?? "Expert").trim();
+
+  const email = String(expert.email ?? "")
+    .trim()
+    .toLowerCase();
+  const staticMatch =
+    (email
+      ? staticExperts.find((item) => item.email.trim().toLowerCase() === email)
+      : undefined) ||
+    staticExperts.find((item) => {
+      const apiName = name.replace(/\s+/g, " ").trim().toLowerCase();
+      return (
+        Boolean(apiName) &&
+        item.name.replace(/\s+/g, " ").trim().toLowerCase() === apiName
+      );
+    });
+
+  const categoryNames = Array.isArray(expert.categories)
+    ? expert.categories
+        .map((category) => {
+          if (category && typeof category === "object" && "name" in category) {
+            return String((category as { name?: unknown }).name ?? "").trim();
+          }
+          return String(category ?? "").trim();
+        })
+        .filter(Boolean)
+    : [];
 
   const languages = Array.isArray(expert.languages)
     ? expert.languages.map(String)
@@ -236,13 +266,26 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
       ? [expert.certifications]
       : [];
 
-  const resolvedSpecialization = resolveExpertSpecialization(expert);
-  const specializations = parseListField(expert.specialization);
-  const staticMatch = findStaticExpertMatch(expert);
-  const displaySpecializations =
-    specializations.length > 0
-      ? specializations
-      : (staticMatch?.specializations ?? parseListField(resolvedSpecialization));
+  const specializations =
+    categoryNames.length > 0
+      ? categoryNames
+      : typeof expert.specialization === "string" && expert.specialization
+        ? [expert.specialization]
+        : [];
+
+  const aboutParts = [
+    expert.about,
+    expert.bio,
+    expert.why_started,
+    expert.mission,
+  ]
+    .filter((v) => typeof v === "string" && v.trim())
+    .map(String);
+
+  const primarySpecialization =
+    categoryNames[0] ||
+    (typeof expert.specialization === "string" ? expert.specialization : "") ||
+    "Guidance";
 
   return {
     slug: id,
@@ -255,11 +298,11 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
         ? `${expert.experience_years}+ YEARS EXPERIENCE`
         : "EXPERIENCED GUIDE",
     bio: String(
-      expert.bio ||
-        expert.about ||
-        "Verified Cosmicguruji expert ready to guide your journey.",
+      expert.bio?.trim() ||
+        expert.about?.trim() ||
+        `${name} is a verified Cosmicguruji expert ready to guide your journey.`,
     ),
-    specialization: resolvedSpecialization,
+    specialization: primarySpecialization,
     experienceDetail:
       expert.experience_years != null
         ? `${expert.experience_years}+ Years`
@@ -270,19 +313,21 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
         expert.profession ||
         expert.role ||
         "Cosmicguruji Expert",
-    ),
-    profession: String(expert.profession || expert.role || "Expert"),
+    ).trim(),
+    profession: String(expert.profession || expert.role || "Expert").trim(),
     clients: "—",
     sessions: String(expert.total_sessions ?? "—"),
     rating: `${expert.average_rating ?? "0.00"}/5 (${expert.total_reviews ?? 0}+)`,
-    phone: String(expert.phone || expert.whatsapp_number || "—"),
-    whatsapp: String(expert.whatsapp_number || expert.phone || "—"),
-    email: String(expert.email || "—"),
-    location: formatExpertLocation(expert.city, expert.state, expert.country),
+    phone: String(expert.phone || expert.whatsapp_number || "—").trim(),
+    whatsapp: String(expert.whatsapp_number || expert.phone || "—").trim(),
+    email: String(expert.email || "—").trim(),
+    location: [expert.city, expert.state, expert.country]
+      .filter(Boolean)
+      .join(", ") || "India",
     languages,
     education,
     certifications,
-    specializations: displaySpecializations,
+    specializations,
     about: buildAboutParagraphs(expert, name),
     highlights: [
       {
@@ -677,10 +722,10 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
         </div>
       </section>
 
-      <ExpertReviewsSection
+      {/* <ExpertReviewsSection
         expertSlug={expert.slug}
         ratingLabel={expert.rating}
-      />
+      /> */}
 
       {/* CTA Banner */}
       <section className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 lg:px-8">
