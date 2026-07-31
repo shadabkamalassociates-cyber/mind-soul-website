@@ -194,6 +194,24 @@ function mapExpertServices(
   return services;
 }
 
+function formatExpertLocation(
+  ...parts: (string | null | undefined)[]
+): string {
+  const seen = new Set<string>();
+  const unique: string[] = [];
+
+  for (const part of parts) {
+    const value = String(part ?? "").trim();
+    if (!value) continue;
+    const key = value.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(value);
+  }
+
+  return unique.join(", ") || "India";
+}
+
 function mapApiExpertToProfile(expert: Expert): ExpertProfile {
   const id = String(expert.id ?? expert._id ?? "");
   const name =
@@ -260,9 +278,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
     phone: String(expert.phone || expert.whatsapp_number || "—"),
     whatsapp: String(expert.whatsapp_number || expert.phone || "—"),
     email: String(expert.email || "—"),
-    location: [expert.city, expert.state, expert.country]
-      .filter(Boolean)
-      .join(", ") || "India",
+    location: formatExpertLocation(expert.city, expert.state, expert.country),
     languages,
     education,
     certifications,
@@ -747,46 +763,55 @@ function ProfileHeaderContent({
         {expert.titles}
       </p>
 
-      <div className="mt-5 rounded-xl border border-[#E8EAF4] bg-white px-3 py-4 sm:px-4 sm:py-5">
-        <div className="grid grid-cols-2 gap-y-4 sm:grid-cols-4">
-          <ContactItem icon={<PhoneIcon />} label="Mobile" value={expert.phone} />
-          <ContactItem icon={<WhatsAppIcon />} label="WhatsApp" value={expert.whatsapp} />
-          <ContactItem icon={<MailIcon />} label="Email" value={expert.email} />
-          <ContactItem icon={<LocationIcon />} label="Location" value={expert.location} />
-        </div>
-
+      <div className="mt-5 overflow-hidden rounded-xl border border-[#E8EAF4] bg-[#FAFBFF]">
         <div
-          className={`mt-4 flex items-center gap-2 border-t border-[#E8EAF4] pt-3.5 ${center ? "justify-center" : "justify-start"}`}
+          className={`grid grid-cols-1 divide-y divide-[#E8EAF4] sm:grid-cols-2 sm:divide-x sm:divide-y-0 ${center ? "text-center" : "text-left"}`}
         >
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center text-[#1A1A4A]">
-            <GlobeMiniIcon />
-          </span>
-          <p className="text-[11px] text-[#5C5C7A] sm:text-[12px]">
-            <span className="font-semibold text-[#1A1A4A]">Languages Spoken</span>
-            <span className="mx-1.5 text-[#C5C5D5]">|</span>
-            {expert.languages.join(", ")}
-          </p>
+          <ProfileMetaItem
+            icon={<LocationIcon />}
+            label="Location"
+            value={expert.location}
+            centered={center}
+          />
+          <ProfileMetaItem
+            icon={<GlobeMiniIcon />}
+            label="Languages Spoken"
+            value={expert.languages.join(", ")}
+            centered={center}
+          />
         </div>
       </div>
     </>
   );
 }
 
-function ContactItem({
+function ProfileMetaItem({
   icon,
   label,
   value,
+  centered = false,
 }: {
   icon: ReactNode;
   label: string;
   value: string;
+  centered?: boolean;
 }) {
   return (
-    <div className="flex items-start gap-2.5 text-left sm:border-r sm:border-[#E8EAF4] sm:px-3 sm:last:border-r-0">
-      <span className="mt-0.5 shrink-0 text-[#1A1A4A]">{icon}</span>
-      <div className="min-w-0">
-        <p className="truncate text-[12px] font-semibold text-[#1A1A4A] sm:text-[13px]">{value}</p>
-        <p className="mt-0.5 text-[10px] font-medium text-[#8A8AA8]">{label}</p>
+    <div
+      className={`flex items-start gap-3 px-4 py-4 sm:px-5 sm:py-5 ${
+        centered ? "flex-col items-center text-center sm:items-center" : ""
+      }`}
+    >
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
+        {icon}
+      </span>
+      <div className={`min-w-0 ${centered ? "w-full" : "flex-1"}`}>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
+          {label}
+        </p>
+        <p className="mt-1 text-[13px] font-semibold leading-snug text-[#1A1A4A] sm:text-[14px]">
+          {value}
+        </p>
       </div>
     </div>
   );

@@ -270,13 +270,6 @@ export default function ExpertReviewsSection({
                 <HeartIcon filled={profileLiked} className="h-4 w-4" />
                 {profileLiked ? "Liked" : "Like Expert"} ({formatCount(profileLikes)})
               </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-full border border-[#1A1A4A] bg-white px-5 py-2 text-[13px] font-semibold text-[#1A1A4A] transition hover:bg-[#F4F4FA]"
-              >
-                <ChatBubbleIcon className="h-4 w-4" />
-                Chat
-              </button>
             </div>
           </div>
         </div>
@@ -595,19 +588,6 @@ function HeartIcon({
         strokeWidth="1.4"
         strokeLinejoin="round"
         fill={filled ? "currentColor" : "none"}
-      />
-    </svg>
-  );
-}
-
-function ChatBubbleIcon({ className = "h-4 w-4" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M5 6H19V16H9L5 19V6Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
       />
     </svg>
   );
