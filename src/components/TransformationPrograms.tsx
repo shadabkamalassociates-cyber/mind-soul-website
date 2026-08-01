@@ -240,62 +240,54 @@ function MembershipCard() {
 
 function HowSoulSenseiWorks() {
   return (
-    <div className="works-panel relative mt-5 overflow-hidden rounded-2xl border border-[#E4E2EF]">
-      {/* Soft mandala on light indigo */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <Image
-          src="/bg-mandala.png"
-          alt=""
-          fill
-          className="object-cover object-left opacity-[0.08]"
-          sizes="1400px"
-          quality={90}
-        />
-        <div className="absolute inset-0 bg-[#F4F2FA]/85" />
-      </div>
+    <div className="works-panel relative mt-4 overflow-hidden rounded-2xl border border-[#D8C4EF]/80">
+      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-[#F8F2FD] via-[#EDE4F8] to-[#ECE4F8]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-1 bg-gradient-to-r from-[#4B2475] via-[#C5A059] to-[#4B2475]" />
 
-      <div className="relative z-10 px-5 pt-5 pb-4 sm:px-6 lg:px-7 lg:pt-6">
+      <div className="relative z-10 px-4 pt-4 pb-3 sm:px-5 lg:px-6">
         <h3
-          className="text-[24px] font-medium leading-none text-[#3D3D8F] sm:text-[28px]"
+          className="text-[22px] font-medium leading-none text-[#3B1C5B] sm:text-[24px]"
           style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
         >
           How Cosmicguruji Works
         </h3>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
           {workSteps.map((step, index) => (
             <div key={step.number} className="relative">
-              <div className="flex items-start gap-3">
-                <div className="flex min-w-0 flex-1 items-start gap-3">
+              <div className="flex items-start gap-2.5">
+                <div className="flex min-w-0 flex-1 items-start gap-2.5">
                   <div className="shrink-0">
-                    <p className="text-[12px] font-semibold tracking-[0.18em] text-[#3D3D8F]">
+                    <p className="text-[11px] font-semibold tracking-[0.16em] text-[#C5A059]">
                       {step.number}
                     </p>
-                    <div className="relative mt-2 h-[52px] w-[52px]">
-                      <Image
-                        src={step.icon}
-                        alt=""
-                        fill
-                        unoptimized
-                        className="object-contain"
-                        sizes="46px"
-                        quality={95}
-                      />
+                    <div className="relative mt-1.5 flex h-[44px] w-[44px] items-center justify-center rounded-full bg-white/70 shadow-[0_3px_10px_rgba(75,36,117,0.07)] ring-1 ring-[#D8C4EF]/60">
+                      <div className="relative h-[32px] w-[32px]">
+                        <Image
+                          src={step.icon}
+                          alt=""
+                          fill
+                          unoptimized
+                          className="object-contain"
+                          sizes="32px"
+                          quality={95}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="pt-[18px]">
-                    <h4 className="text-[15px] font-semibold leading-tight text-[#1A1A4A]">
+                  <div className="pt-2">
+                    <h4 className="text-[14px] font-semibold leading-tight text-[#3B1C5B]">
                       {step.title}
                     </h4>
-                    <p className="mt-1 max-w-[165px] text-[12px] leading-[1.45] text-[#5C5C7A]">
+                    <p className="mt-0.5 max-w-[165px] text-[11px] leading-snug text-[#6B5B8A]">
                       {step.description}
                     </p>
                   </div>
                 </div>
 
                 {index < workSteps.length - 1 ? (
-                  <div className="works-connector mt-[25px] hidden lg:flex" aria-hidden>
+                  <div className="works-connector mt-[18px] hidden lg:flex" aria-hidden>
                     <span className="works-connector-line" />
                     <span className="works-connector-arrow">→</span>
                   </div>
@@ -306,35 +298,38 @@ function HowSoulSenseiWorks() {
         </div>
       </div>
 
-      <div className="works-trust-row relative z-10 px-5 py-4 sm:px-6 lg:px-7">
+      <div className="works-trust-row relative z-10 px-4 py-3 sm:px-5 sm:py-4 lg:px-6">
         <div className="works-trust-title-row">
           <span className="works-trust-line" />
-          <span className="works-trust-title">TRUSTED BY SOULS WORLDWIDE</span>
+          <span className="works-trust-title">Trusted By Souls Worldwide</span>
           <span className="works-trust-line" />
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-8">
+        <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5 lg:gap-2">
           {trustStats.map((stat) => (
-            <div key={stat.label} className="flex items-center gap-2.5">
-              <div className="relative h-[22px] w-[22px] shrink-0">
-                <Image
-                  src={stat.icon}
-                  alt=""
-                  fill
-                  unoptimized
-                  className="object-contain"
-                  sizes="22px"
-                  quality={95}
-                />
+            <div
+              key={stat.label}
+              className="works-stat-card flex flex-col items-center rounded-lg bg-white/80 px-2 py-2.5 text-center ring-1 ring-[#E8DDF5] sm:px-2.5"
+            >
+              <div className="relative mb-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-[#F3EAFD]">
+                <div className="relative h-4 w-4">
+                  <Image
+                    src={stat.icon}
+                    alt=""
+                    fill
+                    unoptimized
+                    className="object-contain"
+                    sizes="16px"
+                    quality={95}
+                  />
+                </div>
               </div>
-              <div>
-                <p className="text-[20px] font-semibold leading-none text-[#1A1A4A]">
-                  {stat.value}
-                </p>
-                <p className="mt-1 text-[11px] leading-none text-[#5C5C7A]">
-                  {stat.label}
-                </p>
-              </div>
+              <p className="text-[18px] font-semibold leading-none text-[#3B1C5B] sm:text-[20px]">
+                {stat.value}
+              </p>
+              <p className="mt-1 text-[10px] leading-snug text-[#7D6B9A]">
+                {stat.label}
+              </p>
             </div>
           ))}
         </div>

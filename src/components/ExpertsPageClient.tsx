@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
+  expertImageNeedsBlendRemoval,
   fetchVerifiedExperts,
   getExpertCardBio,
   mapExpertForUi,
@@ -319,6 +320,7 @@ export default function ExpertsPageClient() {
 
 function ExpertCard({ expert }: { expert: UiExpert }) {
   const bio = getExpertCardBio(expert.bio);
+  const blendWhiteBg = expertImageNeedsBlendRemoval(expert.email);
 
   return (
     <Link href={`/experts/${expert.slug}`} className="block h-full">
@@ -328,20 +330,13 @@ function ExpertCard({ expert }: { expert: UiExpert }) {
             {expert.experience}
           </span>
           <div className="relative mx-auto h-[215px] w-full sm:h-[225px]">
-            <Image
-              src="/experts-page/frame.png"
-              alt=""
-              fill
-              className="z-0 scale-[1.38] object-contain object-center sm:scale-[1.42]"
-              sizes="(max-width: 768px) 90vw, 340px"
-            />
-            <div className="absolute inset-x-[3%] bottom-0 top-[6%] z-[1] sm:top-[5%]">
+            <div className="absolute inset-x-[3%] bottom-0 top-[6%] sm:top-[5%]">
               <Image
                 src={expert.image}
                 alt={expert.name}
                 fill
                 unoptimized
-                className="object-contain object-bottom"
+                className={`object-contain object-bottom${blendWhiteBg ? " mix-blend-multiply" : ""}`}
                 sizes="(max-width: 768px) 85vw, 320px"
               />
             </div>

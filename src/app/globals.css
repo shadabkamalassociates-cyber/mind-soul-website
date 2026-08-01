@@ -511,13 +511,22 @@ a:hover .expert-arrow-circle {
 }
 
 .works-panel {
-  background: #f4f2fa;
-  box-shadow: 0 4px 24px rgba(26, 26, 74, 0.05);
+  background: linear-gradient(135deg, #f8f2fd 0%, #ede4f8 50%, #ece4f8 100%);
+  box-shadow: 0 8px 32px rgba(59, 28, 91, 0.08);
 }
 
 .works-trust-row {
-  border-top: 1px solid rgba(61, 61, 143, 0.15);
-  background: transparent;
+  border-top: 1px solid rgba(216, 196, 239, 0.8);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(243, 234, 253, 0.55) 100%);
+}
+
+.works-stat-card {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.works-stat-card:hover {
+  box-shadow: 0 6px 20px rgba(59, 28, 91, 0.08);
+  transform: translateY(-1px);
 }
 
 .works-connector {
@@ -528,11 +537,11 @@ a:hover .expert-arrow-circle {
 
 .works-connector-line {
   flex: 1;
-  border-top: 1px dashed rgba(61, 61, 143, 0.35);
+  border-top: 1px dashed rgba(197, 160, 89, 0.45);
 }
 
 .works-connector-arrow {
-  color: #3d3d8f;
+  color: #c5a059;
   font-size: 12px;
   line-height: 1;
 }
@@ -546,15 +555,16 @@ a:hover .expert-arrow-circle {
 .works-trust-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(61, 61, 143, 0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.45), transparent);
 }
 
 .works-trust-title {
-  color: #3d3d8f;
+  color: #4b2475;
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.16em;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 /* Upcoming Retreats */
@@ -601,6 +611,39 @@ a:hover .expert-arrow-circle {
 }
 
 /* Blog Insights */
+.blog-carousel-btn {
+  color: #4b2475;
+  border: 1px solid rgba(216, 196, 239, 0.95);
+  background: rgba(255, 255, 255, 0.92);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.blog-carousel-btn:hover {
+  border-color: #c5a059;
+  background: #4b2475;
+  color: #fff;
+}
+
+.blog-carousel-side-btn {
+  display: flex;
+  height: 42px;
+  width: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #4b2475;
+  border: 1px solid rgba(216, 196, 239, 0.95);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 20px rgba(59, 28, 91, 0.1);
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.blog-carousel-side-btn:hover {
+  border-color: #c5a059;
+  background: #4b2475;
+  color: #fff;
+}
+
 .blog-scroller {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -623,7 +666,7 @@ a:hover .expert-arrow-circle {
 
 .blog-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(26, 26, 74, 0.12);
+  box-shadow: 0 12px 32px rgba(59, 28, 91, 0.14);
 }
 
 .blog-card article {
@@ -672,13 +715,26 @@ a:hover .expert-arrow-circle {
 
 /* FAQ */
 .faq-panel {
-  background: #fff;
-  border: 1px solid #e4e2ef;
-  box-shadow: 0 4px 24px rgba(26, 26, 74, 0.05);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(216, 196, 239, 0.9);
+  box-shadow: 0 8px 28px rgba(59, 28, 91, 0.08);
+}
+
+.faq-panel-accent {
+  height: 3px;
+  margin: -1.25rem -1.25rem 1rem;
+  background: linear-gradient(90deg, #4b2475, #c5a059, #4b2475);
+  border-radius: 2px 2px 0 0;
+}
+
+@media (min-width: 640px) {
+  .faq-panel-accent {
+    margin: -1.5rem -1.5rem 1rem;
+  }
 }
 
 .faq-item {
-  border-bottom: 1px solid rgba(61, 61, 143, 0.12);
+  border-bottom: 1px solid rgba(216, 196, 239, 0.75);
 }
 
 .faq-item:last-child {
@@ -686,7 +742,7 @@ a:hover .expert-arrow-circle {
 }
 
 .faq-item.is-open {
-  border-bottom-color: rgba(61, 61, 143, 0.18);
+  border-bottom-color: rgba(197, 160, 89, 0.35);
 }
 
 .faq-trigger {
@@ -695,7 +751,7 @@ a:hover .expert-arrow-circle {
 }
 
 .faq-trigger:hover span:first-child {
-  color: #000;
+  color: #4b2475;
 }
 
 .faq-plus {
@@ -703,9 +759,9 @@ a:hover .expert-arrow-circle {
 }
 
 .faq-trigger:hover .faq-plus {
-  border-color: #3d3d8f;
-  background: rgba(61, 61, 143, 0.06);
-  color: #000;
+  border-color: #c5a059;
+  background: rgba(243, 234, 253, 0.9);
+  color: #4b2475;
 }
 
 /* Footer */
@@ -812,6 +868,13 @@ a:hover .expert-arrow-circle {
   min-height: 88px;
   padding-top: 9px;
   padding-bottom: 9px;
+}
+
+.hero-banner-image {
+  max-width: 100%;
+  height: auto;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Blog article body — HTML from CMS */

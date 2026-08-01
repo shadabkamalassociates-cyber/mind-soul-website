@@ -67,12 +67,17 @@ export default function FAQ() {
   }
 
   return (
-    <section id="faq" className="relative w-full overflow-hidden bg-[#F4F2FA] py-10 sm:py-12 lg:py-14">
+    <section id="faq" className="relative w-full overflow-hidden bg-gradient-to-br from-[#F8F2FD] via-[#EDE4F8] to-[#ECE4F8] py-10 sm:py-12 lg:py-14">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#4B2475] via-[#C5A059] to-[#4B2475]" />
       <div className="relative z-10 mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
         <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.5fr)_auto] lg:items-center lg:gap-10 xl:gap-12">
           {/* Left — FAQ card */}
           <div className="faq-panel w-full rounded-2xl px-5 py-5 sm:px-6 sm:py-6 lg:max-w-[420px]">
-            <h2 className="mb-4 text-[17px] font-semibold text-black sm:text-[18px]">
+            <div className="faq-panel-accent" aria-hidden />
+            <h2
+              className="mb-4 text-[17px] font-semibold text-[#3B1C5B] sm:text-[18px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
               Frequently Asked Questions
             </h2>
 
@@ -90,11 +95,15 @@ export default function FAQ() {
                       aria-expanded={isOpen}
                       onClick={() => toggle(item.id)}
                     >
-                      <span className="text-[13px] font-medium leading-snug text-black sm:text-[14px]">
+                      <span className="text-[13px] font-medium leading-snug text-[#3B1C5B] sm:text-[14px]">
                         {item.question}
                       </span>
                       <span
-                        className="faq-plus flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#D8D5EA] text-[16px] leading-none font-normal text-black"
+                        className={`faq-plus flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[16px] font-normal leading-none ${
+                          isOpen
+                            ? "border-[#C5A059] bg-[#4B2475] text-white"
+                            : "border-[#D8C4EF] bg-white text-[#4B2475]"
+                        }`}
                         aria-hidden
                       >
                         {isOpen ? "−" : "+"}
@@ -107,7 +116,7 @@ export default function FAQ() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <p className="pb-3.5 pr-2 text-[12px] leading-[1.7] text-[#333333] sm:text-[13px]">
+                        <p className="pb-3.5 pr-2 text-[12px] leading-[1.7] text-[#6B5B8A] sm:text-[13px]">
                           {item.answer}
                         </p>
                       </div>
@@ -152,13 +161,18 @@ function LinkColumn({
 }) {
   return (
     <div>
-      <h3 className="text-[14px] font-semibold text-black sm:text-[15px]">{title}</h3>
+      <h3
+        className="text-[14px] font-semibold text-[#3B1C5B] sm:text-[15px]"
+        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+      >
+        {title}
+      </h3>
       <ul className="mt-3.5 space-y-2.5">
         {links.map((link) => (
           <li key={link.label}>
             <a
               href={link.href}
-              className="text-[12px] text-[#333333] transition hover:text-black sm:text-[13px]"
+              className="text-[12px] text-[#6B5B8A] transition hover:text-[#4B2475] sm:text-[13px]"
             >
               {link.label}
             </a>

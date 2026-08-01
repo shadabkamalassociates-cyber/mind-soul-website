@@ -11,6 +11,7 @@ import type { ExpertProfile } from "@/data/experts";
 import { experts as staticExperts } from "@/data/experts";
 import {
   fetchExpertByIdFromAll,
+  resolveExpertImage,
   resolveExpertSpecialization,
 } from "@/services/expertsService";
 import { ApiError } from "@/services/apiClient";
@@ -307,7 +308,7 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
       expert.experience_years != null
         ? `${expert.experience_years}+ Years`
         : "—",
-    image: String(expert.profile_image || "/experts-page/expert-1-cutout.png"),
+    image: resolveExpertImage(expert),
     titles: String(
       expert.professional_title ||
         expert.profession ||

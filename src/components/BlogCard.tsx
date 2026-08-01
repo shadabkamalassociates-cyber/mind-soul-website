@@ -72,7 +72,7 @@ function BlogCardOverlay({
       href={`/blogs/${article.slug}`}
       className={`group block h-full w-full ${className}`}
     >
-      <article className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-[#E4E2EF] bg-[#1A1A4A] shadow-[0_4px_20px_rgba(26,26,74,0.06)] transition duration-300 hover:shadow-[0_10px_28px_rgba(26,26,74,0.14)]">
+      <article className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-[#D8C4EF]/80 bg-[#3B1C5B] shadow-[0_6px_24px_rgba(59,28,91,0.1)] transition duration-300 hover:border-[#C5A059]/50 hover:shadow-[0_12px_32px_rgba(59,28,91,0.16)]">
         <div className="relative aspect-[3/3.6] w-full overflow-hidden">
           <Image
             src={article.image}
@@ -83,7 +83,7 @@ function BlogCardOverlay({
             sizes="(max-width: 640px) 78vw, (max-width: 1280px) 33vw, 20vw"
             quality={95}
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#3B1C5B]/95 via-[#4B2475]/55 to-transparent" />
 
           <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-4">
             <h3
@@ -92,9 +92,9 @@ function BlogCardOverlay({
             >
               {article.title}
             </h3>
-            <p className="mt-2 text-[11px] text-white/80 sm:text-[12px]">
+            <p className="mt-2 text-[11px] text-white/85 sm:text-[12px]">
               {article.date}
-              <span className="mx-1.5 text-white/45">•</span>
+              <span className="mx-1.5 text-[#C5A059]/80">•</span>
               {article.readTime}
             </p>
           </div>

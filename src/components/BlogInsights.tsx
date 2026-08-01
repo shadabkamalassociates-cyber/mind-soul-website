@@ -56,17 +56,17 @@ export default function BlogInsights() {
   }
 
   return (
-    <section id="blog" className="relative w-full bg-white py-10 sm:py-12 lg:py-14">
-      <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
+    <section id="blog" className="blog-insights-section relative w-full overflow-hidden bg-gradient-to-br from-[#F8F2FD] via-[#EDE4F8] to-[#ECE4F8] py-10 sm:py-12 lg:py-14">
+      <div className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
         <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
           <div>
             <h2
-              className="text-[28px] font-medium leading-tight text-[#3D3D8F] sm:text-[34px] lg:text-[40px]"
+              className="text-[28px] font-medium leading-tight text-[#3B1C5B] sm:text-[34px] lg:text-[40px]"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               From Our Blog & Insights
             </h2>
-            <p className="mt-1.5 text-[13px] text-[#5C5C7A] sm:text-[14px]">
+            <p className="mt-1.5 text-[13px] text-[#6B5B8A] sm:text-[14px]">
               Wisdom for your everyday life
             </p>
           </div>
@@ -74,7 +74,7 @@ export default function BlogInsights() {
           <div className="hidden items-center gap-3 sm:flex">
             <Link
               href="/blogs"
-              className="text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
+              className="text-[13px] font-medium text-[#4B2475] transition hover:text-[#C5A059]"
             >
               View All Articles
             </Link>
@@ -90,7 +90,7 @@ export default function BlogInsights() {
             type="button"
             aria-label="Previous articles"
             onClick={() => scrollByCard(-1)}
-            className="carousel-side-btn-light absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
+            className="blog-carousel-side-btn absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
           >
             <ChevronLeft />
           </button>
@@ -98,7 +98,7 @@ export default function BlogInsights() {
             type="button"
             aria-label="Next articles"
             onClick={() => scrollByCard(1)}
-            className="carousel-side-btn-light absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
+            className="blog-carousel-side-btn absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
           >
             <ChevronRight />
           </button>
@@ -136,7 +136,7 @@ export default function BlogInsights() {
         </div>
 
         <div className="mt-5 flex items-center justify-between sm:hidden">
-          <Link href="/blogs" className="text-[13px] font-medium text-[#3D3D8F]">
+          <Link href="/blogs" className="text-[13px] font-medium text-[#4B2475]">
             View All Articles
           </Link>
           <div className="flex items-center gap-2">
@@ -161,7 +161,7 @@ function CarouselBtn({
       type="button"
       aria-label={direction === "prev" ? "Previous" : "Next"}
       onClick={onClick}
-      className="carousel-nav-btn-light flex h-9 w-9 items-center justify-center rounded-full"
+      className="blog-carousel-btn flex h-9 w-9 items-center justify-center rounded-full"
     >
       {direction === "prev" ? <ChevronLeft /> : <ChevronRight />}
     </button>

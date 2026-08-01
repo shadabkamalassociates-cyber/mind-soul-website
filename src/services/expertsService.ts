@@ -114,6 +114,19 @@ export function resolveExpertSpecialization(expert: Expert): string {
   return "Spiritual Guidance";
 }
 
+export function resolveExpertImage(expert: Expert): string {
+  const staticMatch = findStaticExpertMatch(expert);
+  if (staticMatch?.image) {
+    return staticMatch.image;
+  }
+
+  return String(expert.profile_image || "/experts-page/expert-1-cutout.png");
+}
+
+export function expertImageNeedsBlendRemoval(email: string): boolean {
+  return normalizeExpertEmail(email) === "09jyotirajput1@gmail.com";
+}
+
 export async function fetchAllExperts() {
   const res = await apiGet("/experts/fetch-all", false);
   return extractList<Expert>(res);
@@ -238,9 +251,7 @@ export function mapExpertForUi(expert: Expert) {
     phone: String(expert.phone ?? ""),
     title: normalizeText(title),
     bio: normalizeText(expert.bio ?? expert.about),
-    image: String(
-      expert.profile_image || "/experts-page/expert-1-cutout.png",
-    ),
+    image: resolveExpertImage(expert),
     experience,
     specialization: resolveExpertSpecialization(expert),
     rating: String(expert.average_rating ?? "0.00"),
