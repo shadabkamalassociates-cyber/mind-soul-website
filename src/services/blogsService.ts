@@ -30,6 +30,50 @@ function htmlToPlainText(html: string) {
     .trim();
 }
 
+/** Normalize CMS / exported HTML for clean article rendering. */
+export function sanitizeBlogHtml(html: string) {
+  let out = String(html ?? "").trim();
+  if (!out) return "";
+
+  // Drop ChatGPT / editor selection chrome
+  out = out.replace(
+    /<span[^>]*aria-hidden=["']true["'][^>]*>[\s\S]*?<\/span>/gi,
+    "",
+  );
+  out = out.replace(
+    /<span([^>]*)\srole=["']text["']([^>]*)>/gi,
+    "<span$1$2>",
+  );
+
+  // Unwrap empty / utility spans that only wrap content
+  out = out.replace(/<span(?:\s[^>]*)?>\s*<\/span>/gi, "");
+  out = out.replace(/<span(?:\s[^>]*)?>((?:[^<]|<(?!\/?span\b))*)<\/span>/gi, "$1");
+
+  // Strip noisy attributes from paste exports
+  out = out.replace(/\s(?:data-[a-z0-9_-]+|class|id|role|aria-hidden)=(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "");
+
+  // Body already has a page title — demote CMS h1s to h2
+  out = out.replace(/<h1(\s[^>]*)?>/gi, "<h2$1>");
+  out = out.replace(/<\/h1>/gi, "</h2>");
+
+  // Remove empty blocks that create large gaps (e.g. <h2><br></h2>, <p>&nbsp;</p>)
+  const emptyInner = String.raw`(?:\s|&nbsp;|<br\s*\/?>|<strong>\s*(?:<br\s*\/?>|\s|&nbsp;)*\s*<\/strong>)*`;
+  out = out.replace(
+    new RegExp(`<(p|h[1-6]|div)(?:\\s[^>]*)?>${emptyInner}<\\/\\1>`, "gi"),
+    "",
+  );
+
+  // Clean list item whitespace so short bullets don't look oversized
+  out = out.replace(/<li(?:\s[^>]*)?>\s+/gi, "<li>");
+  out = out.replace(/\s+<\/li>/gi, "</li>");
+
+  // Collapse leftover whitespace between tags
+  out = out.replace(/>\s+</g, "><");
+  out = out.replace(/(<\/(?:p|h[1-6]|ul|ol|blockquote|div)>)(<)/gi, "$1\n$2");
+
+  return out.trim();
+}
+
 function contentToParagraphs(content: string) {
   const trimmed = content.trim();
   if (!trimmed) return [];
@@ -89,7 +133,23 @@ export function mapBlogForUi(
   blog: ApiBlog,
   categoryName?: string,
 ): BlogArticle {
-  const rawContent = String(blog.content ?? "");
+  const title = String(blog.title ?? "Untitled");
+  let rawContent = sanitizeBlogHtml(String(blog.content ?? ""));
+
+  // Drop a leading heading that repeats the page title
+  const leadingHeading = rawContent.match(
+    /^<h[1-6](?:\s[^>]*)?>([\s\S]*?)<\/h[1-6]>/i,
+  );
+  if (leadingHeading) {
+    const headingText = htmlToPlainText(leadingHeading[1])
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+    if (headingText && headingText === title.replace(/\s+/g, " ").trim().toLowerCase()) {
+      rawContent = rawContent.slice(leadingHeading[0].length).trim();
+    }
+  }
+
   const plainContent = htmlToPlainText(rawContent);
   const paragraphs = contentToParagraphs(rawContent);
 
@@ -103,7 +163,7 @@ export function mapBlogForUi(
   return {
     id: String(blog.id ?? blog.slug ?? ""),
     slug: String(blog.slug ?? blog.id ?? ""),
-    title: String(blog.title ?? "Untitled"),
+    title,
     excerpt: String(
       shortDescription ||
         blog.meta_description ||

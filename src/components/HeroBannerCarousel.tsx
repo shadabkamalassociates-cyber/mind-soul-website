@@ -15,21 +15,22 @@ type HeroSlide = {
 /** Update images and links here */
 const heroSlides: HeroSlide[] = [
   {
-    src: "/CosmicGurujibanner.png",
+    src: "/works/CosmiGurujibanner.png",
     alt: "Cosmic Guruji — Healing Spirituality. Heal your mind. Awaken your soul.",
-    href: "/live-sessions",
+    href: "/contact",
     label: "Join Cosmic Guruji healing sessions",
   },
   {
-    src: "/cosmic-guruji-banner.png",
+    src: "/works/CosmicGurujibannerRE.png",
     alt: "Cosmic Guruji — Live sessions and spiritual guidance",
-    href: "/live-sessions",
+    href: "/contact",
     label: "Explore live sessions",
-  },
+  }
+  ,
   {
-    src: "/cosmic-guruji-banner@2x.png",
+    src: "/works/Cosmic-Guruji-banner-RE1.png",
     alt: "Cosmic Guruji — Transform your mind and soul",
-    href: "/experts",
+    href: "/contact",
     label: "Meet our experts",
   },
 ];

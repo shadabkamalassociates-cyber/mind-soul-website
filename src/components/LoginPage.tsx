@@ -694,7 +694,7 @@ export default function LoginPage() {
                   </button>
                 </form>
 
-                <div className="my-3 flex items-center gap-3">
+                {/* <div className="my-3 flex items-center gap-3">
                   <span className="h-px flex-1 bg-[#E6E8F2]" />
                   <span className="text-[11px] text-[#8A8AA8]">
                     or sign up with
@@ -717,7 +717,7 @@ export default function LoginPage() {
                   >
                     Login
                   </button>
-                </p>
+                </p> */}
               </>
             )}
           </div>
@@ -748,15 +748,15 @@ export default function LoginPage() {
             <p className="text-[12px] text-[#5C5C7A] sm:text-[13px]">
               Need Help? Call or WhatsApp us at{" "}
               <a
-                href="tel:+919876543210"
+                href="tel:+919205706449"
                 className="font-semibold text-[#1A1A4A] hover:underline"
               >
-                +91 98765 43210
+                +91 9205706449
               </a>
             </p>
           </div>
           <a
-            href="https://wa.me/919876543210"
+            href="https://wa.me/919205706449"
             target="_blank"
             rel="noreferrer"
             aria-label="WhatsApp support"

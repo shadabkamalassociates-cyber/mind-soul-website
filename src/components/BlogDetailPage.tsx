@@ -75,17 +75,9 @@ export default function BlogDetailPage({
           </div>
         </header>
 
-        <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-[#E8EAF4] shadow-[0_8px_32px_rgba(26,26,74,0.08)]">
-          <Image
-            src={article.image}
-            alt={article.title}
-            fill
-            unoptimized
-            className="object-cover object-center"
-            sizes="860px"
-            priority
-            quality={95}
-          />
+        <div className="relative ">
+          <img src={article.image} alt={article.title} className="w-full h-full object-cover object-center" />
+          
         </div>
 
         {article.shortDescription && (

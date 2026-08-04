@@ -163,16 +163,28 @@ export default function Footer() {
               Join our community and stay connected on social media.
             </p>
             <div className="mt-4 flex items-center gap-2.5">
-              <SocialBtn label="Facebook">
+              <SocialBtn
+                label="Facebook"
+                href="https://www.facebook.com/share/1GdQUWSZ3x/"
+              >
                 <FacebookIcon />
               </SocialBtn>
-              <SocialBtn label="Instagram">
+              <SocialBtn
+                label="Instagram"
+                href="https://www.instagram.com/cosmic_gurujii?igsh=MWtkeHdzMzc1NGR6aw=="
+              >
                 <InstagramIcon />
               </SocialBtn>
-              <SocialBtn label="YouTube">
+              <SocialBtn
+                label="YouTube"
+                href="https://youtube.com/@cosmicguruji-j2e?si=uNiHtm3SZTKfojB6"
+              >
                 <YouTubeIcon />
               </SocialBtn>
-              <SocialBtn label="WhatsApp">
+              <SocialBtn
+                label="WhatsApp"
+                href="https://wa.me/919205706449"
+              >
                 <WhatsAppIcon />
               </SocialBtn>
             </div>
@@ -263,14 +275,18 @@ function FooterHeading({ children }: { children: ReactNode }) {
 
 function SocialBtn({
   label,
+  href,
   children,
 }: {
   label: string;
+  href: string;
   children: ReactNode;
 }) {
   return (
     <a
-      href={`#${label.toLowerCase()}`}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label={label}
       className="footer-social flex h-9 w-9 items-center justify-center rounded-full"
     >

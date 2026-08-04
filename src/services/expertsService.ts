@@ -87,6 +87,11 @@ export function resolveExpertTitle(expert: Expert): string {
 }
 
 export function resolveExpertSpecialization(expert: Expert): string {
+  const fromCategories = getCategoryNames(expert);
+  if (fromCategories.length) {
+    return fromCategories.map(formatSpecialization).join(", ");
+  }
+
   const fromApi =
     typeof expert.specialization === "string" ? expert.specialization.trim() : "";
   if (fromApi) return formatSpecialization(fromApi);
@@ -114,13 +119,30 @@ export function resolveExpertSpecialization(expert: Expert): string {
   return "Spiritual Guidance";
 }
 
+function getCategoryNames(expert: Expert): string[] {
+  if (!Array.isArray(expert.categories)) return [];
+
+  return expert.categories
+    .map((category) => {
+      if (category && typeof category === "object" && "name" in category) {
+        return String((category as { name?: unknown }).name ?? "").trim();
+      }
+      return String(category ?? "").trim();
+    })
+    .filter(Boolean);
+}
+
 export function resolveExpertImage(expert: Expert): string {
+  const profileImage =
+    typeof expert.profile_image === "string" ? expert.profile_image.trim() : "";
+  if (profileImage) return profileImage;
+
   const staticMatch = findStaticExpertMatch(expert);
   if (staticMatch?.image) {
     return staticMatch.image;
   }
 
-  return String(expert.profile_image || "/experts-page/expert-1-cutout.png");
+  return "/experts-page/expert-1-cutout.png";
 }
 
 export function expertImageNeedsBlendRemoval(email: string): boolean {
@@ -226,8 +248,12 @@ export function getExpertCardBio(bio: string): string {
 export function mapExpertForUi(expert: Expert) {
   const id = String(expert.id ?? expert._id ?? "");
   const name =
-    (typeof expert.name === "string" && expert.name) ||
-    [expert.first_name, expert.last_name].filter(Boolean).join(" ") ||
+    (typeof expert.name === "string" && expert.name.trim()) ||
+    [expert.first_name, expert.last_name]
+      .filter(Boolean)
+      .map((part) => String(part).trim())
+      .filter(Boolean)
+      .join(" ") ||
     "Expert";
 
   const title = resolveExpertTitle(expert);
