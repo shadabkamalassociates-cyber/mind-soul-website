@@ -1,12 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import {
   purchaseCommunityJoinWithRazorpay,
   type CommunityJoinDetails,
 } from "@/services/communityJoinService";
+import {
+  JUST99_ASSETS,
+  JUST99_FEATURES,
+  JUST99_PERKS,
+} from "@/components/communityJoin/just99Assets";
 
 type Step = "offer" | "form" | "pay" | "success";
 
@@ -15,20 +19,6 @@ type CommunityJoinExperienceProps = {
   source?: "website_popup" | "just99_landing";
   onClose?: () => void;
 };
-
-const features = [
-  { icon: <LotusIcon />, title: "Inner Healing", desc: "Find peace within you" },
-  { icon: <PeopleIcon />, title: "Community", desc: "Connect with like-minded souls" },
-  { icon: <MeditateIcon />, title: "Live Sessions", desc: "Weekly healing & meditation" },
-  { icon: <StarIcon />, title: "Positive Energy", desc: "Daily guidance for a better you" },
-];
-
-const perks = [
-  { icon: <GiftIcon />, title: "Lifetime Access", desc: "One Time Payment" },
-  { icon: <HeadsetIcon />, title: "Live Healing Sessions", desc: "Weekly Live Interaction" },
-  { icon: <PeopleIcon />, title: "Supportive Community", desc: "Connect & Share" },
-  { icon: <HeartIcon />, title: "Daily Guidance", desc: "Uplift Your Journey" },
-];
 
 export default function CommunityJoinExperience({
   variant,
@@ -95,11 +85,12 @@ export default function CommunityJoinExperience({
       aria-labelledby="community-popup-title"
       className={
         isPage
-          ? "just99-shell community-popup relative flex h-full min-h-0 w-full flex-col overflow-hidden"
+          ? "just99-shell relative flex h-full min-h-0 w-full flex-col overflow-hidden"
           : "community-popup community-popup-animate relative flex max-h-[min(90vh,640px)] w-full max-w-[820px] flex-col overflow-hidden rounded-[20px] border border-white/70 shadow-[0_24px_70px_rgba(46,22,80,0.38)]"
       }
     >
-      <div className="community-popup-accent" aria-hidden />
+      {!isPage && <div className="community-popup-accent" aria-hidden />}
+      {isPage && <Just99BackgroundDecor />}
       <Sparkles />
 
       {!isPage && onClose ? (
@@ -111,145 +102,78 @@ export default function CommunityJoinExperience({
         >
           <CloseIcon />
         </button>
-      ) : isPage ? (
-        <Link
-          href="/"
-          aria-label="Back to home"
-          className="absolute right-4 top-4 z-40 flex h-9 w-9 items-center justify-center rounded-full border border-[#E8DDF5] bg-white/95 text-[#4B2475] shadow-[0_4px_12px_rgba(75,36,117,0.12)] transition hover:border-[#4B2475] hover:bg-[#4B2475] hover:text-white lg:right-6 lg:top-6"
-        >
-          <CloseIcon />
-        </Link>
       ) : null}
 
-      <div className="just99-main community-popup-body grid min-h-0 flex-1 overflow-hidden lg:grid-cols-2">
-        <div
-          className={
-            isPage
-              ? "community-popup-left just99-left relative flex flex-col justify-center overflow-y-auto px-6 py-8 sm:px-10 lg:px-14 xl:px-20"
-              : "community-popup-left relative overflow-y-auto px-4 py-4 sm:px-5 sm:py-4"
-          }
-        >
-          <div className="community-popup-vine community-popup-vine-left" aria-hidden />
-          <div className="community-popup-vine community-popup-vine-right" aria-hidden />
-
-          <div className={`relative z-[1] ${isPage ? "just99-left-inner mx-auto w-full max-w-2xl lg:mx-0" : ""}`}>
-            <div className="flex items-center gap-2.5 sm:gap-3">
+      <div
+        className={
+          isPage
+            ? "just99-main grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[1.22fr_0.78fr]"
+            : "just99-main grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[1.18fr_0.82fr]"
+        }
+      >
+        <div className="just99-left community-popup-left relative flex flex-col justify-center overflow-y-auto">
+          <div className="just99-left-inner relative z-[1]">
+            <div className="just99-brand-row">
               <span className="community-logo-ring">
                 <Image
                   src="https://res.cloudinary.com/dgnztzmzp/image/upload/v1785323232/logo_-_icon_fbp439.png"
                   alt=""
-                  width={isPage ? 48 : 36}
-                  height={isPage ? 48 : 36}
+                  width={isPage ? 44 : 40}
+                  height={isPage ? 44 : 40}
                   unoptimized
-                  className={isPage ? "h-12 w-12" : "h-9 w-9"}
+                  className={isPage ? "h-11 w-11" : "h-10 w-10"}
                 />
               </span>
               <div>
-                <p className={isPage ? "community-brand-name text-base sm:text-lg" : "community-brand-name"}>
-                  COSMIC GURUJI
-                </p>
-                <p className={isPage ? "community-brand-tag text-[9px] sm:text-[10px]" : "community-brand-tag"}>
-                  Spreading Light, Healing Lives
-                </p>
+                <p className="community-brand-name">COSMIC GURUJI</p>
+                <p className="community-brand-tag">Spreading Light, Healing Lives</p>
               </div>
             </div>
 
-            <div className={`${isPage ? "mt-8" : "mt-4"} text-center lg:text-left`}>
-              <div className="flex items-center justify-center gap-2 lg:justify-start">
+            <div className="just99-hero">
+              <div className="just99-join-row">
                 <span className="community-popup-line" />
-                <span
-                  className={
-                    isPage
-                      ? "text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8A7AA8]"
-                      : "text-[9px] font-semibold uppercase tracking-[0.22em] text-[#8A7AA8]"
-                  }
-                >
-                  Join Our
-                </span>
+                <span className="just99-join-label">Join Our</span>
                 <span className="community-popup-line" />
               </div>
 
-              <div className="mt-3 flex flex-wrap items-end justify-center gap-x-3 gap-y-0 lg:justify-start">
-                <h1
-                  id="community-popup-title"
-                  className={
-                    isPage
-                      ? "text-[40px] font-semibold leading-none text-[#3B1C5B] sm:text-[48px] lg:text-[56px]"
-                      : "text-[28px] font-semibold leading-none text-[#3B1C5B] sm:text-[30px]"
-                  }
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                >
+              <div className="just99-headline">
+                <h1 id="community-popup-title" className="just99-healing">
                   Healing
                 </h1>
-                <p
-                  className={
-                    isPage
-                      ? "community-popup-script text-[48px] leading-[0.95] sm:text-[56px] lg:text-[64px]"
-                      : "community-popup-script text-[38px] leading-[0.95] sm:text-[42px]"
-                  }
-                >
-                  Community
-                </p>
+                <p className="just99-community">Community</p>
               </div>
 
-              <p className={isPage ? "mt-4 text-base font-semibold text-[#5A3D8C] sm:text-lg" : "mt-2.5 text-[12px] font-semibold text-[#5A3D8C]"}>
-                Heal. Connect. Grow Together.
-              </p>
-              <p
-                className={
-                  isPage
-                    ? "mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[#7A6B96] sm:text-base lg:mx-0"
-                    : "mx-auto mt-1.5 max-w-[300px] text-[10px] leading-relaxed text-[#7A6B96] lg:mx-0 lg:max-w-none sm:text-[11px]"
-                }
-              >
+              <div className="just99-lotus-divider" aria-hidden>
+                <span className="just99-divider-line" />
+                <Just99Asset src={JUST99_ASSETS.lotus} size={isPage ? 22 : 18} className="just99-lotus-icon" />
+                <span className="just99-divider-line" />
+              </div>
+
+              <p className="just99-tagline">Heal. Connect. Grow Together.</p>
+              <p className="just99-desc">
                 A sacred space to heal your mind, uplift your soul and connect with
                 like-minded souls.
               </p>
             </div>
 
-            <div
-              className={
-                isPage
-                  ? "mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4"
-                  : "mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:gap-1.5"
-              }
-            >
-              {features.map((item) => (
+            <div className="just99-features">
+              {JUST99_FEATURES.map((item) => (
                 <div key={item.title} className="community-feature-card">
-                  <span className="community-feature-icon">{item.icon}</span>
-                  <p
-                    className={
-                      isPage
-                        ? "mt-2 text-xs font-semibold leading-tight text-[#3B1C5B] sm:text-sm"
-                        : "mt-1.5 text-[10px] font-semibold leading-tight text-[#3B1C5B]"
-                    }
-                  >
-                    {item.title}
-                  </p>
-                  <p
-                    className={
-                      isPage
-                        ? "mt-1 text-[10px] leading-snug text-[#8A7AA8] sm:text-xs"
-                        : "mt-0.5 text-[8px] leading-snug text-[#8A7AA8]"
-                    }
-                  >
-                    {item.desc}
-                  </p>
+                  <span className="just99-feature-icon-wrap">
+                    <Just99Asset src={item.image} size={isPage ? 52 : 36} />
+                  </span>
+                  <p className="community-feature-title">{item.title}</p>
+                  <p className="community-feature-desc">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div
-          className={
-            isPage
-              ? "community-popup-right just99-right relative flex min-h-[320px] flex-col justify-center overflow-y-auto border-t border-[#E4D8F5]/80 px-6 py-8 sm:px-10 lg:border-t-0 lg:border-l lg:px-12 xl:px-16"
-              : "community-popup-right relative flex min-h-[280px] flex-col overflow-y-auto border-t border-[#E4D8F5]/80 px-4 py-4 sm:px-5 lg:border-t-0 lg:border-l"
-          }
-        >
-          <div className={isPage ? "just99-offer-wrap mx-auto w-full max-w-md" : "h-full"}>
-            {step === "offer" && <OfferPanel onJoin={onJoinClick} large={isPage} />}
+        <div className="just99-right community-popup-right relative flex flex-col justify-center overflow-y-auto">
+          <div className="just99-offer-wrap">
+            {step === "offer" && <OfferPanel onJoin={onJoinClick} compact={!isPage} />}
             {step === "form" && (
               <FormPanel
                 details={details}
@@ -274,36 +198,30 @@ export default function CommunityJoinExperience({
         </div>
       </div>
 
-      <div className={isPage ? "community-popup-perks shrink-0 px-6 py-3 lg:px-10" : "community-popup-perks shrink-0 px-4 py-2.5"}>
-        <div className={isPage ? "community-popup-perks-inner just99-perks" : "community-popup-perks-inner"}>
-          {perks.map((item) => (
-            <div key={item.title} className="flex min-w-0 items-center gap-2 sm:gap-3">
-              <span className="community-perk-icon">{item.icon}</span>
-              <div className="min-w-0">
-                <p className={isPage ? "truncate text-xs font-semibold text-[#3B1C5B] sm:text-sm" : "truncate text-[10px] font-semibold text-[#3B1C5B]"}>
-                  {item.title}
-                </p>
-                <p className={isPage ? "truncate text-[10px] text-[#8A7AA8] sm:text-xs" : "truncate text-[8px] text-[#8A7AA8]"}>
-                  {item.desc}
-                </p>
+      <div className={`just99-bottom shrink-0 ${isPage ? "" : "just99-bottom-popup"}`}>
+        <div className="just99-perks-bar community-popup-perks shrink-0">
+          <div className="community-popup-perks-inner just99-perks">
+            {JUST99_PERKS.map((item) => (
+              <div key={item.title} className="just99-perk-item">
+                <span className="just99-perk-icon-wrap">
+                  <Just99Asset src={item.image} size={isPage ? 28 : 22} />
+                </span>
+                <div className="min-w-0">
+                  <p className="just99-perk-title">{item.title}</p>
+                  <p className="just99-perk-desc">{item.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div
-        className={
-          isPage
-            ? "community-popup-footer shrink-0 px-6 py-3 text-center text-xs leading-snug text-white/95 sm:text-sm lg:px-10"
-            : "community-popup-footer shrink-0 px-3 py-2.5 text-center text-[10px] leading-snug text-white/95"
-        }
-      >
-        <span className="inline-flex items-center justify-center gap-2">
-          <LotusMini />
-          Be a part of a loving community that uplifts and inspires you every day.
-          <LotusMini />
-        </span>
+        <div className="just99-footer community-popup-footer shrink-0">
+          <span className="inline-flex items-center justify-center gap-2">
+            <Just99Asset src={JUST99_ASSETS.lotus} size={isPage ? 14 : 12} className="just99-footer-lotus" />
+            Be a part of a loving community that uplifts and inspires you every day.
+            <Just99Asset src={JUST99_ASSETS.lotus} size={isPage ? 14 : 12} className="just99-footer-lotus" />
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -315,23 +233,26 @@ export default function CommunityJoinExperience({
   return shell;
 }
 
-function OfferPanel({ onJoin, large = false }: { onJoin: () => void; large?: boolean }) {
+function OfferPanel({ onJoin, compact = false }: { onJoin: () => void; compact?: boolean }) {
   return (
-    <div className="flex h-full flex-col justify-center">
-      <div className={`community-offer-card ${large ? "just99-offer-card" : ""}`}>
+    <div className="flex h-full w-full flex-col justify-center">
+      <div className={`community-offer-card just99-offer-card ${compact ? "just99-offer-card-popup" : ""}`}>
         <div className="community-offer-ribbon">
           <span>Special Offer</span>
         </div>
 
-        <div className={large ? "community-offer-body just99-offer-body" : "community-offer-body"}>
+        <div className="community-offer-body just99-offer-body">
           <div className="community-only-row">
             <SparkleTiny />
+            <span className="community-only-line" aria-hidden />
             <span className="community-only-text">Only</span>
+            <span className="community-only-line" aria-hidden />
             <SparkleTiny />
           </div>
 
           <div className="community-price-block">
-            <p className={`community-popup-price ${large ? "just99-price" : ""}`}>
+            <span className="community-price-glow" aria-hidden />
+            <p className="community-popup-price just99-price">
               <span className="community-popup-price-symbol">₹</span>
               <span className="community-popup-price-amount">99</span>
             </p>
@@ -349,7 +270,7 @@ function OfferPanel({ onJoin, large = false }: { onJoin: () => void; large?: boo
             </div>
           </div>
 
-          <JoinNowButton onClick={onJoin} large={large} />
+          <JoinNowButton onClick={onJoin} large useAssetIcon />
 
           <div className="community-trust-row">
             <span className="community-trust-item">
@@ -376,10 +297,12 @@ function JoinNowButton({
   onClick,
   label = "Join Now",
   large = false,
+  useAssetIcon = false,
 }: {
   onClick: () => void;
   label?: string;
   large?: boolean;
+  useAssetIcon?: boolean;
 }) {
   return (
     <button
@@ -388,13 +311,63 @@ function JoinNowButton({
       className={`community-join-btn ${large ? "just99-join-btn" : ""}`}
     >
       <span className="community-join-btn-left">
-        <PeopleIcon />
+        {useAssetIcon ? (
+          <Just99Asset src={JUST99_ASSETS.community} size={22} />
+        ) : (
+          <PeopleIcon />
+        )}
       </span>
       <span className="community-join-btn-label">{label}</span>
       <span className="community-join-btn-arrow">
         <ArrowIcon />
       </span>
     </button>
+  );
+}
+
+function Just99Asset({
+  src,
+  size,
+  className = "",
+}: {
+  src: string;
+  size: number;
+  className?: string;
+}) {
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={size}
+      height={size}
+      unoptimized
+      className={`just99-asset-img object-contain ${className}`.trim()}
+      style={{ width: size, height: size }}
+    />
+  );
+}
+
+function Just99BackgroundDecor() {
+  return (
+    <div className="just99-bg-decor pointer-events-none absolute inset-0 z-[1]" aria-hidden>
+      <Image
+        src={JUST99_ASSETS.vine}
+        alt=""
+        width={180}
+        height={462}
+        unoptimized
+        className="just99-bg-vine just99-bg-vine-left object-contain"
+      />
+      <Image
+        src={JUST99_ASSETS.vine}
+        alt=""
+        width={180}
+        height={462}
+        unoptimized
+        className="just99-bg-vine just99-bg-vine-right object-contain"
+      />
+      <div className="just99-bg-mountains" />
+    </div>
   );
 }
 

@@ -1249,9 +1249,9 @@ a:hover .expert-arrow-circle {
   top: 0;
   z-index: 2;
   transform: translate(-50%, -50%);
-  border-radius: 999px;
+  border-radius: 2px;
   background: linear-gradient(180deg, #4b2475 0%, #3b1c5b 100%);
-  padding: 6px 22px;
+  padding: 7px 30px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -1261,6 +1261,14 @@ a:hover .expert-arrow-circle {
   box-shadow:
     0 6px 16px rgba(59, 28, 91, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  clip-path: polygon(
+    11px 0%,
+    calc(100% - 11px) 0%,
+    100% 50%,
+    calc(100% - 11px) 100%,
+    11px 100%,
+    0% 50%
+  );
 }
 
 .community-offer-ribbon span {
@@ -1276,19 +1284,73 @@ a:hover .expert-arrow-circle {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
+}
+
+.community-only-line {
+  display: inline-block;
+  width: 34px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c5a059, transparent);
+  position: relative;
+}
+
+.community-only-line::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: #c5a059;
 }
 
 .community-only-text {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #9a8ab5;
+  color: #4b2475;
 }
 
 .community-price-block {
-  margin: 10px 0 14px;
+  position: relative;
+  margin: 1rem 0 1rem;
+}
+
+.just99-offer-card .community-only-row {
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.just99-offer-card .community-price-block {
+  margin-top: 1.25rem;
+  margin-bottom: 1.125rem;
+}
+
+.community-price-glow {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  z-index: 0;
+  width: min(72%, 170px);
+  height: min(72%, 170px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(248, 242, 255, 0.72) 38%,
+    rgba(243, 234, 253, 0.28) 62%,
+    transparent 78%
+  );
+}
+
+.community-price-block .community-popup-price {
+  position: relative;
+  z-index: 1;
 }
 
 .community-payment-badge {
@@ -1297,25 +1359,26 @@ a:hover .expert-arrow-circle {
   justify-content: center;
   margin: 0 auto 18px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #4b2475 0%, #5a3d8c 100%);
+  background: linear-gradient(90deg, #7d4ea5 0%, #6840a0 55%, #5a3d8c 100%);
   padding: 6px 16px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(75, 36, 117, 0.22);
+  box-shadow: 0 4px 12px rgba(75, 36, 117, 0.2);
 }
 
 .community-access-box {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-radius: 12px;
-  border: 2px dashed #d0c0e8;
-  background: #faf8fd;
+  border-radius: 14px;
+  border: 1.5px dashed #c9b3e6;
+  background: rgba(255, 255, 255, 0.92);
   padding: 14px 16px;
   text-align: left;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .community-access-copy {
@@ -1637,36 +1700,319 @@ a:hover .expert-arrow-circle {
   min-height: 100dvh;
 }
 
-/* Just99 landing page — full screen */
+/* Just99 landing page — full screen exact design */
 .just99-page {
   height: 100vh;
   height: 100dvh;
   width: 100%;
   overflow: hidden;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  background: linear-gradient(180deg, #faf8ff 0%, #f3ecfc 42%, #f9f8ff 100%);
+}
+
+.just99-bg-decor {
+  overflow: hidden;
+  clip-path: inset(0 0 148px 0);
+}
+
+.just99-bg-decor::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 255, 255, 0.6), transparent 70%),
-    radial-gradient(ellipse 45% 35% at 8% 85%, rgba(196, 160, 220, 0.25), transparent 60%),
-    radial-gradient(ellipse 45% 35% at 92% 85%, rgba(196, 160, 220, 0.25), transparent 60%),
-    linear-gradient(160deg, #f8f2fd 0%, #ede4f8 45%, #e8dff5 100%);
+    linear-gradient(90deg, rgba(250, 248, 255, 0.72) 0%, transparent 14%, transparent 86%, rgba(250, 248, 255, 0.72) 100%),
+    linear-gradient(180deg, rgba(250, 248, 255, 0.35) 0%, transparent 22%);
+}
+
+.just99-bg-vine {
+  position: absolute;
+  width: auto;
+  max-width: min(11vw, 145px);
+  height: min(52vh, 440px);
+  opacity: 0.52;
+  object-fit: contain;
+  object-position: bottom center;
+  bottom: 140px;
+  top: auto;
+  mix-blend-mode: multiply;
+  filter: saturate(0.88) brightness(1.04);
+  -webkit-mask-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.72) 45%,
+    rgba(0, 0, 0, 0.28) 78%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.72) 45%,
+    rgba(0, 0, 0, 0.28) 78%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.just99-bg-vine-left {
+  left: 0;
+}
+
+.just99-bg-vine-right {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.just99-bg-mountains {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 88px;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(232, 218, 248, 0.35), transparent),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 90' preserveAspectRatio='none'%3E%3Cpath fill='%23c4a0dc' fill-opacity='0.14' d='M0 90 L0 58 Q120 42 240 52 T480 46 T720 54 T960 48 T1200 52 L1200 90 Z'/%3E%3C/svg%3E")
+      center bottom / 100% 100% no-repeat;
+}
+
+.just99-asset-img {
+  display: block;
+  background: transparent;
+}
+
+.just99-feature-icon-wrap,
+.just99-perk-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.just99-feature-icon-wrap {
+  min-height: 3.25rem;
+}
+
+.just99-page .community-feature-icon {
+  background: transparent;
+  box-shadow: none;
+}
+
+.just99-page .community-perk-icon {
+  background: transparent;
+}
+
+.just99-footer-lotus {
+  opacity: 0.95;
+  filter: brightness(1.4);
 }
 
 .just99-shell {
   min-height: 100vh;
   min-height: 100dvh;
+  background: transparent;
 }
 
 .just99-main {
   min-height: 0;
 }
 
+.just99-left {
+  padding: 2rem 1rem 1.5rem;
+  background: transparent;
+}
+
+.just99-left.community-popup-left {
+  background: transparent;
+}
+
+.just99-left.community-popup-left::after {
+  display: none;
+}
+
+.just99-left-inner {
+  width: 100%;
+  max-width: 100%;
+}
+
+.just99-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.just99-page .community-brand-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #3b1c5b;
+}
+
+.just99-page .community-brand-tag {
+  margin-top: 2px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a7aa8;
+}
+
+.just99-hero {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.just99-join-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+}
+
+.just99-join-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #4a3aff;
+}
+
+.just99-headline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  margin-top: 0.875rem;
+}
+
+.just99-healing {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(2.75rem, 5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  color: #0a0e4b;
+}
+
+.just99-community {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(2.75rem, 5vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.05;
+  text-align: center;
+  background: linear-gradient(180deg, #1a1a5e 0%, #702cf6 42%, #7b2ff7 72%, #3b52f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.just99-lotus-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.just99-divider-line {
+  display: inline-block;
+  width: 3.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c5a059 45%, #c5a059 55%, transparent);
+}
+
+.just99-lotus-icon {
+  flex-shrink: 0;
+}
+
+.just99-tagline {
+  margin-top: 1rem;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #5e2ced;
+}
+
+.just99-desc {
+  margin: 0.75rem auto 0;
+  max-width: 26rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: #333366;
+}
+
+.just99-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.just99-features .community-feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.625rem 0.875rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 6px 18px rgba(75, 36, 117, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  text-align: center;
+}
+
+.just99-features .community-feature-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.community-feature-title {
+  margin-top: 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #3b1c5b;
+}
+
+.community-feature-desc {
+  margin-top: 0.25rem;
+  font-size: 0.5625rem;
+  line-height: 1.35;
+  color: #8a7aa8;
+}
+
 .just99-left::after {
-  height: 80px;
+  height: 72px;
 }
 
 .just99-right {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255, 255, 255, 0.9), rgba(250, 246, 255, 0.7)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(243, 234, 253, 0.55) 100%);
+  position: relative;
+  padding: 1.5rem 1.25rem;
+  background: transparent;
+  border-left: none;
+}
+
+.just99-right::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: min(68vh, 520px);
+  width: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(197, 160, 89, 0.22) 9%,
+    rgba(197, 160, 89, 0.88) 20%,
+    rgba(197, 160, 89, 0.88) 80%,
+    rgba(197, 160, 89, 0.22) 91%,
+    transparent 100%
+  );
+}
+
+.just99-right.community-popup-right {
+  background: transparent;
 }
 
 .just99-offer-wrap {
@@ -1677,94 +2023,492 @@ a:hover .expert-arrow-circle {
   justify-content: center;
 }
 
+.just99-page .just99-offer-wrap {
+  justify-content: center;
+  padding-right: 0;
+}
+
+.just99-page .just99-right {
+  padding-left: 3.5rem;
+  padding-right: 1.5rem;
+}
+
 .just99-offer-card {
   width: 100%;
-  max-width: 420px;
-  border-radius: 24px;
-  border-width: 2px;
+  max-width: 390px;
+  border-radius: 26px;
+  border: 1.5px solid rgba(139, 95, 191, 0.62);
+  background:
+    radial-gradient(ellipse 88% 58% at 50% 36%, rgba(255, 255, 255, 0.98) 0%, rgba(249, 246, 255, 0.94) 52%, rgba(243, 236, 252, 0.9) 100%),
+    #fff;
   box-shadow:
-    0 16px 48px rgba(75, 36, 117, 0.16),
-    0 4px 12px rgba(75, 36, 117, 0.08);
+    0 0 0 1px rgba(142, 45, 226, 0.07),
+    0 16px 48px rgba(74, 0, 224, 0.11),
+    0 0 28px rgba(142, 45, 226, 0.07);
+  animation: communityOfferGlow 4s ease-in-out infinite;
 }
 
 .just99-offer-body {
-  padding: 38px 28px 28px;
+  padding: 2.65rem 1.5rem 1.75rem;
+}
+
+.just99-page .just99-offer-card:not(.just99-offer-card-popup) .just99-offer-body {
+  padding: 2.65rem 0.875rem 1.75rem 2.35rem;
+}
+
+.just99-page .just99-offer-card:not(.just99-offer-card-popup) .community-price-glow {
+  left: calc(50% + 0.625rem);
 }
 
 .just99-price {
-  font-size: clamp(3.5rem, 7vw, 5rem) !important;
+  font-size: clamp(3.5rem, 6vw, 4.5rem) !important;
+  background: linear-gradient(180deg, #5a7fd4 0%, #4b2475 38%, #3b1c5b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
 }
 
-.just99-page .community-only-text {
-  font-size: 12px;
-  letter-spacing: 0.32em;
+.just99-offer-card .community-only-line {
+  width: 2.75rem;
 }
 
-.just99-page .community-payment-badge {
-  font-size: 10px;
-  padding: 7px 18px;
-  margin-bottom: 20px;
+.just99-offer-card .community-only-text {
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
+  color: #4b2475;
 }
 
-.just99-page .community-access-box {
-  padding: 16px 18px;
+.just99-offer-card .community-price-glow {
+  width: min(80%, 210px);
+  height: min(80%, 210px);
+}
+
+.just99-offer-card .community-payment-badge {
+  font-size: 0.59375rem;
+  padding: 0.5rem 1.25rem;
+  margin-bottom: 1.375rem;
+  background: linear-gradient(90deg, #8b5fbf 0%, #734fa8 55%, #6840a0 100%);
+}
+
+.just99-offer-card .community-access-box {
+  padding: 1rem 1.125rem;
   border-radius: 14px;
+  border: 1.5px dashed #c9b3e6;
+  background: rgba(255, 255, 255, 0.96);
 }
 
-.just99-page .community-access-title {
-  font-size: 14px;
+.just99-offer-card .community-access-title {
+  font-size: 0.875rem;
 }
 
-.just99-page .community-access-desc {
-  font-size: 11px;
+.just99-offer-card .community-access-desc {
+  font-size: 0.6875rem;
 }
 
-.just99-page .community-access-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 11px;
+.just99-offer-card .community-access-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
 }
 
+.just99-offer-card .community-join-btn,
 .just99-join-btn {
-  margin-top: 22px;
+  margin-top: 1.25rem;
   min-height: 54px;
-  padding: 6px 6px 6px 10px;
+  background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 38%, #5b21b6 72%, #4c1d95 100%);
+  box-shadow:
+    0 12px 30px rgba(91, 33, 182, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
-.just99-page .community-join-btn-label {
-  font-size: 15px;
+.just99-offer-card .community-join-btn-label,
+.just99-page .just99-join-btn .community-join-btn-label {
+  font-size: 0.875rem;
   letter-spacing: 0.18em;
 }
 
-.just99-page .community-join-btn-left,
-.just99-page .community-join-btn-arrow {
+.just99-offer-card .community-join-btn-left,
+.just99-offer-card .community-join-btn-arrow,
+.just99-page .just99-join-btn .community-join-btn-left,
+.just99-page .just99-join-btn .community-join-btn-arrow {
   width: 44px;
   height: 44px;
 }
 
-.just99-page .community-trust-row {
-  margin-top: 18px;
-  font-size: 11px;
+.just99-offer-card .community-trust-row {
+  margin-top: 1.125rem;
+  font-size: 0.6875rem;
 }
 
-.just99-page .community-offer-ribbon {
-  font-size: 10px;
-  padding: 7px 26px;
+.just99-offer-card .community-offer-ribbon {
+  font-size: 0.59375rem;
+  padding: 0.5625rem 1.625rem;
+  clip-path: polygon(
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 50%,
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% 50%
+  );
+}
+
+.just99-offer-card-popup {
+  max-width: 100%;
+  border-radius: 22px;
+}
+
+.just99-offer-card-popup .just99-offer-body {
+  padding: 1.85rem 1.125rem 1.25rem;
+}
+
+.just99-offer-card-popup .just99-price {
+  font-size: clamp(2.65rem, 7.5vw, 3.35rem) !important;
+}
+
+.just99-offer-card-popup .community-only-line {
+  width: 2rem;
+}
+
+.just99-offer-card-popup .community-price-glow {
+  width: min(76%, 150px);
+  height: min(76%, 150px);
+}
+
+.just99-offer-card-popup .community-payment-badge {
+  font-size: 0.5rem;
+  padding: 0.375rem 0.875rem;
+  margin-bottom: 0.875rem;
+}
+
+.just99-offer-card-popup .community-access-box {
+  padding: 0.75rem 0.875rem;
+}
+
+.just99-offer-card-popup .community-access-title {
+  font-size: 0.75rem;
+}
+
+.just99-offer-card-popup .community-access-desc {
+  font-size: 0.5625rem;
+}
+
+.just99-offer-card-popup .community-access-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.just99-offer-card-popup .community-join-btn {
+  margin-top: 0.875rem;
+  min-height: 46px;
+}
+
+.just99-offer-card-popup .community-join-btn-label {
+  font-size: 0.75rem;
+}
+
+.just99-offer-card-popup .community-join-btn-left,
+.just99-offer-card-popup .community-join-btn-arrow {
+  width: 38px;
+  height: 38px;
+}
+
+.just99-offer-card-popup .community-trust-row {
+  margin-top: 0.875rem;
+  font-size: 0.5625rem;
+}
+
+.just99-offer-card-popup .community-offer-ribbon {
+  font-size: 0.5rem;
+  padding: 0.4375rem 1.25rem;
+}
+
+.just99-perks-bar {
+  padding: 0.625rem 1rem 0.75rem;
+  background: rgba(255, 255, 255, 0.28);
+  border-top: 1px solid rgba(216, 196, 239, 0.55);
+}
+
+.just99-bottom {
+  position: relative;
+  z-index: 6;
+  background: linear-gradient(180deg, rgba(249, 248, 255, 0.98) 0%, #f3ecfc 100%);
 }
 
 .just99-perks {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 12px 20px !important;
+  padding: 0.625rem 1.25rem !important;
+  border-radius: 999px;
 }
 
-.just99-page .community-feature-card {
-  padding: 14px 10px;
+.just99-perk-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.625rem;
 }
 
-.just99-page .community-feature-icon {
-  width: 38px;
-  height: 38px;
+.just99-perk-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #3b1c5b;
+}
+
+.just99-perk-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.5625rem;
+  color: #8a7aa8;
+}
+
+.just99-footer {
+  width: calc(100% - 1.5rem);
+  max-width: 680px;
+  margin: 0 auto 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.just99-page .just99-footer.community-popup-footer {
+  box-shadow:
+    0 8px 24px rgba(59, 28, 91, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Popup dialog — same centered UI as /just99 landing */
+.community-popup .just99-left {
+  padding: 0.875rem 0.75rem 0.625rem;
+  background: transparent;
+}
+
+.community-popup .just99-left.community-popup-left::after {
+  display: none;
+}
+
+.community-popup .just99-hero {
+  margin-top: 0.875rem;
+  text-align: center;
+}
+
+.community-popup .just99-healing,
+.community-popup .just99-community {
+  font-size: clamp(1.65rem, 3.8vw, 2.125rem);
+}
+
+.community-popup .just99-tagline {
+  margin-top: 0.625rem;
+  font-size: 0.8125rem;
+}
+
+.community-popup .just99-desc {
+  margin-top: 0.5rem;
+  max-width: 100%;
+  font-size: 0.625rem;
+  line-height: 1.5;
+}
+
+.community-popup .just99-features {
+  margin-top: 0.875rem;
+  gap: 0.4375rem;
+}
+
+.community-popup .just99-features .community-feature-card {
+  padding: 0.625rem 0.375rem 0.5rem;
+  border-radius: 12px;
+}
+
+.community-popup .community-feature-title {
+  margin-top: 0.375rem;
+  font-size: 0.5625rem;
+}
+
+.community-popup .community-feature-desc {
+  font-size: 0.5rem;
+}
+
+.community-popup .just99-feature-icon-wrap {
+  min-height: 2.25rem;
+}
+
+.community-popup .just99-right {
+  padding: 0.75rem 0.625rem;
+  background: transparent;
+}
+
+.community-popup .just99-right::before {
+  height: min(58vh, 360px);
+}
+
+.community-popup .just99-bottom-popup {
+  background: linear-gradient(180deg, rgba(249, 248, 255, 0.98) 0%, #f3ecfc 100%);
+}
+
+.community-popup .just99-perks-bar {
+  padding: 0.4375rem 0.625rem 0.5rem;
+}
+
+.community-popup .just99-perks {
+  padding: 0.4375rem 0.625rem !important;
+  gap: 0.375rem;
+}
+
+.community-popup .just99-perk-item {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.25rem;
+}
+
+.community-popup .just99-perk-title {
+  font-size: 0.5625rem;
+  white-space: normal;
+}
+
+.community-popup .just99-perk-desc {
+  font-size: 0.5rem;
+  white-space: normal;
+}
+
+.community-popup .just99-footer {
+  width: calc(100% - 2.5rem);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.5rem;
+  padding: 0.4375rem 0.875rem;
+  font-size: 0.5625rem;
+  line-height: 1.4;
+  box-shadow:
+    0 6px 18px rgba(59, 28, 91, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.community-popup .just99-join-label {
+  font-size: 0.5625rem;
+}
+
+.community-popup .just99-divider-line {
+  width: 2rem;
+}
+
+@media (min-width: 640px) {
+  .community-popup .just99-features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4375rem;
+  }
+
+  .community-popup .just99-perks {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .community-popup .just99-perk-item {
+    flex-direction: row;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  .community-popup .just99-left {
+    padding: 1rem 0.875rem 0.75rem;
+  }
+
+  .community-popup .just99-right {
+    padding: 0.875rem 0.75rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .community-popup .just99-right {
+    min-height: 280px;
+    border-left: none;
+    border-top: 1px solid rgba(228, 216, 245, 0.75);
+  }
+
+  .community-popup .just99-right::before {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .just99-features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+
+  .just99-left {
+    padding: 2.25rem 1.25rem 1.75rem;
+  }
+
+  .just99-right {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .just99-page .just99-right {
+    padding: 1.75rem 1.5rem 1.75rem 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .just99-left {
+    padding: 2.5rem 1.75rem 2rem 2rem;
+  }
+
+  .just99-left-inner {
+    max-width: 100%;
+  }
+
+  .just99-right {
+    padding: 2rem 1.75rem;
+  }
+
+  .just99-page .just99-right {
+    padding: 2rem 2rem 2rem 4.5rem;
+  }
+
+  .just99-page .just99-offer-wrap {
+    padding-right: 0;
+  }
+
+  .just99-perks-bar {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .just99-footer {
+    width: calc(100% - 2.5rem);
+    max-width: 720px;
+    margin-bottom: 1rem;
+    padding: 0.6875rem 1.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .just99-left {
+    padding: 2.75rem 2rem 2.25rem 2.5rem;
+  }
+
+  .just99-right {
+    padding: 2.25rem 2rem;
+  }
+
+  .just99-page .just99-right {
+    padding: 2.25rem 2.5rem 2.25rem 5.25rem;
+  }
+
+  .just99-page .just99-offer-wrap {
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 1023px) {
@@ -1783,5 +2527,26 @@ a:hover .expert-arrow-circle {
 
   .just99-main {
     overflow: visible;
+  }
+
+  .just99-right {
+    min-height: 360px;
+    border-left: none;
+    border-top: 1px solid rgba(228, 216, 245, 0.75);
+  }
+
+  .just99-right::before {
+    display: none;
+  }
+
+  .just99-bg-vine {
+    max-width: min(13vw, 110px);
+    height: min(44vh, 320px);
+    bottom: 150px;
+    opacity: 0.46;
+  }
+
+  .just99-bg-decor {
+    clip-path: inset(0 0 165px 0);
   }
 }
