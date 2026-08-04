@@ -18,14 +18,17 @@ type CommunityJoinOrderResponse = {
   };
 };
 
-export async function submitCommunityJoinLead(details: CommunityJoinDetails) {
+export async function submitCommunityJoinLead(
+  details: CommunityJoinDetails,
+  source = "website_popup",
+) {
   return apiPost(
     "/community/join-lead",
     {
       name: details.name,
       email: details.email,
       phone: details.whatsapp,
-      source: "website_popup",
+      source,
     },
     false,
   );
@@ -61,9 +64,10 @@ export async function verifyCommunityJoinPayment(body: {
 
 export async function purchaseCommunityJoinWithRazorpay(
   details: CommunityJoinDetails,
+  source = "website_popup",
 ) {
   try {
-    await submitCommunityJoinLead(details);
+    await submitCommunityJoinLead(details, source);
   } catch {
     // Lead capture is best-effort; payment can still proceed.
   }

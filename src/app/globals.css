@@ -1230,83 +1230,110 @@ a:hover .expert-arrow-circle {
 
 .community-offer-card {
   position: relative;
-  border-radius: 16px;
-  border: 2px solid transparent;
-  background:
-    linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(135deg, #8e2de2 0%, #4a00e0 50%, #7d4ea5 100%) border-box;
+  border-radius: 20px;
+  background: #fff;
+  border: 2px solid #8b5fbf;
+  box-shadow:
+    0 10px 40px rgba(75, 36, 117, 0.14),
+    0 2px 8px rgba(75, 36, 117, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.community-popup .community-offer-card {
   animation: communityOfferGlow 4s ease-in-out infinite;
 }
 
 .community-offer-ribbon {
   position: absolute;
   left: 50%;
-  top: -1px;
+  top: 0;
   z-index: 2;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  background: linear-gradient(90deg, #3b1c5b 0%, #5a3d8c 50%, #3b1c5b 100%);
-  padding: 5px 20px;
+  background: linear-gradient(180deg, #4b2475 0%, #3b1c5b 100%);
+  padding: 6px 22px;
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #fff;
   white-space: nowrap;
   box-shadow:
-    0 4px 14px rgba(59, 28, 91, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 6px 16px rgba(59, 28, 91, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-.community-offer-ribbon::before,
-.community-offer-ribbon::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  transform: translateY(-50%) rotate(45deg);
-  background: #2e1650;
-  opacity: 0.85;
-}
-
-.community-offer-ribbon::before {
-  left: -3px;
-}
-
-.community-offer-ribbon::after {
-  right: -3px;
+.community-offer-ribbon span {
+  display: block;
 }
 
 .community-offer-body {
-  padding: 24px 16px 16px;
+  padding: 30px 22px 22px;
+  text-align: center;
 }
 
 .community-only-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 10px;
+  gap: 10px;
+}
+
+.community-only-text {
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #8a7aa8;
+  color: #9a8ab5;
+}
+
+.community-price-block {
+  margin: 10px 0 14px;
 }
 
 .community-payment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  border-radius: 999px;
   background: linear-gradient(90deg, #4b2475 0%, #5a3d8c 100%);
-  box-shadow: 0 4px 10px rgba(75, 36, 117, 0.2);
+  padding: 6px 16px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(75, 36, 117, 0.22);
 }
 
 .community-access-box {
   display: flex;
   align-items: center;
-  gap: 10px;
-  border-radius: 10px;
-  border: 1.5px dashed #c9b5e0;
-  background: linear-gradient(180deg, #fdfbff 0%, #f7f2fc 100%);
-  padding: 10px 12px;
+  gap: 12px;
+  border-radius: 12px;
+  border: 2px dashed #d0c0e8;
+  background: #faf8fd;
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.community-access-copy {
+  min-width: 0;
+}
+
+.community-access-title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #3b1c5b;
+}
+
+.community-access-desc {
+  margin-top: 2px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: #7a6b96;
 }
 
 .community-access-icon {
@@ -1314,9 +1341,9 @@ a:hover .expert-arrow-circle {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   background: linear-gradient(145deg, #f3eafd 0%, #e8d9f8 100%);
   color: #4b2475;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
@@ -1327,13 +1354,15 @@ a:hover .expert-arrow-circle {
   width: 100%;
   align-items: center;
   gap: 0;
+  margin-top: 18px;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(90deg, #6a11cb 0%, #4b2475 40%, #3b1c5b 100%);
-  padding: 4px 4px 4px 6px;
+  background: linear-gradient(90deg, #7c3aed 0%, #5b21b6 45%, #4c1d95 100%);
+  padding: 5px 5px 5px 8px;
+  min-height: 48px;
   box-shadow:
-    0 8px 22px rgba(59, 28, 91, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 10px 28px rgba(91, 33, 182, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
@@ -1354,23 +1383,23 @@ a:hover .expert-arrow-circle {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.18);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .community-join-btn-label {
   flex: 1;
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .community-join-btn-arrow {
@@ -1378,12 +1407,35 @@ a:hover .expert-arrow-circle {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: #fff;
   color: #4b2475;
-  box-shadow: 0 2px 8px rgba(75, 36, 117, 0.15);
+  box-shadow: 0 2px 8px rgba(75, 36, 117, 0.12);
+}
+
+.community-trust-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 16px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #8a7aa8;
+}
+
+.community-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.community-trust-divider {
+  width: 1px;
+  height: 14px;
+  background: #d8c4ef;
 }
 
 .community-trust-icon {
@@ -1429,23 +1481,131 @@ a:hover .expert-arrow-circle {
 
 .community-popup-input {
   width: 100%;
-  border-radius: 10px;
-  border: 1px solid #e0d4f0;
+  border-radius: 12px;
+  border: 1.5px solid #e4d8f5;
   background: #fff;
-  padding: 10px 12px;
-  font-size: 13px;
+  padding: 12px 14px;
+  font-size: 14px;
   color: #3b1c5b;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .community-popup-input::placeholder {
-  color: #a89bbd;
+  color: #b0a3c4;
 }
 
 .community-popup-input:focus {
-  border-color: #7d4ea5;
-  box-shadow: 0 0 0 3px rgba(125, 78, 165, 0.14);
+  border-color: #8b5fbf;
+  box-shadow: 0 0 0 3px rgba(125, 78, 165, 0.12);
+}
+
+.community-form-panel {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  padding: 4px 2px;
+}
+
+.community-form-header {
+  margin-bottom: 18px;
+}
+
+.community-form-title {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #3b1c5b;
+}
+
+.community-form-subtitle {
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #7a6b96;
+}
+
+.community-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.community-form-field {
+  display: block;
+}
+
+.community-form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5a3d8c;
+}
+
+.community-form-required {
+  color: #dc4b4b;
+}
+
+.community-form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.community-form-back-btn {
+  width: 100%;
+  cursor: pointer;
+  border-radius: 999px;
+  border: 1.5px solid #d8c4ef;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b2475;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.community-form-back-btn:hover {
+  border-color: #c9b5e0;
+  background: #f3eafd;
+}
+
+.community-form-panel-lg .community-form-title {
+  font-size: 1.75rem;
+}
+
+.community-form-panel-lg .community-form-subtitle {
+  font-size: 0.9375rem;
+}
+
+.community-form-panel-lg .community-form-header {
+  margin-bottom: 22px;
+}
+
+.community-form-panel-lg .community-form {
+  gap: 18px;
+}
+
+.community-form-panel-lg .community-form-label {
+  margin-bottom: 9px;
+  font-size: 11px;
+}
+
+.community-form-panel-lg .community-popup-input {
+  padding: 14px 16px;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+.community-form-actions .community-join-btn {
+  margin-top: 0;
 }
 
 .community-popup-footer {
@@ -1468,5 +1628,160 @@ a:hover .expert-arrow-circle {
 
   .community-sparkle {
     display: none;
+  }
+}
+
+.just99-layout {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Just99 landing page — full screen */
+.just99-page {
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 255, 255, 0.6), transparent 70%),
+    radial-gradient(ellipse 45% 35% at 8% 85%, rgba(196, 160, 220, 0.25), transparent 60%),
+    radial-gradient(ellipse 45% 35% at 92% 85%, rgba(196, 160, 220, 0.25), transparent 60%),
+    linear-gradient(160deg, #f8f2fd 0%, #ede4f8 45%, #e8dff5 100%);
+}
+
+.just99-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.just99-main {
+  min-height: 0;
+}
+
+.just99-left::after {
+  height: 80px;
+}
+
+.just99-right {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255, 255, 255, 0.9), rgba(250, 246, 255, 0.7)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(243, 234, 253, 0.55) 100%);
+}
+
+.just99-offer-wrap {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.just99-offer-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 24px;
+  border-width: 2px;
+  box-shadow:
+    0 16px 48px rgba(75, 36, 117, 0.16),
+    0 4px 12px rgba(75, 36, 117, 0.08);
+}
+
+.just99-offer-body {
+  padding: 38px 28px 28px;
+}
+
+.just99-price {
+  font-size: clamp(3.5rem, 7vw, 5rem) !important;
+}
+
+.just99-page .community-only-text {
+  font-size: 12px;
+  letter-spacing: 0.32em;
+}
+
+.just99-page .community-payment-badge {
+  font-size: 10px;
+  padding: 7px 18px;
+  margin-bottom: 20px;
+}
+
+.just99-page .community-access-box {
+  padding: 16px 18px;
+  border-radius: 14px;
+}
+
+.just99-page .community-access-title {
+  font-size: 14px;
+}
+
+.just99-page .community-access-desc {
+  font-size: 11px;
+}
+
+.just99-page .community-access-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+}
+
+.just99-join-btn {
+  margin-top: 22px;
+  min-height: 54px;
+  padding: 6px 6px 6px 10px;
+}
+
+.just99-page .community-join-btn-label {
+  font-size: 15px;
+  letter-spacing: 0.18em;
+}
+
+.just99-page .community-join-btn-left,
+.just99-page .community-join-btn-arrow {
+  width: 44px;
+  height: 44px;
+}
+
+.just99-page .community-trust-row {
+  margin-top: 18px;
+  font-size: 11px;
+}
+
+.just99-page .community-offer-ribbon {
+  font-size: 10px;
+  padding: 7px 26px;
+}
+
+.just99-perks {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 20px !important;
+}
+
+.just99-page .community-feature-card {
+  padding: 14px 10px;
+}
+
+.just99-page .community-feature-icon {
+  width: 38px;
+  height: 38px;
+}
+
+@media (max-width: 1023px) {
+  .just99-page {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .just99-shell {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+  }
+
+  .just99-main {
+    overflow: visible;
   }
 }
