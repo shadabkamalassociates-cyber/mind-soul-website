@@ -4,15 +4,43 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import CommunityJoinExperience from "@/components/communityJoin/CommunityJoinExperience";
 
+const POPUP_SEEN_KEY = "mind_soul_community_popup_seen";
+const HIDDEN_PATHS = ["/just99", "/congratulations"];
+
+function hasSeenPopup() {
+  try {
+    return window.localStorage.getItem(POPUP_SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markPopupSeen() {
+  try {
+    window.localStorage.setItem(POPUP_SEEN_KEY, "1");
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
 export default function CommunityJoinPopup() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (pathname === "/just99") return;
-    const timer = window.setTimeout(() => setIsOpen(true), 500);
+    if (HIDDEN_PATHS.includes(pathname)) return;
+    if (hasSeenPopup()) return;
+
+    const timer = window.setTimeout(() => {
+      if (hasSeenPopup()) return;
+      setIsOpen(true);
+      markPopupSeen();
+    }, 500);
+
     return () => window.clearTimeout(timer);
-  }, [pathname]);
+    // Only on first mount — not on every route change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -23,9 +51,10 @@ export default function CommunityJoinPopup() {
     };
   }, [isOpen]);
 
-  if (pathname === "/just99" || !isOpen) return null;
+  if (HIDDEN_PATHS.includes(pathname) || !isOpen) return null;
 
   function dismissPopup() {
+    markPopupSeen();
     setIsOpen(false);
   }
 
