@@ -7,6 +7,8 @@ export const JUST99_ASSETS = {
   gift: "/just99/gift.png",
   heart: "/just99/heart.png",
   headset: "/just99/headset.png",
+  heroPortrait: "/just99/hero-portrait.png?v=4",
+  whyJoinArt: "/just99/why-join-chakra.png",
 } as const;
 
 export const JUST99_FEATURES = [
@@ -21,4 +23,29 @@ export const JUST99_PERKS = [
   { image: JUST99_ASSETS.headset, title: "Live Healing Sessions", desc: "Weekly Live Interaction" },
   { image: JUST99_ASSETS.community, title: "Supportive Community", desc: "Connect & Share" },
   { image: JUST99_ASSETS.heart, title: "Daily Guidance", desc: "Uplift Your Journey" },
+] as const;
+
+export const JUST99_WHY_JOIN_CHECKLIST = [
+  "Lifetime Community Access",
+  "Live Healing Sessions",
+  "Supportive Community",
+  "Daily Guidance",
+] as const;
+
+export const JUST99_BOTTOM_VALUES = [
+  {
+    image: JUST99_ASSETS.lotus,
+    title: "A Safe Space",
+    desc: "Judgment-free & compassionate environment",
+  },
+  {
+    image: JUST99_ASSETS.star,
+    title: "Expert Guidance",
+    desc: "Learn from experienced healers & guides",
+  },
+  {
+    image: JUST99_ASSETS.community,
+    title: "Grow Together",
+    desc: "Together we heal, together we rise",
+  },
 ] as const;

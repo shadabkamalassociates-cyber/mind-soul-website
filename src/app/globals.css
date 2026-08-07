@@ -1700,14 +1700,57 @@ a:hover .expert-arrow-circle {
   min-height: 100dvh;
 }
 
-/* Just99 landing page — full screen exact design */
-.just99-page {
+.just99-layout-fit {
   height: 100vh;
   height: 100dvh;
-  width: 100%;
   overflow: hidden;
+}
+
+/* Just99 landing page — single screen, no scroll */
+.just99-landing {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+}
+
+.just99-site-header header {
+  border-bottom-color: rgba(238, 240, 250, 0.92);
+}
+
+.just99-site-header header > div {
+  height: 58px !important;
+}
+
+@media (min-width: 1024px) {
+  .just99-site-header header > div {
+    height: 60px !important;
+  }
+}
+
+.just99-page {
+  width: 100%;
   font-family: var(--font-jakarta), system-ui, sans-serif;
   background: linear-gradient(180deg, #faf8ff 0%, #f3ecfc 42%, #f9f8ff 100%);
+}
+
+.just99-page-fit {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.just99-page-scroll {
+  min-height: auto;
+  overflow: visible;
+}
+
+.just99-shell-fit {
+  min-height: 0;
 }
 
 .just99-bg-decor {
@@ -1807,8 +1850,7 @@ a:hover .expert-arrow-circle {
 }
 
 .just99-shell {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: auto;
   background: transparent;
 }
 
@@ -2512,16 +2554,13 @@ a:hover .expert-arrow-circle {
 }
 
 @media (max-width: 1023px) {
-  .just99-page {
-    overflow-y: auto;
-    height: auto;
-    min-height: 100vh;
-    min-height: 100dvh;
+  .just99-page-scroll {
+    overflow: visible;
+    min-height: auto;
   }
 
   .just99-shell {
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: auto;
     height: auto;
   }
 
@@ -2548,5 +2587,1508 @@ a:hover .expert-arrow-circle {
 
   .just99-bg-decor {
     clip-path: inset(0 0 165px 0);
+  }
+}
+
+/* Just99 full landing — single viewport fit */
+.just99-hero-landing {
+  margin-top: 0;
+  text-align: center;
+}
+
+.just99-hero-landing .just99-join-row,
+.just99-hero-landing .just99-lotus-divider {
+  justify-content: center;
+}
+
+.just99-hero-landing .just99-headline {
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.just99-hero-landing .just99-healing,
+.just99-hero-landing .just99-community {
+  text-align: center;
+}
+
+.just99-hero-landing .just99-desc {
+  margin-inline: auto;
+  max-width: 20rem;
+}
+
+.just99-page .just99-healing,
+.just99-page .just99-community {
+  font-size: clamp(2rem, 4vh, 3.2rem);
+  line-height: 0.96;
+}
+
+.just99-page .just99-hero-actions {
+  margin-top: 0.625rem;
+}
+
+.just99-page .just99-hero {
+  margin-top: 0.25rem;
+}
+
+.just99-page .just99-join-label {
+  font-size: clamp(0.5625rem, 1.05vh, 0.6875rem);
+  color: #4b2475;
+  letter-spacing: 0.26em;
+}
+
+.just99-page .just99-tagline {
+  margin-top: 0.5rem;
+  font-size: clamp(0.8125rem, 1.65vh, 0.9375rem);
+}
+
+.just99-page .just99-desc {
+  margin-top: 0.4375rem;
+  font-size: clamp(0.6875rem, 1.2vh, 0.8125rem);
+  line-height: 1.45;
+  color: #4a4566;
+}
+
+.just99-page .just99-lotus-divider {
+  margin-top: 0.5rem;
+}
+
+.just99-page .just99-divider-line {
+  width: 2.75rem;
+}
+
+.just99-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.just99-hero-join-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c3aed 0%, #5b21b6 55%, #4c1d95 100%);
+  padding: 0.5rem 1.125rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(91, 33, 182, 0.24);
+  cursor: pointer;
+}
+
+.just99-hero-watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1.5px solid rgba(139, 95, 191, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0.48rem 0.95rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #4b2475;
+  cursor: pointer;
+}
+
+/* Just99 full landing — single viewport fit */
+.just99-main-landing {
+  position: relative;
+  z-index: 3;
+  min-height: 0;
+  flex: 1 1 58%;
+  padding: 0.1rem 0.35rem 0;
+  align-items: center;
+  overflow: visible;
+}
+
+.just99-main-landing::before {
+  content: "";
+  position: absolute;
+  left: 42%;
+  top: 50%;
+  z-index: 0;
+  width: min(82vh, 760px);
+  height: min(82vh, 760px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, transparent 52%, rgba(139, 95, 191, 0.07) 53%, transparent 54%),
+    radial-gradient(circle, transparent 62%, rgba(139, 95, 191, 0.06) 63%, transparent 64%),
+    radial-gradient(circle, transparent 72%, rgba(139, 95, 191, 0.05) 73%, transparent 74%),
+    radial-gradient(circle, transparent 82%, rgba(139, 95, 191, 0.04) 83%, transparent 84%),
+    radial-gradient(circle, transparent 92%, rgba(139, 95, 191, 0.03) 93%, transparent 94%);
+}
+
+.just99-hero-ripple-rings {
+  position: absolute;
+  inset: -22%;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, transparent 54%, rgba(197, 160, 89, 0.08) 55%, transparent 56%),
+    radial-gradient(circle, transparent 66%, rgba(139, 95, 191, 0.05) 67%, transparent 68%);
+  opacity: 0.85;
+}
+
+.just99-hero-center-landing {
+  position: absolute;
+  left: 42%;
+  top: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(66vh, 600px);
+  height: min(66vh, 600px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.just99-hero-portrait-glow {
+  position: absolute;
+  inset: -14%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.98) 0%, rgba(250, 246, 255, 0.78) 30%, rgba(243, 236, 252, 0.32) 55%, transparent 72%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.65),
+    0 0 0 14px rgba(245, 240, 255, 0.55),
+    0 0 0 28px rgba(240, 232, 252, 0.32),
+    0 0 0 42px rgba(232, 218, 248, 0.14),
+    0 0 0 56px rgba(225, 210, 245, 0.06);
+}
+
+.just99-hero-portrait-ring {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 244, 255, 0.92) 100%);
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.94),
+    0 0 28px rgba(197, 160, 89, 0.22),
+    0 20px 50px rgba(75, 36, 117, 0.16);
+}
+
+.just99-hero-portrait-crescent {
+  position: absolute;
+  inset: -6px;
+  z-index: 3;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 205deg at 50% 50%,
+    transparent 0deg,
+    rgba(237, 208, 154, 0.35) 18deg,
+    #edd09a 42deg,
+    #c5a059 68deg,
+    rgba(197, 160, 89, 0.28) 92deg,
+    transparent 128deg,
+    transparent 360deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+  filter: drop-shadow(-6px 0 14px rgba(197, 160, 89, 0.55));
+}
+
+.just99-hero-portrait-ring::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid rgba(197, 160, 89, 0.38);
+  pointer-events: none;
+}
+
+.just99-hero-portrait-ring::after {
+  content: "";
+  position: absolute;
+  inset: -26px;
+  border-radius: 50%;
+  border: 1px solid rgba(197, 160, 89, 0.22);
+  pointer-events: none;
+}
+
+.just99-hero-portrait-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 38%;
+}
+
+.just99-main-landing .just99-left {
+  position: relative;
+  z-index: 2;
+}
+
+.just99-main-landing .just99-right {
+  position: relative;
+  z-index: 4;
+}
+
+.just99-main-landing .just99-right::before {
+  display: none;
+}
+
+.just99-page .just99-left {
+  padding: 0.15rem 0.35rem 0.15rem 0.65rem;
+}
+
+.just99-page .just99-right {
+  padding: 0.15rem 0.5rem 0.15rem 0.35rem;
+}
+
+.just99-offer-wrap-landing {
+  justify-content: flex-start;
+  margin-left: -2.75rem;
+}
+
+.just99-offer-card-landing {
+  position: relative;
+  z-index: 5;
+  max-width: min(100%, 292px);
+  border-radius: 22px;
+  box-shadow:
+    0 14px 40px rgba(75, 36, 117, 0.14),
+    0 0 0 1px rgba(139, 95, 191, 0.08);
+}
+
+.just99-hero-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 2;
+}
+
+.just99-features-hidden {
+  display: none;
+}
+
+.just99-page .just99-bg-decor {
+  clip-path: inset(0 0 0 0);
+}
+
+.just99-page .just99-bg-vine {
+  max-width: min(9vw, 110px);
+  height: min(36vh, 280px);
+  bottom: 88px;
+  opacity: 0.38;
+}
+
+.just99-page .just99-bg-mountains {
+  height: 48px;
+}
+
+.just99-offer-card-landing .just99-offer-body {
+  padding: 2rem 1rem 1rem !important;
+}
+
+.just99-offer-card-landing .community-price-glow {
+  left: 50% !important;
+}
+
+.just99-offer-card-landing .just99-price {
+  font-size: clamp(2.35rem, 4.8vh, 3.1rem) !important;
+}
+
+.just99-offer-card-landing .community-only-text {
+  font-size: 0.5625rem;
+}
+
+.just99-offer-card-landing .community-price-block {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.just99-offer-card-landing .community-payment-badge {
+  margin-bottom: 0.75rem;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.5rem;
+}
+
+.just99-offer-card-landing .community-access-box {
+  padding: 0.625rem 0.75rem;
+}
+
+.just99-offer-card-landing .community-access-title {
+  font-size: 0.75rem;
+}
+
+.just99-offer-card-landing .community-access-desc {
+  font-size: 0.5625rem;
+}
+
+.just99-offer-card-landing .community-access-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.just99-offer-card-landing .community-join-btn,
+.just99-offer-card-landing.just99-offer-card .community-join-btn {
+  margin-top: 0.75rem;
+  min-height: 42px;
+}
+
+.just99-offer-card-landing .community-join-btn-label {
+  font-size: 0.6875rem;
+}
+
+.just99-offer-card-landing .community-join-btn-left,
+.just99-offer-card-landing .community-join-btn-arrow {
+  width: 34px;
+  height: 34px;
+}
+
+.just99-offer-card-landing .community-trust-row {
+  margin-top: 0.625rem;
+  font-size: 0.5625rem;
+}
+
+.just99-offer-card-landing .community-offer-ribbon {
+  font-size: 0.5rem;
+  padding: 0.55rem 1.125rem 0.4rem;
+  min-height: 1.85rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.just99-bottom-landing {
+  flex: 0 0 auto;
+}
+
+.just99-page .just99-bottom {
+  background: transparent;
+  border-top: none;
+}
+
+.just99-page .just99-perks-bar {
+  padding: 0.35rem 0.875rem 0.45rem;
+  background: transparent;
+  border-top: none;
+}
+
+.just99-page .just99-perks {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.45rem 1rem !important;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 22px rgba(75, 36, 117, 0.07);
+}
+
+.just99-page .just99-perk-title {
+  font-size: 0.625rem;
+}
+
+.just99-page .just99-perk-desc {
+  font-size: 0.5rem;
+}
+
+.just99-landing-sections {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.just99-mid-section {
+  position: relative;
+  z-index: 2;
+  padding: 0.35rem 0.875rem 0.25rem;
+  background: transparent;
+}
+
+.just99-mid-inner {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.just99-mid-grid {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.78fr) minmax(240px, 1.18fr) minmax(190px, 0.84fr);
+  gap: 0.625rem;
+  align-items: stretch;
+}
+
+.just99-why-card {
+  display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: 0.5rem;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #2a1148 0%, #1a0a30 100%);
+  padding: 0.625rem 0.625rem 0.625rem 0.5rem;
+  box-shadow: 0 12px 28px rgba(26, 10, 48, 0.22);
+}
+
+.just99-why-card-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.just99-why-card-art-img {
+  width: 100%;
+  height: 100%;
+  min-height: 118px;
+  max-height: 150px;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.just99-why-card-content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.25rem 0.375rem 0.25rem 0;
+}
+
+.just99-why-card-title {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(0.8125rem, 1.45vh, 0.9375rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #e8c69f;
+}
+
+.just99-why-card-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0.4375rem 0 0.5rem;
+}
+
+.just99-why-card-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(197, 160, 89, 0.15), rgba(197, 160, 89, 0.75), rgba(197, 160, 89, 0.15));
+}
+
+.just99-why-card-divider-diamond {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  transform: rotate(45deg);
+  background: #c5a059;
+}
+
+.just99-why-card-list {
+  display: grid;
+  gap: 0.3125rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.just99-why-card-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+  font-size: 0.5625rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.just99-why-card-check {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 198, 159, 0.55);
+  background: transparent;
+  color: #e8c69f;
+}
+
+.just99-mid-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.just99-mid-feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px solid rgba(228, 216, 245, 0.9);
+  background: rgba(255, 255, 255, 0.96);
+  padding: 0.625rem 0.5rem 0.5625rem;
+  box-shadow: 0 6px 16px rgba(75, 36, 117, 0.06);
+}
+
+.just99-mid-feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #f8f0ff 0%, #ebe0f8 100%);
+}
+
+.just99-mid-feature-title {
+  margin-top: 0.4375rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #3b1c5b;
+}
+
+.just99-mid-feature-desc {
+  margin-top: 0.1875rem;
+  font-size: 0.5625rem;
+  line-height: 1.35;
+  color: #7a6b96;
+}
+
+.just99-quote-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 16px;
+  border: 1px solid rgba(228, 216, 245, 0.85);
+  background: linear-gradient(180deg, #f8f2ff 0%, #f3ebfc 100%);
+  padding: 0.875rem 0.875rem 0.75rem;
+  box-shadow: 0 8px 20px rgba(75, 36, 117, 0.07);
+}
+
+.just99-quote-mark {
+  display: inline-flex;
+  color: #8b5fbf;
+  opacity: 0.85;
+  transform: scale(0.85);
+  transform-origin: left top;
+}
+
+.just99-quote-text {
+  margin-top: 0.375rem;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(0.8125rem, 1.55vh, 0.9375rem);
+  font-weight: 600;
+  line-height: 1.45;
+  color: #3b1c5b;
+}
+
+.just99-quote-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  margin-top: 0.625rem;
+}
+
+.just99-quote-line {
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c5a059, transparent);
+}
+
+.just99-quote-vine {
+  position: absolute;
+  right: -0.35rem;
+  bottom: -0.5rem;
+  width: auto;
+  max-width: 72px;
+  height: auto;
+  max-height: 140px;
+  opacity: 0.38;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.just99-values-bar {
+  border-top: 1px solid rgba(228, 216, 245, 0.65);
+  background: linear-gradient(180deg, rgba(250, 248, 255, 0.72) 0%, rgba(245, 240, 252, 0.92) 100%);
+  padding: 0.4rem 0.875rem 0.55rem;
+}
+
+.just99-values-inner {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.625rem;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.just99-values-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  text-align: left;
+}
+
+.just99-values-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #f8f0ff 0%, #ebe0f8 100%);
+}
+
+.just99-values-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #3b1c5b;
+}
+
+.just99-values-desc {
+  margin-top: 0.0625rem;
+  font-size: 0.5625rem;
+  line-height: 1.3;
+  color: #7a6b96;
+}
+
+@media (min-width: 1024px) {
+  .just99-main-landing {
+    padding: 0.4rem 1.25rem 0;
+  }
+
+  .just99-page .just99-left {
+    padding: 0.5rem 1rem 0.25rem 1.25rem;
+  }
+
+  .just99-page .just99-right {
+    padding: 0.35rem 1rem 0.25rem 0.5rem !important;
+  }
+
+  .just99-mid-section {
+    padding-inline: 1.25rem;
+  }
+
+  .just99-values-bar {
+    padding-inline: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .just99-main-landing::before {
+    left: 41%;
+    width: min(86vh, 820px);
+    height: min(86vh, 820px);
+  }
+
+  .just99-hero-center-landing {
+    left: 41%;
+    width: min(70vh, 620px);
+    height: min(70vh, 620px);
+  }
+
+  .just99-offer-wrap-landing {
+    margin-left: -3.25rem;
+  }
+
+  .just99-page.just99-page-fit .just99-main-landing .just99-left {
+    padding-inline: 0.85rem 0.25rem !important;
+  }
+
+  .just99-page.just99-page-fit .just99-main-landing .just99-right {
+    padding: 0.15rem 0.85rem 0.15rem 0 !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .just99-main-landing::before {
+    left: 40%;
+    width: min(90vh, 860px);
+    height: min(90vh, 860px);
+  }
+
+  .just99-hero-center-landing {
+    left: 40%;
+    width: min(72vh, 640px);
+    height: min(72vh, 640px);
+  }
+
+  .just99-offer-wrap-landing {
+    margin-left: -3.75rem;
+  }
+
+  .just99-page.just99-page-fit .just99-main-landing .just99-right {
+    padding: 0.15rem 1rem 0.15rem 0 !important;
+  }
+}
+
+/* Override legacy landing paddings for single-screen layout */
+.just99-page.just99-page-fit .just99-left,
+.just99-page.just99-page-fit .just99-right {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+}
+
+.just99-page.just99-page-fit .just99-main-landing .just99-left {
+  padding-inline: 0.65rem 0.25rem;
+}
+
+.just99-page.just99-page-fit .just99-main-landing .just99-right {
+  padding-inline: 0.35rem 0.75rem;
+}
+
+@media (max-width: 1023px) {
+  .just99-layout-fit {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .just99-main-landing {
+    grid-template-columns: 1fr !important;
+    flex: 1 1 48%;
+  }
+
+  .just99-hero-center-landing {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: min(68vw, 300px);
+    height: min(68vw, 300px);
+    margin: 0.2rem auto;
+    order: 2;
+  }
+
+  .just99-right {
+    order: 3;
+  }
+
+  .just99-left {
+    order: 1;
+  }
+
+  .just99-mid-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "why why"
+      "features quote";
+  }
+
+  .just99-why-card {
+    grid-area: why;
+  }
+
+  .just99-mid-features {
+    grid-area: features;
+  }
+
+  .just99-quote-card {
+    grid-area: quote;
+  }
+
+  .just99-values-inner {
+    grid-template-columns: 1fr;
+    gap: 0.375rem;
+  }
+}
+
+/* ===== /just99 ONE SCREEN fit — user tweaks ===== */
+.just99-landing-fit {
+  height: 100%;
+  overflow: hidden;
+  background: #faf8ff;
+}
+
+.just99-landing-fit .just99-page {
+  background:
+    radial-gradient(ellipse 65% 50% at 52% 22%, rgba(255, 245, 230, 0.5) 0%, transparent 58%),
+    radial-gradient(ellipse 45% 35% at 18% 18%, rgba(243, 236, 252, 0.65) 0%, transparent 60%),
+    linear-gradient(180deg, #faf8ff 0%, #f3ecfc 48%, #f7f4fc 100%);
+}
+
+.just99-landing-fit .just99-shell-fit {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.just99-landing-fit .just99-main-landing {
+  flex: 1 1 55% !important;
+  min-height: 0 !important;
+  padding: 0.45rem 1.75rem 0 !important;
+  overflow: hidden !important;
+  align-items: center;
+  grid-template-columns: minmax(250px, 0.95fr) minmax(280px, 0.82fr) !important;
+}
+
+/* Slightly left of previous center — not flush left */
+.just99-landing-fit .just99-hero-landing {
+  text-align: left !important;
+  max-width: min(24rem, 38vw);
+  margin-inline: auto;
+  transform: translateX(-1.15rem);
+}
+
+.just99-landing-fit .just99-hero-landing .just99-join-row,
+.just99-landing-fit .just99-hero-landing .just99-headline {
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+.just99-landing-fit .just99-join-row-landing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.just99-landing-fit .just99-join-row-landing .just99-join-label {
+  color: #c5a059 !important;
+  font-size: clamp(0.72rem, 1.35vh, 0.875rem) !important;
+  font-weight: 700;
+  letter-spacing: 0.28em !important;
+  text-transform: uppercase;
+}
+
+.just99-landing-fit .just99-join-lotus {
+  margin-inline: 0.05rem;
+}
+
+.just99-landing-fit .just99-join-ornament {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.just99-landing-fit .just99-join-line {
+  display: inline-block;
+  width: 0.85rem;
+  height: 1px;
+  background: #c5a059;
+  opacity: 0.85;
+}
+
+.just99-landing-fit .just99-join-spark {
+  color: #c5a059;
+  font-size: 0.5rem;
+  line-height: 1;
+}
+
+.just99-landing-fit .just99-hero-landing .just99-healing,
+.just99-landing-fit .just99-hero-landing .just99-community {
+  text-align: left !important;
+}
+
+.just99-landing-fit .just99-page .just99-healing {
+  font-family: var(--font-playfair), Georgia, serif !important;
+  font-size: clamp(2.3rem, 5.2vh, 3.5rem) !important;
+  font-weight: 700 !important;
+  line-height: 0.95 !important;
+  color: #2a1a4a !important;
+  background: none !important;
+  -webkit-text-fill-color: #2a1a4a;
+}
+
+.just99-landing-fit .just99-page .just99-community {
+  font-family: var(--font-playfair), Georgia, serif !important;
+  font-size: clamp(2.45rem, 5.6vh, 3.75rem) !important;
+  font-weight: 700 !important;
+  line-height: 0.95 !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: #5b21b6 !important;
+  -webkit-text-fill-color: #5b21b6;
+}
+
+.just99-landing-fit .just99-page .just99-tagline {
+  margin-top: 0.5rem !important;
+  font-family: var(--font-playfair), Georgia, serif !important;
+  font-size: clamp(1rem, 1.85vh, 1.3rem) !important;
+  font-weight: 500 !important;
+  font-style: italic !important;
+  color: #6b3fa0 !important;
+  text-align: left !important;
+}
+
+.just99-landing-fit .just99-hero-divider {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+
+.just99-landing-fit .just99-hero-divider-dots {
+  color: #c5a059;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.just99-landing-fit .just99-hero-divider-spark {
+  color: #c5a059;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.just99-landing-fit .just99-page .just99-desc {
+  margin: 0.45rem 0 0 !important;
+  max-width: 21rem;
+  font-size: clamp(0.82rem, 1.4vh, 1rem) !important;
+  line-height: 1.55 !important;
+  color: #4a4566 !important;
+  text-align: left !important;
+}
+
+.just99-landing-fit .just99-page .just99-hero-actions {
+  justify-content: flex-start !important;
+  margin-top: 0.85rem !important;
+  gap: 0.55rem;
+}
+
+.just99-landing-fit .just99-hero-join-btn {
+  padding: 0.55rem 1.2rem !important;
+  font-size: clamp(0.8rem, 1.35vh, 0.9rem) !important;
+  text-transform: none !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #6d28d9 0%, #5b21b6 50%, #4c1d95 100%) !important;
+  box-shadow: 0 8px 20px rgba(91, 33, 182, 0.28) !important;
+}
+
+.just99-landing-fit .just99-hero-watch-btn {
+  padding: 0.5rem 1.1rem !important;
+  font-size: clamp(0.8rem, 1.35vh, 0.9rem) !important;
+  border: 1.5px solid rgba(155, 120, 200, 0.55) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #5b2d9e !important;
+}
+
+.just99-landing-fit .just99-main-landing::before {
+  left: 50% !important;
+  top: 50% !important;
+  width: min(68vh, 580px) !important;
+  height: min(68vh, 580px) !important;
+  background:
+    radial-gradient(circle, rgba(255, 248, 235, 0.6) 0%, transparent 40%),
+    radial-gradient(circle, transparent 48%, rgba(197, 160, 89, 0.12) 49%, transparent 50%),
+    radial-gradient(circle, transparent 62%, rgba(139, 95, 191, 0.07) 63%, transparent 64%) !important;
+}
+
+/* 2nd image: keep stable size/position */
+.just99-landing-fit .just99-hero-center-landing {
+  left: 50% !important;
+  top: 50% !important;
+  width: min(46vh, 400px) !important;
+  height: min(46vh, 400px) !important;
+}
+
+.just99-landing-fit .just99-hero-portrait-ring {
+  padding: 3px !important;
+  background: linear-gradient(145deg, #f5e6c8 0%, #c5a059 35%, #edd09a 70%, #c5a059 100%) !important;
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.75),
+    0 0 36px rgba(197, 160, 89, 0.35),
+    0 18px 40px rgba(75, 36, 117, 0.16) !important;
+}
+
+.just99-landing-fit .just99-main-landing .just99-left {
+  z-index: 3;
+  padding: 0.7rem 1.25rem 0.7rem 1.75rem !important;
+  background: transparent !important;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.just99-landing-fit .just99-main-landing .just99-right {
+  z-index: 5;
+  padding: 0.7rem 3.25rem 0.7rem 0.85rem !important;
+  background: transparent !important;
+  justify-content: center;
+}
+
+/* 1st SC: offer card only — slight left nudge, nothing else moves */
+.just99-landing-fit .just99-offer-wrap-landing {
+  margin-left: auto !important;
+  margin-right: 1rem;
+  max-width: min(340px, 34vw);
+  width: 100%;
+  z-index: 6;
+  transform: translateX(-5.75rem);
+}
+
+.just99-landing-fit .just99-offer-card-landing {
+  max-width: 100% !important;
+  min-height: 0;
+  border-radius: 22px !important;
+  border: 1.5px solid rgba(139, 95, 191, 0.55) !important;
+  background:
+    radial-gradient(ellipse 88% 58% at 50% 36%, rgba(255, 255, 255, 0.98) 0%, rgba(249, 246, 255, 0.96) 52%, rgba(245, 240, 252, 0.94) 100%),
+    #fff !important;
+  box-shadow:
+    0 14px 40px rgba(74, 0, 224, 0.12),
+    0 0 0 1px rgba(142, 45, 226, 0.06) !important;
+  display: flex;
+  flex-direction: column;
+  animation: none;
+}
+
+.just99-landing-fit .just99-offer-card-landing .just99-offer-body {
+  padding: 2rem 1.15rem 1.15rem !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 0;
+  text-align: center;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-only-row {
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-only-text {
+  font-size: 0.62rem !important;
+  letter-spacing: 0.28em !important;
+  color: #4b2475 !important;
+  text-transform: uppercase;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-only-line {
+  width: 2.1rem !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-price-block {
+  margin-top: 0.55rem !important;
+  margin-bottom: 0.55rem !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .just99-price,
+.just99-landing-fit .just99-offer-card-landing .community-popup-price {
+  font-size: clamp(2.55rem, 4.6vh, 3.15rem) !important;
+  background: linear-gradient(180deg, #6d5ce7 0%, #5b21b6 42%, #3b1c5b 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-price-glow {
+  left: 50% !important;
+  background: radial-gradient(circle, rgba(139, 95, 191, 0.18) 0%, transparent 70%) !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-payment-badge {
+  font-size: 0.55rem !important;
+  padding: 0.4rem 0.95rem !important;
+  margin: 0 auto 0.85rem !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #8b5fbf 0%, #734fa8 55%, #6840a0 100%) !important;
+  color: #fff !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-access-box {
+  padding: 0.7rem 0.85rem !important;
+  border: 1.5px dashed #c9b3e6 !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-radius: 14px !important;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  transform: none;
+  gap: 0.7rem !important;
+  text-align: left;
+  align-items: center;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-access-title {
+  font-size: 0.8rem !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  color: #3b1c5b !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-access-desc {
+  font-size: 0.62rem !important;
+  line-height: 1.35 !important;
+  color: #7a6b96 !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-access-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 11px !important;
+  background: linear-gradient(145deg, #f8f0ff 0%, #ebe0f8 100%) !important;
+  color: #4b2475 !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-join-btn {
+  min-height: 48px !important;
+  margin-top: 0.85rem !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 38%, #5b21b6 72%, #4c1d95 100%) !important;
+  box-shadow:
+    0 12px 28px rgba(91, 33, 182, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-join-btn-label {
+  font-size: 0.78rem !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-join-btn-left,
+.just99-landing-fit .just99-offer-card-landing .community-join-btn-arrow {
+  width: 38px !important;
+  height: 38px !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-join-btn-left {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #f5e6c8 !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-join-btn-arrow {
+  background: #fff !important;
+  color: #4b2475 !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-trust-row {
+  margin-top: 0.85rem !important;
+  font-size: 0.62rem !important;
+  color: #8a7aa8 !important;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-offer-ribbon {
+  font-size: 0.55rem !important;
+  padding: 0.72rem 1.4rem 0.5rem !important;
+  min-height: 2.1rem;
+  box-sizing: border-box;
+  letter-spacing: 0.2em !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  background: linear-gradient(180deg, #4b2475 0%, #3b1c5b 100%) !important;
+  clip-path: polygon(
+    10px 0%,
+    calc(100% - 10px) 0%,
+    100% 50%,
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0% 50%
+  ) !important;
+}
+
+.just99-landing-fit .just99-offer-card-landing .community-offer-ribbon span {
+  display: block;
+  padding-top: 0.2rem;
+  line-height: 1.15;
+}
+
+.just99-landing-fit .just99-bottom-landing,
+.just99-landing-fit .just99-page .just99-bottom {
+  flex: 0 0 auto !important;
+  margin-top: -0.65rem;
+  position: relative;
+  z-index: 4;
+}
+
+/* 5th SC: full width, tighter height */
+.just99-landing-fit .just99-page .just99-perks-bar {
+  padding: 0 !important;
+  background: transparent !important;
+  width: 100%;
+  margin-top: -0.25rem;
+}
+
+.just99-landing-fit .just99-page .just99-perks {
+  width: 100%;
+  max-width: min(1280px, 96vw) !important;
+  margin: 0 auto !important;
+  padding: 0.4rem 1.75rem !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 4px 16px rgba(75, 36, 117, 0.06) !important;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.just99-landing-fit .just99-page .just99-perk-title {
+  font-size: clamp(0.72rem, 1.3vh, 0.88rem) !important;
+  font-weight: 700;
+  color: #3b1c5b;
+  line-height: 1.2;
+}
+
+.just99-landing-fit .just99-page .just99-perk-desc {
+  font-size: clamp(0.58rem, 1.05vh, 0.7rem) !important;
+  color: #7a6b96;
+  line-height: 1.2;
+}
+
+.just99-landing-fit .just99-perk-icon-wrap {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.just99-landing-fit .just99-landing-sections {
+  flex: 0 0 auto !important;
+  min-height: 0;
+  width: 100%;
+}
+
+.just99-landing-fit .just99-mid-section {
+  padding: 0.2rem 0 0.1rem !important;
+  width: 100%;
+}
+
+.just99-landing-fit .just99-mid-inner {
+  max-width: min(1280px, 96vw) !important;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.just99-landing-fit .just99-mid-grid {
+  grid-template-columns: minmax(200px, 1fr) minmax(230px, 1.1fr) minmax(190px, 0.95fr) !important;
+  gap: 0.65rem !important;
+  width: 100%;
+  align-items: stretch;
+}
+
+.just99-landing-fit .just99-why-card {
+  min-height: 0 !important;
+  height: 100%;
+  border-radius: 14px !important;
+  background: linear-gradient(145deg, #2a1148 0%, #3b1c5b 55%, #4b2475 100%) !important;
+  padding: 0.45rem 0.55rem !important;
+  grid-template-columns: 0.85fr 1.15fr !important;
+  gap: 0.4rem !important;
+}
+
+.just99-landing-fit .just99-why-card-art-img {
+  max-height: clamp(88px, 12.5vh, 120px) !important;
+  min-height: 0 !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+.just99-landing-fit .just99-why-card-title {
+  font-size: clamp(0.78rem, 1.4vh, 0.95rem) !important;
+  color: #fff !important;
+  margin-bottom: 0.15rem !important;
+}
+
+.just99-landing-fit .just99-why-card-list {
+  gap: 0.18rem !important;
+  margin-top: 0.2rem !important;
+}
+
+.just99-landing-fit .just99-why-card-list li {
+  font-size: clamp(0.58rem, 1.05vh, 0.7rem) !important;
+  line-height: 1.25 !important;
+}
+
+.just99-landing-fit .just99-why-card-check {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.just99-landing-fit .just99-mid-features {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.4rem !important;
+}
+
+.just99-landing-fit .just99-mid-feature-card {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  border-radius: 12px !important;
+  padding: 0.35rem 0.4rem !important;
+  gap: 0.1rem;
+}
+
+.just99-landing-fit .just99-mid-feature-icon {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.just99-landing-fit .just99-mid-feature-title {
+  margin-top: 0.08rem !important;
+  font-size: clamp(0.68rem, 1.2vh, 0.82rem) !important;
+  line-height: 1.2;
+}
+
+.just99-landing-fit .just99-mid-feature-desc {
+  margin-top: 0 !important;
+  font-size: clamp(0.55rem, 1vh, 0.68rem) !important;
+  line-height: 1.2;
+}
+
+.just99-landing-fit .just99-quote-card {
+  border-radius: 14px !important;
+  padding: 0.55rem 0.75rem !important;
+  text-align: center;
+}
+
+.just99-landing-fit .just99-quote-mark {
+  transform: scale(0.72);
+  margin-inline: auto;
+}
+
+.just99-landing-fit .just99-quote-text {
+  font-size: clamp(0.75rem, 1.35vh, 0.95rem) !important;
+  margin-top: 0.2rem !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+}
+
+.just99-landing-fit .just99-quote-footer {
+  margin-top: 0.3rem !important;
+  justify-content: center !important;
+}
+
+.just99-landing-fit .just99-values-bar {
+  padding: 0.25rem 0 0.35rem !important;
+  background: linear-gradient(180deg, #f3ecfc 0%, #ebe4f7 100%) !important;
+  width: 100%;
+}
+
+.just99-landing-fit .just99-values-inner {
+  max-width: min(1280px, 96vw) !important;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  gap: 1rem;
+}
+
+.just99-landing-fit .just99-values-icon {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.just99-landing-fit .just99-values-title {
+  font-size: clamp(0.7rem, 1.25vh, 0.85rem) !important;
+  line-height: 1.2;
+}
+
+.just99-landing-fit .just99-values-desc {
+  font-size: clamp(0.58rem, 1.05vh, 0.7rem) !important;
+  line-height: 1.2;
+}
+
+.just99-landing-fit .just99-site-header header > div {
+  height: 52px !important;
+}
+
+@media (min-width: 1280px) {
+  .just99-landing-fit .just99-hero-center-landing {
+    width: min(46vh, 400px) !important;
+    height: min(46vh, 400px) !important;
+  }
+
+  .just99-landing-fit .just99-offer-wrap-landing {
+    max-width: 350px;
+    margin-right: 1.25rem;
+    transform: translateX(-6.25rem);
+  }
+
+  .just99-landing-fit .just99-main-landing .just99-right {
+    padding-right: 3.75rem !important;
+  }
+
+  .just99-landing-fit .just99-main-landing .just99-left {
+    padding-left: 2rem !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .just99-landing-fit {
+    overflow: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  .just99-landing-fit .just99-page-fit,
+  .just99-landing-fit .just99-shell-fit {
+    overflow: visible !important;
+    flex: none !important;
+  }
+
+  .just99-landing-fit .just99-main-landing {
+    flex: none !important;
+    min-height: auto !important;
+    display: flex !important;
+    flex-direction: column;
+    padding: 0.75rem !important;
+  }
+
+  .just99-landing-fit .just99-hero-center-landing {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: min(58vw, 240px) !important;
+    height: min(58vw, 240px) !important;
+    margin: 0.35rem auto !important;
+  }
+
+  .just99-landing-fit .just99-main-landing::before {
+    display: none !important;
+  }
+
+  .just99-landing-fit .just99-offer-wrap-landing {
+    margin-inline: auto !important;
+    max-width: 340px;
+  }
+
+  .just99-landing-fit .just99-mid-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .just99-landing-fit .just99-page .just99-perks {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .just99-landing-fit .just99-values-inner {
+    grid-template-columns: 1fr !important;
   }
 }

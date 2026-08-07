@@ -20,7 +20,6 @@ export function extractToken(payload: AuthResponse): string | null {
 
   return null;
 }
-
 export function extractUser(payload: AuthResponse): AuthUser | null {
   if (payload.user && typeof payload.user === "object") return payload.user;
 
