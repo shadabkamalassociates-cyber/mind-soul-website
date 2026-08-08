@@ -53,9 +53,19 @@ export default function CommunityJoinExperience({
 
   useEffect(() => {
     if (!isPage) return;
+
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
     const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    const syncBodyScroll = () => {
+      document.body.style.overflow = mediaQuery.matches ? "hidden" : "";
+    };
+
+    syncBodyScroll();
+    mediaQuery.addEventListener("change", syncBodyScroll);
+
     return () => {
+      mediaQuery.removeEventListener("change", syncBodyScroll);
       document.body.style.overflow = prev;
     };
   }, [isPage]);
@@ -160,7 +170,7 @@ export default function CommunityJoinExperience({
       aria-labelledby="community-popup-title"
       className={
         isPage
-          ? "just99-shell just99-shell-fit relative flex min-h-0 w-full flex-1 flex-col overflow-hidden"
+          ? "just99-shell just99-shell-fit relative flex w-full flex-1 flex-col overflow-visible lg:min-h-0 lg:overflow-hidden"
           : "community-popup community-popup-animate community-popup-responsive relative flex w-full flex-col overflow-hidden rounded-[16px] border border-white/70 shadow-[0_24px_70px_rgba(46,22,80,0.38)] sm:rounded-[20px]"
       }
     >
@@ -182,7 +192,7 @@ export default function CommunityJoinExperience({
       <div
         className={
           isPage
-            ? "just99-main just99-main-landing relative grid min-h-0 flex-1 grid-cols-1 overflow-x-hidden overflow-y-auto lg:grid-cols-[0.95fr_0.75fr] lg:overflow-hidden"
+            ? "just99-main just99-main-landing relative grid flex-none grid-cols-1 overflow-x-hidden overflow-y-visible lg:min-h-0 lg:flex-1 lg:grid-cols-[0.95fr_0.75fr] lg:overflow-hidden"
             : "just99-main just99-main-popup relative flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto lg:grid lg:grid-cols-[1.18fr_0.82fr] lg:overflow-hidden"
         }
       >
@@ -206,7 +216,7 @@ export default function CommunityJoinExperience({
         ) : null}
 
         <div
-          className={`just99-left community-popup-left relative flex min-h-0 flex-col justify-center overflow-hidden ${isPage ? "" : "hidden lg:flex"}`}
+          className={`just99-left community-popup-left relative flex min-h-0 flex-col justify-center overflow-visible lg:overflow-hidden ${isPage ? "" : "hidden lg:flex"}`}
         >
           <div className="just99-left-inner relative z-[1]">
             {!isPage ? (
@@ -304,7 +314,7 @@ export default function CommunityJoinExperience({
         </div>
 
         <div
-          className={`just99-right community-popup-right relative flex min-h-0 flex-col justify-center overflow-hidden ${isPage ? "" : "order-first flex-1 lg:order-none"}`}
+          className={`just99-right community-popup-right relative flex min-h-0 flex-col justify-center overflow-visible lg:overflow-hidden ${isPage ? "" : "order-first flex-1 lg:order-none"}`}
         >
           {!isPage && (
             <div className="just99-popup-mobile-head lg:hidden">
@@ -393,7 +403,7 @@ export default function CommunityJoinExperience({
         <div className="just99-site-header shrink-0">
           <Header />
         </div>
-        <div className="just99-page just99-page-fit">{shell}</div>
+        <div className="just99-page just99-page-fit min-h-0 flex-none lg:flex-1">{shell}</div>
       </div>
     );
   }
