@@ -1,20 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Header from "@/components/Header";
+import CongratulationsDialog from "@/components/CongratulationsDialog";
 import Just99LandingSections from "@/components/communityJoin/Just99LandingSections";
 import {
+  checkCommunityJoinPaymentStatus,
   purchaseCommunityJoinWithRazorpay,
-  type CommunityJoinDetails,
 } from "@/services/communityJoinService";
+import { useAppSelector } from "@/store/hooks";
 import {
   JUST99_ASSETS,
   JUST99_FEATURES,
   JUST99_PERKS,
 } from "@/components/communityJoin/just99Assets";
+import "./community-popup.css";
 
-type Step = "offer" | "form" | "pay" | "success";
+type Step = "offer" | "form";
 
 type CommunityJoinExperienceProps = {
   variant: "popup" | "page";
@@ -27,15 +31,25 @@ export default function CommunityJoinExperience({
   source = "website_popup",
   onClose,
 }: CommunityJoinExperienceProps) {
+  const router = useRouter();
+  const user = useAppSelector((s) => s.auth.user);
   const [step, setStep] = useState<Step>("offer");
-  const [details, setDetails] = useState<CommunityJoinDetails>({
-    name: "",
-    email: "",
-    whatsapp: "",
-  });
   const [error, setError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
+  const [showCongrats, setShowCongrats] = useState(false);
+  const submitLockRef = useRef(false);
   const isPage = variant === "page";
+
+  const profileDetails = useMemo(
+    () => ({
+      name:
+        [user?.first_name, user?.last_name].filter(Boolean).join(" ").trim() ||
+        String(user?.name || "").trim(),
+      email: String(user?.email || "").trim(),
+      whatsapp: String(user?.phone || "").trim(),
+    }),
+    [user],
+  );
 
   useEffect(() => {
     if (!isPage) return;
@@ -46,29 +60,87 @@ export default function CommunityJoinExperience({
     };
   }, [isPage]);
 
-  function resetFlow() {
-    setStep("offer");
-    setError(null);
-    onClose?.();
-  }
+  useEffect(() => {
+    if (!isPage) return;
+
+    let cancelled = false;
+
+    async function verifyExistingPayment() {
+      try {
+        const res = await checkCommunityJoinPaymentStatus();
+        console.log("res++++++++++++++++*************", res);
+        if (!cancelled && res?.success === true) {
+          setShowCongrats(true);
+        }
+      } catch {
+        // Keep the Just99 page when verification fails or payment is pending.
+      }
+    }
+
+    void verifyExistingPayment();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isPage]);
 
   function onJoinClick() {
     setError(null);
     setStep("form");
   }
 
-  function onFormSubmit(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setStep("pay");
+  function handleCongratsClose() {
+    setShowCongrats(false);
+    onClose?.();
+    if (isPage) {
+      router.push("/");
+    }
   }
 
-  async function onPayNow() {
+  async function onFormSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (submitLockRef.current || isPaying) return;
+
     setError(null);
+
+    const { name, email, whatsapp } = profileDetails;
+    if (!name || !email || !whatsapp) {
+      setError(
+        "Your profile is missing name, email or phone. Please update your account first.",
+      );
+      return;
+    }
+
+    submitLockRef.current = true;
     setIsPaying(true);
     try {
-      await purchaseCommunityJoinWithRazorpay(details, source);
-      setStep("success");
+      await purchaseCommunityJoinWithRazorpay(
+        { name, email, whatsapp },
+        source,
+      );
+
+      // Confirm membership via community verify endpoint before showing congrats.
+      try {
+        const status = await checkCommunityJoinPaymentStatus();
+        if (status?.success === true) {
+          if (isPage) {
+            setShowCongrats(true);
+          } else {
+            onClose?.();
+            router.push("/congratulations");
+          }
+          return;
+        }
+      } catch {
+        // Fall through — Razorpay checkout already succeeded.
+      }
+
+      if (isPage) {
+        setShowCongrats(true);
+      } else {
+        onClose?.();
+        router.push("/congratulations");
+      }
     } catch (err) {
       setError(
         err instanceof Error
@@ -76,6 +148,7 @@ export default function CommunityJoinExperience({
           : "Payment could not be completed. Please try again.",
       );
     } finally {
+      submitLockRef.current = false;
       setIsPaying(false);
     }
   }
@@ -88,7 +161,7 @@ export default function CommunityJoinExperience({
       className={
         isPage
           ? "just99-shell just99-shell-fit relative flex min-h-0 w-full flex-1 flex-col overflow-hidden"
-          : "community-popup community-popup-animate relative flex max-h-[min(90vh,640px)] w-full max-w-[820px] flex-col overflow-hidden rounded-[20px] border border-white/70 shadow-[0_24px_70px_rgba(46,22,80,0.38)]"
+          : "community-popup community-popup-animate community-popup-responsive relative flex w-full flex-col overflow-hidden rounded-[16px] border border-white/70 shadow-[0_24px_70px_rgba(46,22,80,0.38)] sm:rounded-[20px]"
       }
     >
       {!isPage && <div className="community-popup-accent" aria-hidden />}
@@ -109,8 +182,8 @@ export default function CommunityJoinExperience({
       <div
         className={
           isPage
-            ? "just99-main just99-main-landing relative grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[0.95fr_0.75fr]"
-            : "just99-main grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[1.18fr_0.82fr]"
+            ? "just99-main just99-main-landing relative grid min-h-0 flex-1 grid-cols-1 overflow-x-hidden overflow-y-auto lg:grid-cols-[0.95fr_0.75fr] lg:overflow-hidden"
+            : "just99-main just99-main-popup relative flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto lg:grid lg:grid-cols-[1.18fr_0.82fr] lg:overflow-hidden"
         }
       >
         {isPage ? (
@@ -132,7 +205,9 @@ export default function CommunityJoinExperience({
           </div>
         ) : null}
 
-        <div className="just99-left community-popup-left relative flex min-h-0 flex-col justify-center overflow-hidden">
+        <div
+          className={`just99-left community-popup-left relative flex min-h-0 flex-col justify-center overflow-hidden ${isPage ? "" : "hidden lg:flex"}`}
+        >
           <div className="just99-left-inner relative z-[1]">
             {!isPage ? (
               <div className="just99-brand-row">
@@ -207,14 +282,7 @@ export default function CommunityJoinExperience({
 
               {isPage ? (
                 <div className="just99-hero-actions">
-                  <button type="button" onClick={onJoinClick} className="just99-hero-join-btn">
-                    Join Now
-                    <SparkleTiny />
-                  </button>
-                  <button type="button" className="just99-hero-watch-btn">
-                    <PlayIcon />
-                    Watch Intro
-                  </button>
+                 
                 </div>
               ) : null}
             </div>
@@ -235,37 +303,44 @@ export default function CommunityJoinExperience({
           </div>
         </div>
 
-        <div className="just99-right community-popup-right relative flex min-h-0 flex-col justify-center overflow-hidden">
-          <div className={`just99-offer-wrap ${isPage ? "just99-offer-wrap-landing" : ""}`}>
+        <div
+          className={`just99-right community-popup-right relative flex min-h-0 flex-col justify-center overflow-hidden ${isPage ? "" : "order-first flex-1 lg:order-none"}`}
+        >
+          {!isPage && (
+            <div className="just99-popup-mobile-head lg:hidden">
+              <p className="just99-popup-mobile-brand">Cosmic Guruji</p>
+              <h2 className="just99-popup-mobile-title">Healing Community</h2>
+              <p className="just99-popup-mobile-sub">Lifetime access for ₹99</p>
+            </div>
+          )}
+          <div className={`just99-offer-wrap ${isPage ? "just99-offer-wrap-landing" : "just99-offer-wrap-popup"}`}>
             {step === "offer" && (
-              <OfferPanel onJoin={onJoinClick} compact={!isPage} landing={isPage} />
+              <JoinOfferPanel
+                onJoin={onJoinClick}
+                compact={!isPage}
+                landing={isPage}
+              />
             )}
             {step === "form" && (
               <FormPanel
-                details={details}
-                setDetails={setDetails}
+                details={profileDetails}
+                error={error}
+                isPaying={isPaying}
                 onSubmit={onFormSubmit}
                 onBack={() => setStep("offer")}
                 large={isPage}
               />
             )}
-            {step === "pay" && (
-              <PayPanel
-                details={details}
-                error={error}
-                isPaying={isPaying}
-                onPay={onPayNow}
-                onBack={() => setStep("form")}
-                large={isPage}
-              />
-            )}
-            {step === "success" && <SuccessPanel onClose={resetFlow} large={isPage} />}
           </div>
         </div>
       </div>
 
-      <div className={`just99-bottom shrink-0 ${isPage ? "just99-bottom-landing" : "just99-bottom-popup"}`}>
-        <div className="just99-perks-bar community-popup-perks shrink-0">
+      <div
+        className={`just99-bottom shrink-0 ${isPage ? "just99-bottom-landing" : "just99-bottom-popup"} ${!isPage ? "just99-bottom-popup-mobile" : ""}`}
+      >
+        <div
+          className={`just99-perks-bar community-popup-perks shrink-0 ${!isPage ? "just99-perks-bar-popup" : ""}`}
+        >
           <div className="community-popup-perks-inner just99-perks">
             {JUST99_PERKS.map((item) => (
               <div key={item.title} className="just99-perk-item">
@@ -293,6 +368,22 @@ export default function CommunityJoinExperience({
       </div>
 
       {isPage ? <Just99LandingSections /> : null}
+
+      {isPage && showCongrats ? (
+        <div className="community-popup-overlay fixed inset-0 z-[250] overflow-y-auto overscroll-contain">
+          <div className="flex min-h-full items-center justify-center p-3 py-6 sm:p-4">
+            <button
+              type="button"
+              aria-label="Close congratulations"
+              className="fixed inset-0 bg-[#1a1240]/55 backdrop-blur-[6px]"
+              onClick={handleCongratsClose}
+            />
+            <div className="relative z-10 w-full max-w-[440px]">
+              <OfferPanel onClose={handleCongratsClose} />
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 
@@ -310,7 +401,15 @@ export default function CommunityJoinExperience({
   return shell;
 }
 
-function OfferPanel({
+function OfferPanel({ onClose }: { onClose?: () => void }) {
+  return (
+    <div className="flex h-full w-full flex-col justify-center">
+      <CongratulationsDialog onClose={onClose} />
+    </div>
+  );
+}
+
+function JoinOfferPanel({
   onJoin,
   compact = false,
   landing = false,
@@ -462,183 +561,105 @@ function Just99BackgroundDecor() {
   );
 }
 
+function ReadOnlyField({
+  label,
+  value,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  placeholder: string;
+}) {
+  return (
+    <div className="community-form-field">
+      <span className="community-form-label">{label}</span>
+      <div
+        aria-readonly="true"
+        className="community-popup-input w-full cursor-not-allowed select-none bg-[#F3F0FA] text-[#3B1C5B] opacity-90"
+      >
+        {value.trim() || (
+          <span className="text-[#A89BC4]">{placeholder}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function FormPanel({
   details,
-  setDetails,
+  error,
+  isPaying,
   onSubmit,
   onBack,
   large = false,
 }: {
-  details: CommunityJoinDetails;
-  setDetails: (value: CommunityJoinDetails) => void;
+  details: { name: string; email: string; whatsapp: string };
+  error: string | null;
+  isPaying: boolean;
   onSubmit: (e: FormEvent) => void;
   onBack: () => void;
   large?: boolean;
 }) {
+  const canPay = Boolean(details.name && details.email && details.whatsapp);
+
   return (
-    <div className={`community-form-panel ${large ? "community-form-panel-lg" : ""}`}>
+    <div className={`community-form-panel community-step-panel ${large ? "community-form-panel-lg" : ""}`}>
       <div className="community-form-header">
         <h2 className="community-form-title">Your Details</h2>
-        <p className="community-form-subtitle">Fill in your details to continue to payment.</p>
+        <p className="community-form-subtitle">
+          Confirm your account details and pay ₹99 for lifetime access.
+        </p>
       </div>
 
       <form onSubmit={onSubmit} className="community-form">
-        <PopupField label="Full Name" required>
-          <input
-            required
-            type="text"
-            value={details.name}
-            onChange={(e) => setDetails({ ...details, name: e.target.value })}
-            placeholder="Enter your full name"
-            className="community-popup-input"
-          />
-        </PopupField>
-        <PopupField label="WhatsApp Number" required>
-          <input
-            required
-            type="tel"
-            value={details.whatsapp}
-            onChange={(e) => setDetails({ ...details, whatsapp: e.target.value })}
-            placeholder="+91 98765 43210"
-            className="community-popup-input"
-          />
-        </PopupField>
-        <PopupField label="Email Address" required>
-          <input
-            required
-            type="email"
-            value={details.email}
-            onChange={(e) => setDetails({ ...details, email: e.target.value })}
-            placeholder="you@email.com"
-            className="community-popup-input"
-          />
-        </PopupField>
+        <ReadOnlyField
+          label="Full Name"
+          value={details.name}
+          placeholder="Not available on your profile"
+        />
+        <ReadOnlyField
+          label="Email Address"
+          value={details.email}
+          placeholder="Not available on your profile"
+        />
+        <ReadOnlyField
+          label="WhatsApp Number"
+          value={details.whatsapp}
+          placeholder="Not available on your profile"
+        />
+
+        {error && (
+          <p className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] text-[#B42318]">
+            {error}
+          </p>
+        )}
 
         <div className="community-form-actions">
-          <button type="submit" className={`community-join-btn ${large ? "just99-join-btn" : ""}`}>
+          <button
+            type="submit"
+            disabled={isPaying || !canPay}
+            className={`community-join-btn disabled:cursor-not-allowed disabled:opacity-70 ${large ? "just99-join-btn" : ""}`}
+          >
             <span className="community-join-btn-left">
               <PeopleIcon />
             </span>
-            <span className="community-join-btn-label">Continue</span>
+            <span className="community-join-btn-label">
+              {isPaying ? "Processing..." : "Join Now"}
+            </span>
             <span className="community-join-btn-arrow">
               <ArrowIcon />
             </span>
           </button>
-          <button type="button" onClick={onBack} className="community-form-back-btn">
+          <button
+            type="button"
+            onClick={onBack}
+            disabled={isPaying}
+            className="community-form-back-btn disabled:opacity-60"
+          >
             Back
           </button>
         </div>
       </form>
-    </div>
-  );
-}
-
-function PayPanel({
-  details,
-  error,
-  isPaying,
-  onPay,
-  onBack,
-  large = false,
-}: {
-  details: CommunityJoinDetails;
-  error: string | null;
-  isPaying: boolean;
-  onPay: () => void;
-  onBack: () => void;
-  large?: boolean;
-}) {
-  return (
-    <div className="flex h-full flex-col py-1">
-      <h2
-        className={large ? "text-2xl font-semibold text-[#3B1C5B]" : "text-[18px] font-semibold text-[#3B1C5B]"}
-        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-      >
-        Complete Payment
-      </h2>
-      <p className={large ? "mt-2 text-sm text-[#7A6B96]" : "mt-1 text-[11px] text-[#7A6B96]"}>
-        Review your details and pay ₹99 for lifetime access.
-      </p>
-
-      <div className={`mt-4 space-y-2 rounded-xl border border-[#E4D8F5] bg-[#FAF6FF] p-4 text-[#5A3D8C] ${large ? "text-sm" : "text-[11px]"}`}>
-        <p>
-          <strong>Name:</strong> {details.name}
-        </p>
-        <p>
-          <strong>WhatsApp:</strong> {details.whatsapp}
-        </p>
-        <p>
-          <strong>Email:</strong> {details.email}
-        </p>
-        <p className="border-t border-[#E4D8F5] pt-2">
-          <strong>Amount:</strong>{" "}
-          <span className="community-popup-price community-popup-price-sm">
-            <span className="community-popup-price-symbol">₹</span>
-            <span className="community-popup-price-amount">99</span>
-          </span>
-        </p>
-      </div>
-
-      {error && (
-        <p className="mt-2 rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] text-[#B42318]">
-          {error}
-        </p>
-      )}
-
-      <div className="mt-auto space-y-2 pt-3">
-        <button
-          type="button"
-          onClick={onPay}
-          disabled={isPaying}
-          className="community-join-btn disabled:opacity-70"
-        >
-          <span className="community-join-btn-left">
-            <ShieldMini />
-          </span>
-          <span className="community-join-btn-label">
-            {isPaying ? "Processing..." : "Pay Now ₹99"}
-          </span>
-          <span className="community-join-btn-arrow">
-            <ArrowIcon />
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={onBack}
-          disabled={isPaying}
-          className="community-form-back-btn disabled:opacity-60"
-        >
-          Edit Details
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function SuccessPanel({ onClose, large = false }: { onClose: () => void; large?: boolean }) {
-  return (
-    <div className="flex h-full flex-col items-center justify-center py-4 text-center">
-      <span className={`flex items-center justify-center rounded-full bg-[#E8F6EE] text-[#2F9B63] ${large ? "h-16 w-16" : "h-14 w-14"}`}>
-        <CheckIcon />
-      </span>
-      <h2
-        className={large ? "mt-4 text-2xl font-semibold text-[#3B1C5B]" : "mt-3 text-[20px] font-semibold text-[#3B1C5B]"}
-        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-      >
-        Welcome to the Community!
-      </h2>
-      <p className={large ? "mt-3 max-w-sm text-sm leading-relaxed text-[#7A6B96]" : "mt-2 max-w-[240px] text-[11px] leading-relaxed text-[#7A6B96]"}>
-        Payment received. You now have lifetime access to our healing community.
-      </p>
-      <button type="button" onClick={onClose} className="community-join-btn mt-5 max-w-[260px]">
-        <span className="community-join-btn-left">
-          <StarIcon />
-        </span>
-        <span className="community-join-btn-label">Continue</span>
-        <span className="community-join-btn-arrow">
-          <ArrowIcon />
-        </span>
-      </button>
     </div>
   );
 }
@@ -667,26 +688,6 @@ function SparkleTiny() {
     <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden className="text-[#C5A059]">
       <path d="M8 1L9.2 6.2L14 7.4L9.2 8.6L8 14L6.8 8.6L2 7.4L6.8 6.2L8 1Z" fill="currentColor" />
     </svg>
-  );
-}
-
-function PopupField({
-  label,
-  required = false,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <label className="community-form-field">
-      <span className="community-form-label">
-        {label}
-        {required && <span className="community-form-required"> *</span>}
-      </span>
-      {children}
-    </label>
   );
 }
 
@@ -742,14 +743,6 @@ function MeditateIcon() {
   );
 }
 
-function StarIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M12 3.5L14.2 9.2L20 9.8L15.6 13.8L17 19L12 16.2L7 19L8.4 13.8L4 9.8L9.8 9.2L12 3.5Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 function GiftIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -798,14 +791,6 @@ function BoltIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M13 2L5 14H12L11 22L19 10H12L13 2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M5 12L10 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

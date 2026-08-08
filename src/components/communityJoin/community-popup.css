@@ -1,0 +1,1123 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* ── Page backdrop ── */
+.just99-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(255, 255, 255, 0.95), transparent 65%),
+    radial-gradient(circle at 12% 78%, rgba(139, 92, 246, 0.14), transparent 42%),
+    radial-gradient(circle at 88% 72%, rgba(109, 40, 217, 0.12), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(196, 160, 220, 0.18), transparent 55%),
+    linear-gradient(165deg, #faf8ff 0%, #f3edff 38%, #ede4f8 72%, #f8f4ff 100%);
+}
+
+.just99-page::before,
+.just99-page::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+  animation: communityOrbFloat 8s ease-in-out infinite;
+}
+
+.just99-page::before {
+  top: 8%;
+  left: 6%;
+  width: 280px;
+  height: 280px;
+  background: rgba(139, 92, 246, 0.16);
+}
+
+.just99-page::after {
+  right: 8%;
+  bottom: 10%;
+  width: 320px;
+  height: 320px;
+  background: rgba(109, 40, 217, 0.12);
+  animation-delay: -3s;
+}
+
+/* ── Main card shell ── */
+.community-popup-page {
+  position: relative;
+  z-index: 1;
+  font-family: "Poppins", var(--font-jakarta), system-ui, sans-serif;
+  background:
+    radial-gradient(ellipse 60% 50% at 18% 12%, rgba(255, 255, 255, 0.92), transparent 62%),
+    radial-gradient(ellipse 55% 45% at 82% 18%, rgba(255, 255, 255, 0.75), transparent 58%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 248, 255, 0.92) 48%, rgba(243, 237, 255, 0.88) 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(139, 92, 246, 0.14),
+    0 24px 64px rgba(76, 29, 149, 0.14),
+    0 48px 100px rgba(76, 29, 149, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+.community-popup-modal {
+  font-family: "Poppins", var(--font-jakarta), system-ui, sans-serif;
+  background:
+    radial-gradient(ellipse 60% 50% at 18% 12%, rgba(255, 255, 255, 0.92), transparent 62%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 248, 255, 0.92) 100%) !important;
+}
+
+.community-popup-glow-border {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+    inset 0 0 40px rgba(139, 92, 246, 0.06);
+}
+
+.community-popup-blur-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(48px);
+  z-index: 0;
+  animation: communityOrbFloat 7s ease-in-out infinite;
+}
+
+.community-popup-blur-orb-1 {
+  top: 12%;
+  left: 8%;
+  width: 180px;
+  height: 180px;
+  background: rgba(139, 92, 246, 0.14);
+}
+
+.community-popup-blur-orb-2 {
+  right: 10%;
+  bottom: 18%;
+  width: 200px;
+  height: 200px;
+  background: rgba(109, 40, 217, 0.1);
+  animation-delay: -2.5s;
+}
+
+@keyframes communityOrbFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-12px) scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes communityCardFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* ── Left panel ── */
+.community-popup-left {
+  background:
+    radial-gradient(ellipse 180px 120px at 0% 50%, rgba(196, 160, 220, 0.18), transparent 72%),
+    radial-gradient(ellipse 180px 120px at 100% 50%, rgba(196, 160, 220, 0.18), transparent 72%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(250, 248, 255, 0.35) 100%) !important;
+}
+
+.community-popup-left::after {
+  height: 72px !important;
+  background:
+    linear-gradient(to top, rgba(237, 228, 248, 0.55), transparent),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 70' preserveAspectRatio='none'%3E%3Cpath fill='%238b5cf6' fill-opacity='0.08' d='M0 70 L0 48 Q60 32 120 44 T240 38 T360 46 T400 40 L400 70 Z'/%3E%3Cpath fill='%234c1d95' fill-opacity='0.05' d='M0 70 L0 56 Q80 42 160 52 T320 46 T400 50 L400 70 Z'/%3E%3C/svg%3E")
+      center bottom / 100% 100% no-repeat !important;
+}
+
+.community-logo-ring {
+  padding: 3px !important;
+  background: linear-gradient(135deg, #ede9fe, #fff 40%, #ddd6fe) !important;
+  box-shadow:
+    0 0 0 4px rgba(139, 92, 246, 0.08),
+    0 8px 24px rgba(76, 29, 149, 0.14) !important;
+  animation: communityOrbFloat 6s ease-in-out infinite;
+}
+
+.community-brand-name {
+  font-family: var(--font-playfair), Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  color: #2e1065 !important;
+}
+
+.community-brand-tag {
+  letter-spacing: 0.2em !important;
+  color: #6b7280 !important;
+}
+
+.community-popup-line {
+  width: 48px !important;
+  background: linear-gradient(90deg, transparent, #8b5cf6, transparent) !important;
+}
+
+.community-popup-line::after {
+  background: #8b5cf6 !important;
+}
+
+.community-popup-script {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 38%, #4c1d95 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.15));
+}
+
+.community-heading-lotus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.35rem;
+  color: #8b5cf6;
+  animation: communityOrbFloat 5s ease-in-out infinite;
+}
+
+/* ── Feature cards ── */
+.community-feature-card {
+  border-radius: 1rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(12px);
+  padding: 14px 10px !important;
+  box-shadow:
+    0 8px 24px rgba(76, 29, 149, 0.07),
+    0 2px 6px rgba(76, 29, 149, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+  animation: communityCardFloat 5s ease-in-out infinite;
+}
+
+.community-feature-card:nth-child(2) {
+  animation-delay: -1.2s;
+}
+
+.community-feature-card:nth-child(3) {
+  animation-delay: -2.4s;
+}
+
+.community-feature-card:nth-child(4) {
+  animation-delay: -3.6s;
+}
+
+.community-feature-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow:
+    0 16px 36px rgba(76, 29, 149, 0.12),
+    0 4px 12px rgba(139, 92, 246, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+.community-feature-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 100%) !important;
+  color: #4c1d95 !important;
+  box-shadow:
+    0 4px 12px rgba(76, 29, 149, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ── Right panel ── */
+.community-popup-right {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 40%, rgba(255, 255, 255, 0.95), rgba(250, 248, 255, 0.75)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(243, 237, 255, 0.65) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.12) !important;
+}
+
+/* ── Offer card ── */
+.community-offer-card {
+  border-radius: 32px !important;
+  border: 2px solid rgba(139, 92, 246, 0.35) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow:
+    0 0 0 1px rgba(139, 92, 246, 0.08),
+    0 20px 50px rgba(76, 29, 149, 0.12),
+    0 8px 24px rgba(109, 40, 217, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+.community-offer-ribbon {
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #6d28d9 0%, #4c1d95 100%) !important;
+  padding: 8px 28px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.24em !important;
+  box-shadow:
+    0 8px 20px rgba(76, 29, 149, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.community-only-text {
+  font-size: 12px !important;
+  letter-spacing: 0.32em !important;
+  color: #6b7280 !important;
+}
+
+.community-popup-price {
+  font-size: clamp(3.5rem, 8vw, 5.5rem) !important;
+  background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 55%, #2e1065 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  filter: drop-shadow(0 4px 12px rgba(76, 29, 149, 0.15));
+}
+
+.community-payment-badge {
+  background: linear-gradient(90deg, #6d28d9 0%, #4c1d95 100%) !important;
+  padding: 8px 20px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.18em !important;
+}
+
+.community-access-box {
+  border-radius: 16px !important;
+  border: 2px dashed rgba(139, 92, 246, 0.35) !important;
+  background: rgba(250, 248, 255, 0.9) !important;
+  padding: 16px 18px !important;
+}
+
+.community-access-title {
+  font-size: 14px !important;
+  color: #2e1065 !important;
+}
+
+.community-access-desc {
+  font-size: 11px !important;
+  color: #6b7280 !important;
+}
+
+.community-access-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(145deg, #f5f3ff, #ede9fe) !important;
+  color: #4c1d95 !important;
+}
+
+/* ── CTA button ── */
+.community-join-btn {
+  min-height: 56px !important;
+  margin-top: 20px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 35%, #4c1d95 100%) !important;
+  background-size: 200% 100% !important;
+  padding: 6px 6px 6px 10px !important;
+  box-shadow:
+    0 12px 32px rgba(76, 29, 149, 0.35),
+    0 0 24px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    background-position 0.4s ease,
+    filter 0.3s ease !important;
+}
+
+.just99-join-btn {
+  min-height: 72px !important;
+  margin-top: 24px !important;
+  padding: 8px 8px 8px 12px !important;
+}
+
+.community-join-btn:hover {
+  transform: scale(1.02) !important;
+  background-position: 100% 0 !important;
+  filter: brightness(1.05) !important;
+  box-shadow:
+    0 16px 40px rgba(76, 29, 149, 0.42),
+    0 0 36px rgba(139, 92, 246, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+.community-join-btn-left {
+  width: 44px !important;
+  height: 44px !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.just99-join-btn .community-join-btn-left,
+.just99-join-btn .community-join-btn-arrow {
+  width: 52px !important;
+  height: 52px !important;
+}
+
+.community-join-btn-label {
+  font-size: 15px !important;
+  letter-spacing: 0.2em !important;
+}
+
+.just99-join-btn .community-join-btn-label {
+  font-size: 16px !important;
+}
+
+.community-join-btn-arrow {
+  width: 44px !important;
+  height: 44px !important;
+  color: #4c1d95 !important;
+  box-shadow: 0 4px 12px rgba(76, 29, 149, 0.15) !important;
+}
+
+.community-trust-row {
+  margin-top: 18px !important;
+  font-size: 11px !important;
+  color: #6b7280 !important;
+}
+
+/* ── Perks floating strip ── */
+.community-popup-perks {
+  position: relative;
+  z-index: 5;
+  padding: 0 1.5rem 1rem !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.community-popup-perks-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.98) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(16px);
+  padding: 14px 24px !important;
+  gap: 12px !important;
+  box-shadow:
+    0 12px 40px rgba(76, 29, 149, 0.1),
+    0 4px 12px rgba(76, 29, 149, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  transform: translateY(-6px);
+}
+
+.community-perk-icon {
+  width: 36px !important;
+  height: 36px !important;
+  background: linear-gradient(145deg, #f5f3ff, #ede9fe) !important;
+  color: #4c1d95 !important;
+  box-shadow: 0 4px 10px rgba(76, 29, 149, 0.08) !important;
+}
+
+/* ── Footer pill ── */
+.community-popup-footer {
+  margin: 0 1.5rem 1.25rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.community-popup-footer-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4c1d95 0%, #6d28d9 50%, #4c1d95 100%);
+  padding: 14px 24px;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 8px 28px rgba(76, 29, 149, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.community-popup-footer-pill svg {
+  color: rgba(255, 255, 255, 0.88);
+  flex-shrink: 0;
+}
+
+/* ── Form / pay panels (visual polish only) ── */
+.community-form-title {
+  color: #2e1065 !important;
+}
+
+.community-form-subtitle {
+  color: #6b7280 !important;
+}
+
+.community-popup-input {
+  border-color: rgba(139, 92, 246, 0.2) !important;
+  border-radius: 14px !important;
+}
+
+.community-popup-input:focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12) !important;
+}
+
+/* ── Sparkles enhancement ── */
+.community-sparkle {
+  width: 8px !important;
+  height: 8px !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(139, 92, 246, 0.4) 40%, transparent 70%) !important;
+}
+
+/* ── Page-specific sizing ── */
+.just99-shell.community-popup-page {
+  min-height: unset !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+@media (min-width: 1024px) {
+  .just99-shell.community-popup-page {
+    height: min(820px, calc(100dvh - 2rem)) !important;
+    max-height: min(820px, calc(100dvh - 2rem)) !important;
+  }
+}
+
+.just99-offer-card {
+  max-width: 440px !important;
+  border-radius: 32px !important;
+}
+
+.just99-offer-body {
+  padding: 42px 32px 32px !important;
+}
+
+.just99-price {
+  font-size: clamp(4rem, 9vw, 6rem) !important;
+}
+
+.just99-page .community-feature-card {
+  padding: 16px 12px !important;
+}
+
+.just99-page .community-feature-icon {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.just99-perks {
+  padding: 0 2rem 1rem !important;
+}
+
+/* Medium-size offer + footer on mobile/tablet */
+@media (max-width: 1023px) {
+  .community-offer-desktop.community-offer-card {
+    border-radius: 24px !important;
+    max-width: 100%;
+  }
+
+  .community-offer-desktop .community-offer-ribbon {
+    padding: 5px 18px !important;
+    font-size: 8px !important;
+    letter-spacing: 0.2em !important;
+  }
+
+  .community-offer-desktop.community-offer-body,
+  .community-offer-desktop .community-offer-body {
+    padding: 26px 18px 20px !important;
+  }
+
+  .community-offer-desktop .community-only-text {
+    font-size: 10px !important;
+    letter-spacing: 0.26em !important;
+  }
+
+  .community-offer-desktop .community-price-block {
+    margin: 6px 0 10px !important;
+  }
+
+  .community-offer-desktop .community-popup-price {
+    font-size: clamp(2.25rem, 11vw, 3rem) !important;
+  }
+
+  .community-offer-desktop .just99-price {
+    font-size: clamp(2.5rem, 12vw, 3.25rem) !important;
+  }
+
+  .community-offer-desktop .community-payment-badge {
+    font-size: 8px !important;
+    padding: 5px 14px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .community-offer-desktop .community-join-btn,
+  .community-offer-desktop .just99-join-btn {
+    min-height: 46px !important;
+    margin-top: 14px !important;
+    padding: 4px 4px 4px 6px !important;
+  }
+
+  .community-offer-desktop .just99-join-btn {
+    min-height: 48px !important;
+    margin-top: 16px !important;
+  }
+
+  .community-offer-desktop .community-join-btn-left,
+  .community-offer-desktop .community-join-btn-arrow {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .community-offer-desktop .just99-join-btn .community-join-btn-left,
+  .community-offer-desktop .just99-join-btn .community-join-btn-arrow {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .community-offer-desktop .community-join-btn-label {
+    font-size: 12px !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  .community-offer-desktop .just99-join-btn .community-join-btn-label {
+    font-size: 13px !important;
+  }
+
+  .community-offer-desktop .community-trust-row {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px 10px !important;
+    margin-top: 12px !important;
+    font-size: 9px !important;
+  }
+
+  .community-offer-desktop .community-trust-icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .community-footer-desktop {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .community-footer-desktop .community-popup-footer-pill {
+    border-radius: 16px !important;
+    padding: 10px 14px !important;
+    font-size: 0.6875rem !important;
+    line-height: 1.4 !important;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .community-footer-desktop .community-popup-footer-pill span {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .community-popup-right {
+    flex: 0 1 auto;
+  }
+
+  .just99-offer-wrap,
+  .community-popup-right > div {
+    width: 100%;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .community-offer-desktop.community-offer-body,
+  .community-offer-desktop .community-offer-body {
+    padding: 30px 22px 22px !important;
+  }
+
+  .community-offer-desktop .community-popup-price {
+    font-size: clamp(2.75rem, 8vw, 3.5rem) !important;
+  }
+
+  .community-footer-desktop .community-popup-footer-pill {
+    max-width: 420px;
+    font-size: 0.75rem !important;
+    padding: 11px 18px !important;
+  }
+}
+
+/* ── Responsive ── */
+
+/* Tablet & below */
+@media (max-width: 1023px) {
+  .just99-page {
+    overflow-y: auto;
+    align-items: flex-start;
+    padding: 0.5rem;
+    min-height: 100dvh;
+  }
+
+  .community-popup-body {
+    overflow: visible !important;
+  }
+
+  .community-popup-left,
+  .community-popup-right {
+    overflow: visible !important;
+  }
+
+  .community-popup-perks-inner {
+    border-radius: 20px !important;
+    transform: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .community-popup-footer {
+    margin: 0 !important;
+  }
+
+  .community-feature-card {
+    animation: none !important;
+  }
+
+  .community-feature-card:hover {
+    transform: translateY(-3px) !important;
+  }
+}
+
+/* Mobile landscape & small tablets */
+@media (max-width: 767px) {
+  .just99-page::before,
+  .just99-page::after {
+    width: 180px;
+    height: 180px;
+  }
+
+  .community-popup-blur-orb-1,
+  .community-popup-blur-orb-2 {
+    width: 120px;
+    height: 120px;
+  }
+
+  .community-popup-vine {
+    opacity: 0.15 !important;
+    width: 20px !important;
+  }
+
+  .community-popup-line {
+    width: 28px !important;
+  }
+
+  .community-feature-card {
+    padding: 10px 8px !important;
+  }
+
+  .community-feature-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .community-popup-perks {
+    padding: 0 0.75rem 0.75rem !important;
+  }
+
+  .community-popup-perks-inner {
+    border-radius: 16px !important;
+    padding: 10px 12px !important;
+    gap: 8px !important;
+  }
+
+  .community-perk-icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .community-popup-page,
+  .community-popup-modal {
+    border-radius: 20px !important;
+  }
+}
+
+/* Small phones */
+@media (max-width: 379px) {
+  .community-brand-name {
+    font-size: 11px !important;
+  }
+
+  .community-brand-tag {
+    font-size: 7px !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  .community-footer-desktop .community-popup-footer-pill {
+    max-width: 300px;
+  }
+}
+
+/* Desktop large */
+@media (min-width: 1024px) {
+  .community-popup-perks-inner {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .just99-offer-card {
+    max-width: 460px !important;
+  }
+
+  .community-popup-script {
+    font-size: inherit;
+  }
+}
+
+/* Popup modal on small screens - allow internal scroll */
+@media (max-width: 639px) {
+  .community-popup-modal {
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+}
+
+/* ===== Full responsive pass — popup + page + steps ===== */
+
+.community-popup-responsive {
+  max-height: min(92dvh, 720px);
+  width: 100%;
+}
+
+.just99-main-popup {
+  -webkit-overflow-scrolling: touch;
+}
+
+.just99-offer-wrap-popup {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.5rem 0.35rem 0.25rem;
+}
+
+.just99-popup-mobile-head {
+  padding: 0.35rem 0.5rem 0.15rem;
+  text-align: center;
+}
+
+.just99-popup-mobile-brand {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6b5b8c;
+}
+
+.just99-popup-mobile-title {
+  margin-top: 0.25rem;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(1.15rem, 4.8vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #3b1c5b;
+}
+
+.just99-popup-mobile-sub {
+  margin-top: 0.2rem;
+  font-size: 0.6875rem;
+  color: #7a6b96;
+}
+
+.just99-bottom-popup-mobile .just99-perks-bar-popup {
+  padding-top: 0.35rem;
+}
+
+.just99-perks-bar-popup .community-popup-perks-inner {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  border-radius: 14px !important;
+  padding: 0.5rem 0.625rem !important;
+  gap: 0.375rem !important;
+  transform: none;
+}
+
+.just99-perks-bar-popup .just99-perk-item {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.2rem;
+}
+
+.just99-perks-bar-popup .just99-perk-title,
+.just99-perks-bar-popup .just99-perk-desc {
+  white-space: normal;
+  font-size: 0.5rem;
+  line-height: 1.25;
+}
+
+.just99-perks-bar-popup .just99-perk-title {
+  font-size: 0.5625rem;
+}
+
+.community-step-panel {
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+}
+
+/* Extra-small phones */
+@media (max-width: 379px) {
+  .community-popup-responsive {
+    border-radius: 14px !important;
+  }
+
+  .just99-offer-wrap-popup {
+    padding-inline: 0.15rem;
+  }
+
+  .just99-offer-card-popup .just99-offer-body {
+    padding: 1.35rem 0.875rem 1rem !important;
+  }
+
+  .just99-offer-card-popup .just99-price,
+  .just99-offer-card-popup .community-popup-price {
+    font-size: clamp(2rem, 14vw, 2.65rem) !important;
+  }
+
+  .just99-offer-card-popup .community-join-btn {
+    min-height: 42px !important;
+  }
+
+  .just99-offer-card-popup .community-join-btn-label {
+    font-size: 0.6875rem !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  .just99-perks-bar-popup .just99-footer-lotus {
+    display: none;
+  }
+
+  .community-popup .just99-footer {
+    font-size: 0.5rem !important;
+    padding: 0.375rem 0.625rem !important;
+  }
+
+  .community-form-panel .community-form-title {
+    font-size: 1.125rem !important;
+  }
+
+  .community-form-panel .community-popup-input {
+    padding: 0.625rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 639px) {
+  .community-popup-responsive {
+    max-height: none;
+    min-height: 0;
+  }
+
+  .just99-main-popup {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+
+  .community-popup .just99-right {
+    min-height: auto !important;
+    padding: 0.5rem 0.625rem 0.375rem !important;
+    border-top: none !important;
+  }
+
+  .just99-offer-wrap-popup {
+    max-width: min(100%, 360px);
+    margin-inline: auto;
+  }
+
+  .just99-offer-card-popup {
+    border-radius: 18px !important;
+  }
+
+  .community-step-panel .community-form-header {
+    margin-bottom: 12px;
+  }
+
+  .community-step-panel .community-form-title {
+    font-size: 1.25rem;
+  }
+
+  .community-step-panel .community-form-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .community-step-panel .community-form {
+    gap: 10px;
+  }
+
+  .community-step-panel .community-popup-input {
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+
+  .just99-bottom-popup-mobile .just99-footer {
+    width: calc(100% - 1rem);
+    font-size: 0.5625rem;
+    line-height: 1.35;
+    padding: 0.375rem 0.625rem;
+  }
+
+  .just99-landing-fit {
+    min-height: 100dvh;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .just99-landing-fit .just99-page-fit {
+    min-height: auto;
+  }
+
+  .just99-landing-fit .just99-main-landing {
+    display: flex !important;
+    flex-direction: column;
+    padding: 0.625rem 0.75rem !important;
+  }
+
+  .just99-landing-fit .just99-hero-landing {
+    max-width: 100% !important;
+    transform: none !important;
+    text-align: center !important;
+    margin-inline: auto;
+  }
+
+  .just99-landing-fit .just99-hero-landing .just99-join-row,
+  .just99-landing-fit .just99-hero-landing .just99-headline {
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .just99-landing-fit .just99-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .just99-landing-fit .just99-hero-join-btn,
+  .just99-landing-fit .just99-hero-watch-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .just99-landing-fit .just99-offer-wrap-landing {
+    max-width: min(100%, 360px);
+    margin-inline: auto !important;
+    transform: none !important;
+  }
+
+  .just99-landing-fit .just99-offer-card-landing .just99-offer-body {
+    padding: 1.75rem 1rem 1.25rem !important;
+  }
+
+  .just99-landing-fit .just99-page .just99-perks {
+    grid-template-columns: 1fr 1fr !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* Small tablets & large phones */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .community-popup-responsive {
+    max-height: min(88dvh, 680px);
+  }
+
+  .just99-offer-wrap-popup {
+    max-width: min(100%, 400px);
+    margin-inline: auto;
+    padding: 0.625rem 0.5rem;
+  }
+
+  .just99-perks-bar-popup .community-popup-perks-inner {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .just99-perks-bar-popup .just99-perk-item {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .just99-landing-fit .just99-main-landing {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
+
+  .just99-landing-fit .just99-offer-wrap-landing {
+    max-width: min(100%, 420px);
+    transform: none !important;
+    margin-inline: auto !important;
+  }
+
+  .just99-landing-fit .just99-hero-center-landing {
+    width: min(42vw, 280px) !important;
+    height: min(42vw, 280px) !important;
+  }
+}
+
+/* Desktop popup */
+@media (min-width: 1024px) {
+  .community-popup-responsive {
+    max-height: min(90vh, 640px);
+  }
+
+  .just99-main-popup {
+    overflow: hidden;
+  }
+
+  .just99-offer-wrap-popup {
+    padding: 0;
+  }
+}
+
+/* Landscape phones — reduce vertical pressure */
+@media (max-height: 520px) and (orientation: landscape) {
+  .community-popup-responsive {
+    max-height: 96dvh;
+  }
+
+  .community-popup .just99-popup-mobile-head {
+    display: none;
+  }
+
+  .just99-offer-card-popup .just99-offer-body {
+    padding: 1.25rem 1rem 0.875rem !important;
+  }
+
+  .just99-offer-card-popup .community-access-box {
+    display: none;
+  }
+
+  .just99-offer-card-popup .community-trust-row {
+    margin-top: 0.5rem !important;
+  }
+
+  .just99-bottom-popup-mobile .just99-perks-bar-popup {
+    display: none;
+  }
+
+  .community-popup .just99-footer {
+    margin-bottom: 0.25rem !important;
+  }
+
+  .just99-landing-fit .just99-hero-center-landing {
+    width: min(28vh, 180px) !important;
+    height: min(28vh, 180px) !important;
+  }
+}
+
+/* Safe area for notched devices */
+@supports (padding: max(0px)) {
+  .community-popup-overlay {
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+    padding-right: max(0.5rem, env(safe-area-inset-right));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  .just99-landing-fit .just99-site-header {
+    padding-top: env(safe-area-inset-top);
+  }
+}

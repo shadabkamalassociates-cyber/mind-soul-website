@@ -14,12 +14,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const article = mapBlogForUi(blog);
 
     return {
-      title: `${article.title} | SoulSensei Blog`,
+      title: `${article.title} | Cosmicguruji Blog`,
       description: article.shortDescription || article.excerpt,
     };
   } catch {
     return {
-      title: `${slug.replace(/-/g, " ")} | SoulSensei Blog`,
+      title: `${slug.replace(/-/g, " ")} | Cosmicguruji Blog`,
       description: "Blog article",
     };
   }

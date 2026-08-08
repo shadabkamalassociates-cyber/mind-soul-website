@@ -119,7 +119,7 @@ function resolveAuthorName(blog: ApiBlog) {
   return (
     readNestedName(blog.author) ??
     (typeof blog.author_name === "string" ? blog.author_name : undefined) ??
-    "SoulSensei Editorial"
+    "Cosmicguruji Editorial"
   );
 }
 

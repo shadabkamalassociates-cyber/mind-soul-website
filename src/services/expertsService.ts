@@ -222,7 +222,7 @@ export async function verifyExpert(
 }
 
 export function getExpertCardBio(bio: string): string {
-  const fallback = "Verified SoulSensei expert ready to guide your journey.";
+  const fallback = "Verified Cosmicguruji expert ready to guide your journey.";
   const normalized = bio.replace(/\s+/g, " ").trim();
   if (!normalized) return fallback;
 

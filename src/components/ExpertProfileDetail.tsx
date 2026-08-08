@@ -162,7 +162,7 @@ function buildAboutParagraphs(expert: Expert, name: string): string[] {
   if (unique.length > 0) return unique;
 
   return [
-    `${name} is a verified SoulSensei expert dedicated to helping seekers with clarity and transformation.`,
+    `${name} is a verified Cosmicguruji expert dedicated to helping seekers with clarity and transformation.`,
   ];
 }
 

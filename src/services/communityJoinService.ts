@@ -19,13 +19,18 @@ type CommunityJoinOrderResponse = {
 };
 
 export async function submitCommunityJoinLead(
-  details: CommunityJoinDetails,
+  details: CommunityJoinDetails & {
+    first_name?: string;
+    last_name?: string;
+  },
   source = "website_popup",
 ) {
   return apiPost(
     "/community/join-lead",
     {
       name: details.name,
+      first_name: details.first_name,
+      last_name: details.last_name,
       email: details.email,
       phone: details.whatsapp,
       source,
@@ -34,7 +39,10 @@ export async function submitCommunityJoinLead(
   );
 }
 
-export async function createCommunityJoinOrder(details: CommunityJoinDetails) {
+export async function createCommunityJoinOrder(
+  details: CommunityJoinDetails,
+  source = "website_popup",
+) {
   return apiPost<CommunityJoinOrderResponse>(
     "/payment/community-join/create",
     {
@@ -43,6 +51,7 @@ export async function createCommunityJoinOrder(details: CommunityJoinDetails) {
       phone: details.whatsapp,
       payment_type: "full",
       amount: 99,
+      source,
       notes: JSON.stringify({
         type: "community_membership",
         name: details.name,
@@ -62,6 +71,21 @@ export async function verifyCommunityJoinPayment(body: {
   return apiPost("/payment/community-join/verify-payment", body, false);
 }
 
+export type CommunityPaymentStatusResponse = {
+  success?: boolean;
+  message?: string;
+  payment?: unknown;
+};
+
+/** Checks whether the current user already has a successful community join payment. */
+export async function checkCommunityJoinPaymentStatus() {
+  return apiPost<CommunityPaymentStatusResponse>(
+    "/community/verify-payment",
+    {},
+    false,
+  );
+}
+
 export async function purchaseCommunityJoinWithRazorpay(
   details: CommunityJoinDetails,
   source = "website_popup",
@@ -72,7 +96,7 @@ export async function purchaseCommunityJoinWithRazorpay(
     // Lead capture is best-effort; payment can still proceed.
   }
 
-  const createRes = await createCommunityJoinOrder(details);
+  const createRes = await createCommunityJoinOrder(details, source);
   const order = createRes.razorpayOrder;
 
   if (!createRes.success || !order?.id || !order.key) {

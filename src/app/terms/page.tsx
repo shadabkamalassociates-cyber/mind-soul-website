@@ -5,8 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | SoulSensei",
-  description: "Read the terms and conditions for using SoulSensei services.",
+  title: "Terms & Conditions | Cosmicguruji",
+  description: "Read the terms and conditions for using Cosmicguruji services.",
 };
 
 export default function TermsPage() {
@@ -36,7 +36,7 @@ export default function TermsPage() {
               Terms &amp; Conditions
             </h1>
             <p className="mt-3 max-w-[560px] text-[13px] leading-relaxed text-white/85 sm:text-[14px]">
-              Please read these terms carefully before using SoulSensei platform
+              Please read these terms carefully before using Cosmicguruji platform
               and services.
             </p>
 

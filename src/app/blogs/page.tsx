@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import BlogsPage from "@/components/BlogsPage";
 
 export const metadata: Metadata = {
-  title: "Blog & Insights | SoulSensei",
+  title: "Blog & Insights | Cosmicguruji",
   description:
-    "Explore articles on wellness, spirituality, meditation, and personal growth from SoulSensei.",
+    "Explore articles on wellness, spirituality, meditation, and personal growth from Cosmicguruji.",
 };
 
 export default function BlogsRoute() {

@@ -3,9 +3,9 @@ import { Suspense } from "react";
 import LiveSessionsPage from "@/components/LiveSessionsPage";
 
 export const metadata: Metadata = {
-  title: "Sessions | SoulSensei",
+  title: "Sessions | Cosmicguruji",
   description:
-    "Browse live interactive sessions and premium recorded videos with verified SoulSensei experts.",
+    "Browse live interactive sessions and premium recorded videos with verified Cosmicguruji experts.",
 };
 
 function SessionsFallback() {

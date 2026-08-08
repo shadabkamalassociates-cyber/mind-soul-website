@@ -59,16 +59,18 @@ export default function CommunityJoinPopup() {
   }
 
   return (
-    <div className="community-popup-overlay fixed inset-0 z-[200] flex items-center justify-center p-2 sm:p-3">
-      <button
-        type="button"
-        aria-label="Close popup"
-        className="absolute inset-0 bg-[#2E1650]/65 backdrop-blur-[6px]"
-        onClick={dismissPopup}
-      />
+    <div className="community-popup-overlay fixed inset-0 z-[200] overflow-y-auto overscroll-contain">
+      <div className="flex min-h-full items-start justify-center p-2 py-4 sm:items-center sm:p-3 sm:py-6">
+        <button
+          type="button"
+          aria-label="Close popup"
+          className="fixed inset-0 bg-[#00000096]/65 backdrop-blur-[6px]"
+          onClick={dismissPopup}
+        />
 
-      <div className="relative z-10 w-full max-w-[820px]">
-        <CommunityJoinExperience variant="popup" onClose={dismissPopup} />
+        <div className="relative z-10 mx-auto w-full max-w-[min(100%,860px)] px-1 sm:px-0">
+          <CommunityJoinExperience variant="popup" onClose={dismissPopup} />
+        </div>
       </div>
     </div>
   );

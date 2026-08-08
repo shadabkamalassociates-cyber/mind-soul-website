@@ -184,7 +184,7 @@ function MembershipCard() {
       <div className="relative min-h-[220px] w-full flex-1 sm:min-h-[240px]">
         <Image
           src="/programs/program-plus.png"
-          alt="SoulSensei Plus"
+          alt="Cosmicguruji Plus"
           fill
           className="object-cover object-[82%_center]"
           sizes="(max-width: 1024px) 300px, 28vw"

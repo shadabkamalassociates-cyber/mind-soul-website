@@ -123,7 +123,7 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-[1200px] items-center gap-8 px-6 pt-10 pb-12 sm:px-8 lg:grid-cols-[1fr_1.15fr] lg:gap-6 lg:px-10 lg:pt-14 lg:pb-16">
           <div className="relative z-10 max-w-[480px]">
             <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#4B4BA8]">
-              About SoulSensei
+              About Cosmicguruji
             </p>
             <h1
               className="text-[36px] font-semibold leading-[1.18] tracking-[-0.02em] text-[#3D3D8F] sm:text-[42px] lg:text-[46px]"
@@ -134,7 +134,7 @@ export default function AboutPage() {
               Enriching Souls.
             </h1>
             <p className="mt-5 text-[15px] leading-[1.75] text-[#5C5C7A] sm:text-[16px]">
-              SoulSensei is a trusted space for self-discovery, healing, and
+              Cosmicguruji is a trusted space for self-discovery, healing, and
               spiritual growth — connecting you with India&apos;s most caring
               experts through live sessions, programs, and community.
             </p>
@@ -187,7 +187,7 @@ export default function AboutPage() {
               Meaningful change.
             </h2>
             <p className="mt-3.5 text-[14px] leading-[1.7] text-black sm:text-[15px]">
-              We built SoulSensei so quality guidance isn&apos;t limited by
+              We built Cosmicguruji so quality guidance isn&apos;t limited by
               location or gatekeeping. Whether you&apos;re seeking calm,
               healing, or deeper purpose — support should feel approachable and
               human.
@@ -362,7 +362,7 @@ export default function AboutPage() {
                   Your trust is our foundation
                 </h2>
                 <p className="mt-3 max-w-[520px] text-[13px] leading-[1.65] text-white/80 sm:text-[14px] lg:mx-0 mx-auto">
-                  Every professional on SoulSensei goes through identity checks,
+                  Every professional on Cosmicguruji goes through identity checks,
                   credential reviews, and platform onboarding before they can
                   offer sessions.
                 </p>
@@ -466,10 +466,10 @@ export default function AboutPage() {
                 Our Commitment to Responsible Care
               </p>
               <p className="mt-2 text-[13px] leading-[1.65] text-[#2A2A3A] sm:text-[13.5px]">
-                SoulSensei is not an emergency or crisis service and does not
+                Cosmicguruji is not an emergency or crisis service and does not
                 replace medical or psychiatric treatment. We encourage users in
                 urgent situations to seek immediate in-person help. For everyday
-                mental wellness, SoulSensei helps you locate appropriate
+                mental wellness, Cosmicguruji helps you locate appropriate
                 professionals and resources to support recovery, growth, and
                 wellbeing.
               </p>
@@ -579,10 +579,10 @@ export default function AboutPage() {
             </Link>
           </div>
           <a
-            href="mailto:support@soulsensei.com"
+            href="mailto:support@Cosmicguruji.com"
             className="text-[14px] text-white/80 transition hover:text-white"
           >
-            support@soulsensei.com
+            support@Cosmicguruji.com
           </a>
           <div className="hidden text-white/50 lg:block">
             <MeditateFooterIcon />

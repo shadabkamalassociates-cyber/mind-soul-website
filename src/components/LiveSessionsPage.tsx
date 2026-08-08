@@ -287,7 +287,7 @@ export default function LiveSessionsPage() {
             </p>
             <p className="mt-4 max-w-[520px] text-[14px] leading-[1.75] text-[#5C5C7A] sm:text-[15px]">
               Join live group sessions, learn from premium recordings, or book a
-              private one-on-one session with a verified SoulSensei expert.
+              private one-on-one session with a verified Cosmicguruji expert.
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-4">

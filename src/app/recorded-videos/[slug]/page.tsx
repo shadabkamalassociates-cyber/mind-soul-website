@@ -6,8 +6,8 @@ type PageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Recorded Video | SoulSensei",
-  description: "Watch premium recorded spiritual sessions on SoulSensei.",
+  title: "Recorded Video | Cosmicguruji",
+  description: "Watch premium recorded spiritual sessions on Cosmicguruji.",
 };
 
 export default async function RecordedVideoDetailRoute({ params }: PageProps) {

@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   return {
-    title: `Category ${slug} | SoulSensei`,
+    title: `Category ${slug} | Cosmicguruji`,
     description: "Live sessions related to this category.",
   };
 }

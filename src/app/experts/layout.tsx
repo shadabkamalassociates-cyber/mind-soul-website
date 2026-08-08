@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Our Experts | SoulSensei",
+  title: "Our Experts | Cosmicguruji",
   description:
-    "Meet SoulSensei's verified spiritual guides, meditation coaches, and energy healers dedicated to your transformation.",
+    "Meet Cosmicguruji's verified spiritual guides, meditation coaches, and energy healers dedicated to your transformation.",
 };
 
 export default function ExpertsLayout({

@@ -96,7 +96,7 @@ function resolveExpert(session: Session, ctx?: SessionUiContext) {
   if (fullName) {
     return {
       name: fullName,
-      role: "SoulSensei Expert",
+      role: "Cosmicguruji Expert",
       avatar: profileImage || DEFAULT_EXPERT_AVATAR,
     };
   }
@@ -112,13 +112,13 @@ function resolveExpert(session: Session, ctx?: SessionUiContext) {
   if (fromApi && !isUuid(fromApi)) {
     return {
       name: fromApi,
-      role: "SoulSensei Expert",
+      role: "Cosmicguruji Expert",
       avatar: profileImage || DEFAULT_EXPERT_AVATAR,
     };
   }
 
   return {
-    name: "SoulSensei Expert",
+    name: "Cosmicguruji Expert",
     role: "Verified Guide",
     avatar: DEFAULT_EXPERT_AVATAR,
   };
@@ -258,7 +258,7 @@ export function mapSessionForRecordedUi(
     expert: base.expert,
     expertRole: base.role,
     expertAvatar: base.avatar,
-    expertBio: `${base.expert} is a verified SoulSensei expert in ${resolveRecordedCategory(session, ctx)}.`,
+    expertBio: `${base.expert} is a verified Cosmicguruji expert in ${resolveRecordedCategory(session, ctx)}.`,
     expertStats: [
       { label: "Experience", value: "10+" },
       { label: "Students", value: "—" },
@@ -290,7 +290,7 @@ export function mapSessionForRecordedUi(
     about: description
       ? [
           description,
-          "Learn at your own pace with lifetime access to this recorded session from a verified SoulSensei expert.",
+          "Learn at your own pace with lifetime access to this recorded session from a verified Cosmicguruji expert.",
         ]
       : [base.subtitle],
     reviewsList: [],
@@ -334,10 +334,10 @@ export function mapSessionForDetailPage(
         ]
       : [
           "Join this live interactive session for practical guidance tailored to your journey.",
-          "Designed for seekers who want clarity, confidence, and actionable wisdom from a verified SoulSensei expert.",
+          "Designed for seekers who want clarity, confidence, and actionable wisdom from a verified Cosmicguruji expert.",
         ],
     quote: "Clarity begins the moment you listen within.",
-    quoteAttr: "SoulSensei",
+    quoteAttr: "Cosmicguruji",
     topics: [ui.category, "Live Q&A", "Practical Guidance", "Personalized Insights"],
     image: ui.image,
   };

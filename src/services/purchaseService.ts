@@ -61,7 +61,7 @@ export async function purchaseSessionWithRazorpay(
     orderId: order.id,
     amount: order.amount,
     currency: order.currency,
-    description: "SoulSensei session purchase",
+    description: "Cosmicguruji session purchase",
   });
 
   await verifySessionPayment(payment);

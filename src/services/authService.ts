@@ -110,3 +110,16 @@ export async function sendOtp(phone: string) {
         : "OTP sent successfully via WhatsApp.",
   };
 }
+
+export async function checkAuthUser() {
+  const res = await apiPost<AuthResponse>("/user/check-auth", {});
+  console.log("res++++++++++++++++", res.data);
+  return {
+    raw: res,
+    user: extractUser(res as AuthResponse),
+    message:
+      typeof res.message === "string"
+        ? res.message
+        : "User authenticated successfully.",
+  };
+}

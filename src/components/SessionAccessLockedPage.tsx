@@ -467,7 +467,7 @@ export function SessionLoginRequiredPage({
               Sign in to continue
             </h1>
             <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-7 text-[#5C5C7A] sm:text-[15px]">
-              Please sign in to your SoulSensei account to verify your
+              Please sign in to your Cosmicguruji account to verify your
               enrollment and access this session.
             </p>
 

@@ -87,7 +87,7 @@ export async function openRazorpayCheckout(options: {
       key: options.key,
       amount: options.amount,
       currency: options.currency,
-      name: options.name ?? "SoulSensei",
+      name: options.name ?? "Cosmicguruji",
       description: options.description ?? "Session purchase",
       order_id: options.orderId,
       prefill: options.prefill,
