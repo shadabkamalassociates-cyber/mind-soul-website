@@ -68,7 +68,6 @@ export const checkAuth = createAsyncThunk(
 
     try {
       const result = await authService.checkAuthUser();
-      console.log("result", result);
       return { user: result.user, skipped: false as const };
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {

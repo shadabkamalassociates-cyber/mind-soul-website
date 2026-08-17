@@ -7,9 +7,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
   expertImageNeedsBlendRemoval,
-  fetchVerifiedExperts,
   getExpertCardBio,
-  mapExpertForUi,
+  loadVerifiedExpertsForUi,
   type UiExpert,
 } from "@/services/expertsService";
 import { ApiError } from "@/services/apiClient";
@@ -54,9 +53,9 @@ export default function ExpertsPageClient() {
       setError(null);
 
       try {
-        const data = await fetchVerifiedExperts();
+        const { experts: data } = await loadVerifiedExpertsForUi();
         if (!cancelled) {
-          setExperts(data.map(mapExpertForUi));
+          setExperts(data);
           setStatus("succeeded");
         }
       } catch (err) {

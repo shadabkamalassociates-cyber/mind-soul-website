@@ -5,6 +5,7 @@ import type {
   SignupPayload,
 } from "@/types/auth";
 import { apiPost, extractData } from "@/services/apiClient";
+import { getStoredToken } from "@/lib/authStorage";
 
 export function extractToken(payload: AuthResponse): string | null {
   if (typeof payload.token === "string") return payload.token;
@@ -112,8 +113,16 @@ export async function sendOtp(phone: string) {
 }
 
 export async function checkAuthUser() {
+  const token = getStoredToken();
+  if (!token) {
+    return {
+      raw: null,
+      user: null,
+      message: "No auth token found.",
+    };
+  }
+
   const res = await apiPost<AuthResponse>("/user/check-auth", {});
-  console.log("res++++++++++++++++", res.data);
   return {
     raw: res,
     user: extractUser(res as AuthResponse),

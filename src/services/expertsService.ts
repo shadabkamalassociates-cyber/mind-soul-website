@@ -1,4 +1,4 @@
-import { experts as staticExperts } from "@/data/experts";
+import { experts as staticExperts, type ExpertProfile } from "@/data/experts";
 import type { Expert } from "@/types/expert";
 import {
   ApiError,
@@ -149,6 +149,41 @@ export function expertImageNeedsBlendRemoval(email: string): boolean {
   return normalizeExpertEmail(email) === "09jyotirajput1@gmail.com";
 }
 
+function isVerifiedExpert(expert: Expert): boolean {
+  if (expert.is_verified === true) return true;
+  const status = String(expert.verification_status ?? "").trim().toUpperCase();
+  return status === "VERIFIED";
+}
+
+export function mapStaticExpertProfileToUi(profile: ExpertProfile): UiExpert {
+  return {
+    id: profile.slug,
+    slug: profile.slug,
+    name: profile.name,
+    email: profile.email,
+    phone: profile.phone,
+    title: profile.titles || profile.role,
+    bio: profile.bio,
+    image: profile.image,
+    experience: profile.experienceDetail,
+    specialization: profile.specialization,
+    rating: profile.rating.split("/")[0]?.trim() || "0.00",
+    isVerified: true,
+    verificationStatus: "VERIFIED",
+    raw: {
+      email: profile.email,
+      bio: profile.bio,
+      first_name: profile.name.split(" ")[0],
+      last_name: profile.name.split(" ").slice(1).join(" "),
+      profile_image: profile.image,
+    } as Expert,
+  };
+}
+
+export function getStaticExpertsForUi(): UiExpert[] {
+  return staticExperts.map(mapStaticExpertProfileToUi);
+}
+
 export async function fetchAllExperts() {
   const res = await apiGet("/experts/fetch-all", false);
   return extractList<Expert>(res);
@@ -160,8 +195,56 @@ export async function fetchExpertById(id: string | number) {
 }
 
 export async function fetchVerifiedExperts() {
-  const res = await apiGet("/experts/fetch-all?status=VERIFIED", false);
-  return extractList<Expert>(res);
+  const endpoints = [
+    "/experts/fetch-all?status=VERIFIED",
+    "/experts/fetch-all",
+  ];
+
+  let lastError: unknown;
+
+  for (const path of endpoints) {
+    try {
+      const res = await apiGet(path, false);
+      const list = extractList<Expert>(res);
+      if (!list.length) continue;
+
+      const verified = list.filter(isVerifiedExpert);
+      if (verified.length > 0) return verified;
+
+      // Unfiltered list: return all experts rather than nothing.
+      if (path === "/experts/fetch-all") return list;
+    } catch (err) {
+      lastError = err;
+    }
+  }
+
+  if (lastError instanceof Error) throw lastError;
+  if (lastError) {
+    throw new ApiError("Failed to load experts", 500, lastError);
+  }
+
+  return [];
+}
+
+export async function loadVerifiedExpertsForUi(): Promise<{
+  experts: UiExpert[];
+  source: "api" | "static";
+}> {
+  try {
+    const data = await fetchVerifiedExperts();
+    if (data.length > 0) {
+      return { experts: data.map(mapExpertForUi), source: "api" };
+    }
+  } catch {
+    // Fall back to bundled profiles when proxy/API is unavailable.
+  }
+
+  const fallback = getStaticExpertsForUi();
+  if (fallback.length > 0) {
+    return { experts: fallback, source: "static" };
+  }
+
+  throw new ApiError("No experts available", 404);
 }
 
 export async function fetchExpertByIdFromAll(id: string | number) {

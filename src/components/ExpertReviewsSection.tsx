@@ -130,28 +130,28 @@ export default function ExpertReviewsSection({
   }
 
   return (
-    <section className="bg-[#F8F9FC] py-10 sm:py-12">
-      <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#F8F9FC] py-7 sm:py-9">
+      <div className="mx-auto max-w-[920px] px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-5">
           <h2
-            className="text-[24px] font-semibold text-[#3D3D8F] sm:text-[28px]"
+            className="text-[22px] font-semibold text-[#3D3D8F] sm:text-[24px]"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
           >
             Reviews &amp; Comments
           </h2>
-          <p className="mt-1.5 text-[13px] text-[#6B6BC4] sm:text-[14px]">
+          <p className="mt-1 text-[12px] text-[#6B6BC4] sm:text-[13px]">
             Real experiences from people who have used our services.
           </p>
         </div>
 
         {/* Top card: rating + distribution + write review */}
-        <div className="rounded-2xl border border-[#E8EAF4] bg-white p-5 shadow-[0_4px_20px_rgba(26,26,74,0.05)] sm:p-6 lg:p-7">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[180px_1fr_minmax(280px,340px)] lg:gap-8">
+        <div className="rounded-xl border border-[#E8EAF4] bg-white p-4 shadow-[0_4px_20px_rgba(26,26,74,0.05)] sm:p-5 lg:p-6">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[160px_1fr_minmax(240px,300px)] lg:gap-6">
             {/* Overall rating */}
             <div className="flex flex-col items-center justify-center text-center lg:items-start lg:text-left">
               <div className="flex items-baseline gap-1">
-                <span className="text-[48px] font-bold leading-none text-[#1A1A4A]">
+                <span className="text-[40px] font-bold leading-none text-[#1A1A4A]">
                   {reviewData.overallRating.toFixed(1)}
                 </span>
                 <GoldStarIcon className="mb-1 h-6 w-6" />
@@ -274,10 +274,10 @@ export default function ExpertReviewsSection({
           </div>
         </div>
 
-        {/* Comments list — scrollable */}
-        <div className="mt-6 rounded-2xl border border-[#E8EAF4] bg-white shadow-[0_4px_20px_rgba(26,26,74,0.05)]">
-          <div className="flex items-center justify-between border-b border-[#E8EAF4] px-5 py-4 sm:px-6">
-            <h3 className="text-[15px] font-semibold text-[#1A1A4A]">
+        {/* Comments list — scrollable, compact */}
+        <div className="mt-5 rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_20px_rgba(26,26,74,0.05)]">
+          <div className="flex items-center justify-between border-b border-[#E8EAF4] px-4 py-3 sm:px-5">
+            <h3 className="text-[14px] font-semibold text-[#1A1A4A]">
               Comments ({formatCount(comments.length)})
             </h3>
             <div className="relative">
@@ -294,7 +294,7 @@ export default function ExpertReviewsSection({
             </div>
           </div>
 
-          <div className="max-h-[420px] overflow-y-auto overscroll-contain [scrollbar-color:#C5C5D5_#F4F4FA] [scrollbar-width:thin] sm:max-h-[480px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C5C5D5] [&::-webkit-scrollbar-track]:bg-[#F4F4FA]">
+          <div className="max-h-[260px] overflow-y-auto overscroll-contain [scrollbar-color:#C5C5D5_#F4F4FA] [scrollbar-width:thin] sm:max-h-[300px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C5C5D5] [&::-webkit-scrollbar-track]:bg-[#F4F4FA]">
             {visibleComments.length === 0 ? (
               <p className="px-5 py-10 text-center text-[13px] text-[#8A8AA8] sm:px-6">
                 No comments yet. Be the first to share your experience!
@@ -393,7 +393,7 @@ function CommentItem({
   }, [menuOpen, onMenuClose]);
 
   return (
-    <div className="border-b border-[#EEF0F6] px-5 py-4 last:border-b-0 sm:px-6">
+    <div className="border-b border-[#EEF0F6] px-4 py-3 last:border-b-0 sm:px-5">
       <div className="flex gap-3">
         <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[#EDEEF5]">
           <Image

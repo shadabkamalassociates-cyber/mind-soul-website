@@ -9,9 +9,8 @@ import {
   fetchCategories,
   mapCategoryForUi,
 } from "@/store/slices/categoriesSlice";
-import { checkAuth, logout } from "@/store/slices/authSlice";
+import { logout } from "@/store/slices/authSlice";
 import { fetchCart, resetCart } from "@/store/slices/cartSlice";
-import { checkAuthUser } from "@/services/authService";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -44,14 +43,6 @@ function isNavItemActive(pathname: string, href: string) {
 }
 
 export default function Header() {
-
-  useEffect(() => {
-    const auth = async () => {
-      const data = await checkAuthUser();
-    }
-
-    auth();
-  }, []);
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const { items: categoryItems, status: categoriesStatus } = useAppSelector(

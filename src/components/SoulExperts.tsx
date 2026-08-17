@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { StarIcon } from "@/components/Icons";
 import {
-  fetchVerifiedExperts,
-  mapExpertForUi,
+  loadVerifiedExpertsForUi,
   type UiExpert,
 } from "@/services/expertsService";
 import { ApiError } from "@/services/apiClient";
@@ -35,9 +34,9 @@ export default function SoulExperts() {
       setError(null);
 
       try {
-        const data = await fetchVerifiedExperts();
+        const { experts: data } = await loadVerifiedExpertsForUi();
         if (!cancelled) {
-          setExperts(data.map(mapExpertForUi));
+          setExperts(data);
         }
       } catch (err) {
         if (!cancelled) {

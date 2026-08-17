@@ -404,364 +404,512 @@ const consultationTypes = [
 
 export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
   const firstName = expert.name.replace(/^Dr\.\s*/, "").split(" ")[0];
+  const displayName = expert.name.replace(/^Cosmicguruji\s+/i, "").trim();
+  const fullName = `Cosmicguruji ${displayName}`;
   const enabledConsultations = expert.consultationTypes
     ? consultationTypes.filter((type) =>
         expert.consultationTypes!.includes(type.label),
       )
     : consultationTypes;
 
+  const stats = [
+    { icon: <VideoIcon />, value: expert.sessions, label: "Sessions Completed" },
+    { icon: <PeopleIcon />, value: expert.clients, label: "Clients Guided" },
+    { icon: <CalendarIcon />, value: expert.experienceDetail, label: "Years Experience" },
+    { icon: <ShieldIcon />, value: "100%", label: "Confidential" },
+    { icon: <StarIcon />, value: expert.rating, label: "Ratings" },
+  ];
+
+  const aboutParagraphs = expert.about.filter(
+    (para) => !/^no bio provided\.?$/i.test(para.trim()),
+  );
+  const summaryAbout =
+    aboutParagraphs.length > 0
+      ? aboutParagraphs.slice(0, 1)
+      : [expert.bio].filter((text) => text && !/^no bio provided\.?$/i.test(text.trim()));
+
   return (
-    <main className="min-h-screen bg-[#F8F9FC] text-[#1A1A4A]">
+    <main className="min-h-screen bg-white text-[#1A1A4A]">
       <Header />
 
-      {/* Profile Hero + Header — 2nd screenshot exact circle-wrap curve */}
-      <section className="relative bg-[#F8F9FC]">
-        <div className="relative h-[230px] overflow-hidden sm:h-[270px] lg:h-[290px]">
-          <Image
-            src="/experts-page/profile-hero.png"
-            alt=""
-            fill
-            className="object-cover object-[center_28%]"
-            priority
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0E0E2A]/70 via-[#1A1A4A]/35 to-transparent" />
-          <div className="absolute right-0 top-0 hidden h-full w-[50%] opacity-60 lg:block">
-            <Image
-              src="/bg-mandala.png"
-              alt=""
-              fill
-              unoptimized
-              className="object-contain object-right"
-              sizes="580px"
-            />
-          </div>
-        </div>
+      {/* Hero — cosmic background image visible (2nd sc) */}
+      <section
+        className="relative min-h-[300px] overflow-hidden sm:min-h-[320px]"
+        style={{
+          backgroundImage: "url('/experts-page/cosmic-hero-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center right",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Light overlay — left side only for text readability */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#1A0533]/82 via-[#2E004B]/45 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#1A0533]/40 via-transparent to-transparent" />
 
-        <div className="relative z-10 mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-          {/* Pull up over hero */}
-          <div className="relative -mt-[118px] sm:-mt-[130px] lg:-mt-[148px]">
-            {/* ===== Mobile / tablet (stacked) ===== */}
-            <div className="flex flex-col items-center lg:hidden">
-              <div className="relative z-30">
-                <div className="relative h-[150px] w-[150px] sm:h-[168px] sm:w-[168px]">
-                  <div className="absolute inset-0 rounded-full bg-[#E8E4F5] p-[5px] shadow-[0_14px_40px_rgba(14,14,42,0.3)] ring-[6px] ring-white sm:p-[6px] sm:ring-[7px]">
-                    <div className="relative h-full w-full overflow-hidden rounded-full">
-                      <Image
-                        src={expert.image}
-                        alt={expert.name}
-                        fill
-                        className="object-cover object-top"
-                        sizes="168px"
-                      />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border-[2.5px] border-white bg-[#3D3D8F] text-white shadow-md sm:h-9 sm:w-9">
-                    <LotusIcon />
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative z-20 mt-[-32px] w-full rounded-2xl border border-[#E8EAF4] bg-white px-5 pb-5 pt-12 text-center shadow-[0_12px_40px_rgba(26,26,74,0.10)] sm:px-7 sm:pb-6 sm:pt-14">
-                <ProfileHeaderContent expert={expert} />
-              </div>
-            </div>
-
-            {/* ===== Desktop: circle + curved white wrap ===== */}
-            <div className="relative hidden lg:block" style={{ paddingLeft: 94 }}>
-              {/* Avatar — center sits on white card's left edge */}
-              <div className="absolute left-0 top-0 z-30 h-[172px] w-[172px]">
-                <div className="absolute inset-0 rounded-full bg-[#E8E4F5] p-[6px] shadow-[0_14px_40px_rgba(14,14,42,0.3)] ring-[7px] ring-white">
-                  <div className="relative h-full w-full overflow-hidden rounded-full">
+        <div className="relative mx-auto max-w-[1040px] px-4 pb-20 pt-7 sm:px-6 sm:pb-[5.5rem] sm:pt-8 lg:px-8 lg:pb-24 lg:pt-9">
+          <div className="flex flex-col items-center gap-5 lg:flex-row lg:items-center lg:gap-7">
+            {/* Avatar */}
+            <div className="relative shrink-0">
+              <div className="relative h-[118px] w-[118px] sm:h-[132px] sm:w-[132px] lg:h-[148px] lg:w-[148px]">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#D4AF37] via-[#F0DDB8] to-[#A67C4A] p-[3px] shadow-[0_0_32px_rgba(212,175,55,0.3)]">
+                  <div className="relative h-full w-full overflow-hidden rounded-full border-[3px] border-[#2E004B]/40">
                     <Image
                       src={expert.image}
                       alt={expert.name}
                       fill
+                      priority
                       className="object-cover object-top"
-                      sizes="172px"
+                      sizes="148px"
                     />
                   </div>
                 </div>
-                <div className="absolute bottom-1.5 right-1.5 z-10 flex h-9 w-9 items-center justify-center rounded-full border-[2.5px] border-white bg-[#3D3D8F] text-white shadow-md">
-                  <LotusIcon />
+                <div className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-[#D4AF37]/50 bg-[#2E004B]/90 px-2.5 py-0.5 text-[9px] font-semibold text-[#F0DDB8] shadow-lg backdrop-blur-sm sm:text-[10px]">
+                  <CheckIcon />
+                  {expert.experienceDetail} Experience
                 </div>
               </div>
-
-              {/* White card — circular notch on left edge wraps the avatar */}
-              <div
-                className="expert-curve-card relative z-20 rounded-2xl border border-[#E8EAF4] bg-white pb-6 pl-[110px] pr-8 pt-7 shadow-[0_12px_40px_rgba(26,26,74,0.10)]"
-                style={{
-                  WebkitMaskImage:
-                    "radial-gradient(circle 98px at 0px 86px, transparent 96px, #000 98px)",
-                  maskImage:
-                    "radial-gradient(circle 98px at 0px 86px, transparent 96px, #000 98px)",
-                }}
-              >
-                <ProfileHeaderContent expert={expert} align="left" />
-              </div>
             </div>
-          </div>
 
-          {/* Stats */}
-          <div className="mt-4 grid grid-cols-2 overflow-hidden rounded-xl border border-[#E4E2F0] bg-[#F4F2FA] md:grid-cols-5">
-            {[
-              { icon: <UserIcon />, label: "Profession", value: expert.profession },
-              { icon: <CalendarIcon />, label: "Experience", value: expert.experienceDetail },
-              { icon: <PeopleIcon />, label: "Clients Guided", value: expert.clients },
-              { icon: <VideoIcon />, label: "Sessions Completed", value: expert.sessions },
-              { icon: <StarIcon />, label: "Ratings", value: expert.rating },
-            ].map((stat, idx) => (
-              <div
-                key={stat.label}
-                className={[
-                  "flex flex-col items-center justify-center gap-1 px-2 py-4 text-center sm:gap-1.5 sm:py-5",
-                  "border-b border-[#E4E2F0] md:border-b-0",
-                  idx !== 4 ? "md:border-r md:border-[#E4E2F0]" : "",
-                ].join(" ")}
-              >
-                <span className="text-[#1A1A4A]">{stat.icon}</span>
-                <p className="text-[10px] font-medium text-[#8A8AA8] sm:text-[11px]">{stat.label}</p>
-                <p className="text-[12px] font-semibold text-[#1A1A4A] sm:text-[13px]">{stat.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            {/* Hero copy */}
+            <div className="min-w-0 flex-1 text-center lg:text-left">
+              <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
+                Welcome to Cosmicguruji
+                <Image src="/just99/star.png" alt="" width={12} height={12} unoptimized />
+              </p>
 
-      {/* About + Professional Details */}
-      <section className="mx-auto max-w-[1180px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
-          {/* About */}
-          <div className="min-w-0">
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white px-6 py-7 sm:px-8 sm:py-8 shadow-[0_8px_28px_rgba(26,26,74,0.05)]">
-              <div className="flex items-center gap-3">
-                <Image
-                  src="/experts-page/lotus-gold.png"
-                  alt=""
-                  width={22}
-                  height={22}
-                  unoptimized
-                />
-                <h2
-                  className="text-[22px] font-semibold text-[#3D3D8F] sm:text-[24px]"
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                >
-                  About {expert.name}
-                </h2>
-              </div>
-
-              <div className="mt-5 space-y-4 text-[13px] leading-[1.85] text-[#4A4A6A] sm:text-[14px]">
-                {expert.about.map((para, index) => (
-                  <p key={`about-${index}`}>{para}</p>
-                ))}
-              </div>
-
-              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {expert.highlights.map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-xl border border-[#E8EAF4] bg-[#FAFBFF] px-4 py-4"
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
-                        <LotusIcon />
-                      </span>
-                      <div>
-                        <h4 className="text-[13px] font-semibold text-[#3D3D8F]">
-                          {item.title}
-                        </h4>
-                        <p className="mt-1 text-[12px] leading-relaxed text-[#5C5C7A]">
-                          {item.desc}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Professional Details */}
-          <aside className="lg:sticky lg:top-24">
-            <div className="relative overflow-hidden rounded-2xl border border-[#E8EAF4] bg-white px-5 py-6 shadow-[0_8px_28px_rgba(26,26,74,0.05)]">
-              <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 opacity-[0.06]">
-                <Image src="/bg-mandala.png" alt="" fill unoptimized className="object-contain" />
-              </div>
-              <h3 className="text-[15px] font-semibold text-[#3D3D8F]">Professional Details</h3>
-
-              <DetailRow label="Profession" value={expert.profession} />
-              <DetailRow label="Years of Experience" value={expert.experienceDetail} />
-
-              <div className="mt-4 border-t border-[#E8EAF4] pt-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#3D3D8F]">
-                  Education
-                </p>
-                <ul className="mt-2 space-y-1">
-                  {expert.education.map((e) => (
-                    <li key={e} className="text-[12px] text-[#4A4A6A]">
-                      • {e}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mt-4 border-t border-[#E8EAF4] pt-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#3D3D8F]">
-                  Certifications
-                </p>
-                <ul className="mt-2 space-y-1">
-                  {expert.certifications.map((c) => (
-                    <li key={c} className="text-[12px] text-[#4A4A6A]">
-                      • {c}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="mt-4 border-t border-[#E8EAF4] pt-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#3D3D8F]">
-                  Specialization
-                </p>
-                <ul className="mt-2 space-y-1">
-                  {expert.specializations.map((s) => (
-                    <li key={s} className="text-[12px] text-[#4A4A6A]">
-                      • {s}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      {expert.services.length > 0 && (
-        <section className="bg-white py-8 sm:py-10">
-          <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2
-                className="text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
+              <h1
+                className="mt-2 text-[26px] font-semibold leading-[1.1] text-white sm:text-[32px] lg:text-[36px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
-                Services Offered
-              </h2>
-              <div className="mt-4 flex items-center justify-center gap-3 sm:gap-4">
-                <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
-                <Image src="/experts-page/lotus-gold.png" alt="" width={20} height={20} unoptimized />
-                <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
+                <span className="text-[#D4AF37]">Cosmicguruji </span>
+                {displayName}
+              </h1>
+
+              <p
+                className="mt-1.5 text-[13px] font-medium italic text-[#E8C69F] sm:text-[14px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                {expert.titles}
+              </p>
+
+              <p className="mx-auto mt-3 max-w-[500px] text-[12px] leading-[1.65] text-white/75 sm:text-[13px] lg:mx-0">
+                {expert.bio}
+              </p>
+
+              <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] text-white/85 backdrop-blur-sm">
+                  <LocationIcon /> {expert.location}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] text-white/85 backdrop-blur-sm">
+                  <GlobeMiniIcon /> {expert.languages.join(", ")}
+                </span>
+              </div>
+
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
+                <Link
+                  href="/#book"
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#F0DDB8] via-[#D4AF37] to-[#A67C4A] px-5 py-2.5 text-[12px] font-semibold text-[#2E004B] shadow-[0_6px_20px_rgba(212,175,55,0.3)] transition hover:brightness-105"
+                >
+                  <CalendarIcon /> Book Consultation
+                </Link>
+                <a
+                  href="#expert-services"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/8 px-5 py-2.5 text-[12px] font-semibold text-white backdrop-blur-sm transition hover:bg-white/14"
+                >
+                  Explore Services <ArrowIcon />
+                </a>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-              {expert.services.map((service, index) => (
-                <article
-                  key={`${service.title}-${index}`}
-                  className="relative rounded-2xl border border-[#E4E2EF] bg-white px-4 pb-5 pt-12 text-center shadow-[0_2px_16px_rgba(26,26,74,0.05)]"
-                >
-                  <div className="absolute left-1/2 top-0 flex h-[68px] w-[68px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#3D3D8F] text-white shadow-[0_6px_20px_rgba(26,26,74,0.22)]">
-                    <ServiceCardIcon index={index} />
-                  </div>
-                  <h3
-                    className="text-[15px] font-semibold leading-snug text-[#3D3D8F] sm:text-[16px]"
-                    style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                  >
-                    {service.title}
-                  </h3>
-                  <p className="mx-auto mt-2.5 max-w-[220px] text-[12px] leading-[1.65] text-[#5C5C7A]">
-                    {service.desc}
-                  </p>
-                </article>
+      {/* Stats bar — overlaps hero, compact */}
+      <section className="relative z-10 mx-auto max-w-[920px] px-4 sm:px-6 lg:px-8">
+        <div className="-mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_12px_36px_rgba(46,0,75,0.1)] sm:-mt-12 md:grid-cols-5">
+          {stats.map((stat, idx) => (
+            <div
+              key={stat.label}
+              className={[
+                "flex flex-col items-center justify-center px-2 py-3.5 text-center sm:py-4",
+                idx !== stats.length - 1 ? "md:border-r md:border-[#EEF0FA]" : "",
+                idx % 2 === 0 && idx < stats.length - 1 ? "border-r border-[#EEF0FA] md:border-r" : "",
+                idx < stats.length - 2 ? "border-b border-[#EEF0FA] md:border-b-0" : "",
+                idx === stats.length - 1 ? "col-span-2 md:col-span-1" : "",
+              ].join(" ")}
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
+                {stat.icon}
+              </span>
+              <p className="mt-1.5 text-[15px] font-semibold leading-none text-[#2E004B] sm:text-[16px]">
+                {stat.value}
+              </p>
+              <p className="mt-1 text-[10px] text-[#6B6B8A]">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* About — content-height columns + highlights row */}
+      <section id="expert-about" className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-start lg:gap-6">
+          {/* Left — short summary only */}
+          <div className="rounded-2xl border border-[#E8EAF4] bg-white p-5 shadow-[0_4px_24px_rgba(46,0,75,0.05)] sm:p-6 lg:col-span-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
+              About Me +
+            </p>
+            <h2
+              className="mt-2 text-[22px] font-semibold leading-tight text-[#2E004B] sm:text-[24px]"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
+              About {fullName}
+            </h2>
+            <p className="mt-1 text-[12px] text-[#8A8AA8]">Who am I in short</p>
+
+            <div className="mt-4 space-y-3 text-justify text-[13px] leading-[1.75] text-[#4A4A6A]">
+              {summaryAbout.map((para, index) => (
+                <p key={`about-${index}`} className="line-clamp-6">
+                  {para}
+                </p>
               ))}
+            </div>
+
+            {aboutParagraphs.length > 1 && (
+              <p className="mt-2 text-[11px] text-[#8A8AA8]">
+                +{aboutParagraphs.length - 1} more in full profile below
+              </p>
+            )}
+
+            <a
+              href="#expert-about-full"
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#2E004B]/12 bg-[#F7F5FC] px-4 py-2.5 text-[12px] font-semibold text-[#2E004B] transition hover:border-[#D4AF37]/40 sm:w-auto"
+            >
+              Know More About Me <ArrowIcon />
+            </a>
+          </div>
+
+          {/* Center — professional details, natural height */}
+          <div className="lg:col-span-4">
+            <div className="rounded-2xl border border-[#E8EAF4] bg-white p-5 shadow-[0_4px_24px_rgba(46,0,75,0.05)] sm:p-6">
+              <h3
+                className="text-[16px] font-semibold text-[#2E004B]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                Professional Details
+              </h3>
+
+              <div className="mt-4 grid grid-cols-1 gap-x-5 sm:grid-cols-2">
+                <DetailRow label="Profession" value={expert.profession} />
+                <DetailRow label="Experience" value={expert.experienceDetail} />
+                <DetailRow label="Location" value={expert.location} />
+                <DetailRow label="Languages" value={expert.languages.join(", ")} />
+                {expert.education.length > 0 && (
+                  <DetailRow label="Education" value={expert.education.join(" • ")} />
+                )}
+              </div>
+
+              {expert.specializations.length > 0 && (
+                <div className="mt-4 border-t border-[#EEF0FA] pt-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
+                    Core Specializations
+                  </p>
+                  <div className="mt-2.5 flex flex-wrap gap-2">
+                    {expert.specializations.map((spec) => (
+                      <span
+                        key={spec}
+                        className="rounded-full border border-[#E8EAF4] bg-[#FAFBFF] px-3 py-1 text-[11px] font-medium text-[#4A4A6A]"
+                      >
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {expert.certifications.length > 0 && (
+                <div className="mt-4 border-t border-[#EEF0FA] pt-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
+                    Certifications
+                  </p>
+                  <ul className="mt-2.5 space-y-1.5">
+                    {expert.certifications.map((cert) => (
+                      <li key={cert} className="flex items-start gap-2 text-[11px] text-[#4A4A6A]">
+                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#D4AF37]" />
+                        {cert}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[#EEF0FA] pt-4">
+                <div className="rounded-xl bg-[#FAFBFF] px-2 py-2.5 text-center">
+                  <p className="text-[14px] font-semibold text-[#2E004B]">{expert.sessions}</p>
+                  <p className="mt-0.5 text-[10px] text-[#8A8AA8]">Sessions</p>
+                </div>
+                <div className="rounded-xl bg-[#FAFBFF] px-2 py-2.5 text-center">
+                  <p className="text-[14px] font-semibold text-[#2E004B]">{expert.clients}</p>
+                  <p className="mt-0.5 text-[10px] text-[#8A8AA8]">Clients</p>
+                </div>
+                <div className="rounded-xl bg-[#FAFBFF] px-2 py-2.5 text-center">
+                  <p className="text-[13px] font-semibold leading-tight text-[#2E004B]">
+                    {expert.rating.split("/")[0]?.trim() || expert.rating}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-[#8A8AA8]">Rating</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right — wisdom card, content height */}
+          <div
+            className="relative overflow-hidden rounded-2xl lg:col-span-3"
+            style={{
+              backgroundImage: "url('/experts-page/cosmic-hero-bg.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-[#2E004B]/30 via-[#2E004B]/50 to-[#1A0533]/90" />
+            <div className="relative space-y-4 p-5 sm:p-6">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#D4AF37]">
+                  Words of Wisdom
+                </p>
+                <p className="mt-2 text-[12px] italic text-white/75">{expert.titles}</p>
+              </div>
+
+              <div>
+                <span className="text-[28px] leading-none text-[#D4AF37]">&ldquo;</span>
+                <p
+                  className="mt-1 text-[15px] font-medium leading-snug text-white"
+                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                >
+                  The stars incline us, they do not bind us.
+                </p>
+                <p className="mt-3 text-justify text-[11px] leading-relaxed text-white/80">
+                  {expert.highlights[1]?.desc ?? expert.bio}
+                </p>
+              </div>
+
+              {expert.highlights[3] && (
+                <div className="rounded-xl border border-white/15 bg-white/10 px-3.5 py-3 backdrop-blur-sm">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[#F0DDB8]">
+                    {expert.highlights[3].title}
+                  </p>
+                  <p className="mt-1.5 text-justify text-[11px] leading-relaxed text-white/80">
+                    {expert.highlights[3].desc}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Highlights — own row, each card height = its content */}
+        {expert.highlights.length > 0 && (
+          <div className="mt-5 grid grid-cols-1 items-start gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {expert.highlights.map((item) => (
+              <article
+                key={item.title}
+                className="rounded-xl border border-[#EEF0FA] bg-[#FAFBFF] px-4 py-3.5"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
+                    <LotusIcon />
+                  </span>
+                  <h4 className="text-[12px] font-semibold text-[#2E004B]">{item.title}</h4>
+                </div>
+                <p className="mt-2 text-justify text-[11px] leading-relaxed text-[#6B6B8A]">
+                  {item.desc}
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {/* Full about — remaining paragraphs */}
+        <div
+          id="expert-about-full"
+          className="mt-8 rounded-2xl border border-[#E8EAF4] bg-white px-6 py-8 shadow-[0_8px_32px_rgba(46,0,75,0.05)] sm:px-8"
+        >
+          <SectionHeading title="More About Me" />
+          <div className="mt-8 space-y-4 text-justify text-[13px] leading-[1.85] text-[#4A4A6A] sm:text-[14px]">
+            {(aboutParagraphs.length > 0 ? aboutParagraphs : summaryAbout).map((para, index) => (
+              <p key={`full-about-${index}`}>{para}</p>
+            ))}
+          </div>
+          {expert.certifications.length > 0 && (
+            <div className="mt-6 border-t border-[#EEF0FA] pt-6">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#2E004B]">
+                Certifications
+              </p>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {expert.certifications.map((c) => (
+                  <li
+                    key={c}
+                    className="rounded-full border border-[#E8EAF4] bg-[#F7F5FC] px-3 py-1 text-[12px] text-[#4A4A6A]"
+                  >
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Services Offered */}
+      {expert.services.length > 0 && (
+        <section id="expert-services" className="bg-[#F7F5FC] py-12 sm:py-16">
+          <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+              eyebrow="What I Offer"
+              title="Services Offered"
+            />
+
+            <div className="mt-8 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+              {expert.services.map((service, index) => {
+                const featured = index === 0;
+                return (
+                  <article
+                    key={`${service.title}-${index}`}
+                    className={[
+                      "relative flex flex-col rounded-2xl px-4 py-5 text-center transition hover:-translate-y-0.5 sm:px-5 sm:py-5",
+                      featured
+                        ? "bg-gradient-to-br from-[#2E004B] via-[#3D1068] to-[#2E004B] text-white shadow-[0_12px_36px_rgba(46,0,75,0.25)]"
+                        : "border border-[#E4E2EF] bg-white shadow-[0_4px_20px_rgba(46,0,75,0.06)] hover:border-[#D4AF37]/35",
+                    ].join(" ")}
+                  >
+                    <span
+                      className={[
+                        "mx-auto flex h-10 w-10 items-center justify-center rounded-full",
+                        featured
+                          ? "bg-[#D4AF37]/20 text-[#F0DDB8]"
+                          : "bg-[#EDEAF8] text-[#3D3D8F]",
+                      ].join(" ")}
+                    >
+                      <ServiceCardIcon index={index} />
+                    </span>
+                    <h3
+                      className={[
+                        "mt-3 text-[15px] font-semibold leading-snug sm:text-[16px]",
+                        featured ? "text-white" : "text-[#2E004B]",
+                      ].join(" ")}
+                      style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                    >
+                      {service.title}
+                    </h3>
+                    <p
+                      className={[
+                        "mx-auto mt-2 text-justify text-[12px] leading-[1.6]",
+                        featured ? "text-white/75" : "text-[#5C5C7A]",
+                      ].join(" ")}
+                    >
+                      {service.desc}
+                    </p>
+                    {featured && (
+                      <Link
+                        href="/#book"
+                        className="mt-3 inline-flex items-center justify-center gap-1 self-center rounded-full bg-[#D4AF37] px-4 py-1.5 text-[12px] font-semibold text-[#2E004B] transition hover:brightness-105"
+                      >
+                        Book Now <ArrowIcon />
+                      </Link>
+                    )}
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
       )}
 
       {/* Consultation Types */}
-      <section className="bg-white py-12 sm:py-14">
+      <section className="bg-white py-12 sm:py-16">
         <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-          <h2
-            className="text-center text-[28px] font-semibold text-[#3D3D8F] sm:text-[32px]"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-          >
-            Consultation Types
-          </h2>
+          <SectionHeading eyebrow="Choose Your Path" title="Consultation Types" />
 
-          <div className="mt-5 flex items-center justify-center gap-3 sm:gap-4">
-            <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
-            <Image
-              src="/experts-page/lotus-gold.png"
-              alt=""
-              width={20}
-              height={20}
-              unoptimized
-              className="opacity-95"
-            />
-            <span className="h-px w-16 bg-[#C9A06A]/60 sm:w-24" />
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {enabledConsultations.map((type) => (
               <div
                 key={type.label}
-                className="flex min-h-[96px] items-center gap-4 rounded-2xl border border-[#E4E2EF] bg-white px-5 py-5 shadow-[0_2px_12px_rgba(26,26,74,0.04)]"
+                className="group rounded-2xl border border-[#E4E2EF] bg-white px-4 py-5 text-center shadow-[0_2px_12px_rgba(46,0,75,0.04)] transition hover:border-[#D4AF37]/35 hover:shadow-[0_8px_24px_rgba(46,0,75,0.08)]"
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#F0F2F8] text-[#3D3D8F]">
+                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F2F8] text-[#3D3D8F] transition group-hover:bg-[#EDEAF8]">
                   {type.icon}
                 </span>
-                <div className="min-w-0">
-                  <p className="text-[14px] font-semibold leading-snug text-[#1A1A4A]">
-                    {type.label}
-                  </p>
-                  <p className="mt-1.5 text-[12px] leading-[1.55] text-[#6B6B8A]">
-                    {type.desc}
-                  </p>
-                </div>
+                <p className="mt-3 text-[14px] font-semibold text-[#2E004B]">{type.label}</p>
+                <p className="mt-1.5 text-[11px] leading-relaxed text-[#6B6B8A]">{type.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* <ExpertReviewsSection
-        expertSlug={expert.slug}
-        ratingLabel={expert.rating}
-      /> */}
-
-      {/* CTA Banner */}
-      <section className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 lg:px-8">
-        <div className="rounded-2xl bg-[#1A1A4A] px-6 py-8 sm:px-10 sm:py-10">
-          <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
-            <div>
+      {/* Why Choose — dark banner */}
+      <section className="bg-[#2E004B] py-12 sm:py-14">
+        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-start justify-between gap-10 lg:flex-row lg:items-center">
+            <div className="max-w-lg">
               <h2
-                className="text-[24px] font-semibold text-white sm:text-[28px]"
+                className="text-[26px] font-semibold text-white sm:text-[30px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
-                Ready to Transform Your Life?
+                Why Choose {fullName}?
               </h2>
-              <p className="mt-2 max-w-md text-[13px] leading-relaxed text-white/80">
-                Book a session with {firstName} and take the first step towards
-                clarity, healing, and transformation.
+              <p className="mt-3 text-[13px] leading-relaxed text-white/70 sm:text-[14px]">
+                {expert.bio}
               </p>
               <Link
                 href="/#book"
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#E8C69F] via-[#C9A06A] to-[#A67C4A] px-6 py-3 text-[14px] font-semibold text-[#1A1A4A] shadow-[0_8px_24px_rgba(201,160,106,0.35)] transition hover:brightness-105"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#F0DDB8] via-[#D4AF37] to-[#A67C4A] px-6 py-3 text-[13px] font-semibold text-[#2E004B] shadow-[0_8px_24px_rgba(212,175,55,0.3)] transition hover:brightness-105"
               >
-                Book Your Session Now <ArrowIcon />
+                Book Your Consultation <ArrowIcon />
               </Link>
             </div>
+            <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-4 lg:w-auto lg:gap-6">
+              <WhyChooseItem icon={<StarIcon />} label="Trusted Expert" />
+              <WhyChooseItem icon={<ShieldIcon />} label="100% Secure" />
+              <WhyChooseItem icon={<PeopleIcon />} label="Happy Clients" />
+              <WhyChooseItem icon={<HeartIcon />} label="Satisfaction" />
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <TrustBadge icon={<ShieldIcon />} title="100% Secure" desc="Encrypted sessions" />
-              <TrustBadge
-                icon={<StarIcon />}
-                title="Trusted Expert"
-                desc={expert.experienceDetail + " experience"}
-              />
-              <TrustBadge
-                icon={<HeartIcon />}
-                title="Satisfaction"
-                desc="Thousands of happy clients"
+      <ExpertReviewsSection expertSlug={expert.slug} ratingLabel={expert.rating} />
+
+      {/* Journey CTA — compact */}
+      <section className="bg-gradient-to-br from-[#F7F5FC] via-[#EDEAF8] to-[#F7F5FC] py-8 sm:py-10">
+        <div className="mx-auto max-w-[920px] rounded-2xl border border-[#E8EAF4]/80 bg-white/40 px-5 py-6 sm:px-7 sm:py-7">
+          <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-[1fr_140px] lg:gap-6">
+            <div>
+              <h2
+                className="text-[22px] font-semibold leading-tight text-[#2E004B] sm:text-[26px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                Start Your Journey Towards a Better Tomorrow
+              </h2>
+              <p className="mt-2 max-w-md text-[12px] leading-relaxed text-[#5C5C7A] sm:text-[13px]">
+                Book a session with {firstName} and take the first step towards clarity,
+                healing, and transformation.
+              </p>
+              <Link
+                href="/#book"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#2E004B] px-5 py-2.5 text-[13px] font-semibold text-white shadow-[0_6px_18px_rgba(46,0,75,0.18)] transition hover:bg-[#3D1068]"
+              >
+                Book Consultation Now <ArrowIcon />
+              </Link>
+            </div>
+            <div className="relative mx-auto h-[120px] w-[120px] sm:h-[140px] sm:w-[140px] lg:mx-0 lg:justify-self-end">
+              <Image
+                src="/just99/meditate.png"
+                alt=""
+                fill
+                unoptimized
+                className="object-contain"
+                sizes="140px"
               />
             </div>
           </div>
@@ -773,147 +921,56 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
   );
 }
 
-function ProfileHeaderContent({
-  expert,
-  align = "center",
+function SectionHeading({
+  eyebrow,
+  title,
 }: {
-  expert: ExpertProfile;
-  align?: "center" | "left";
-}) {
-  const center = align === "center";
-  return (
-    <>
-      <span className="inline-flex items-center gap-1.5 rounded-md border border-[#D8DAE8] bg-[#F3F4F8] px-2.5 py-1 text-[8px] font-bold uppercase tracking-[0.14em] text-[#3D3D8F] sm:text-[9px]">
-        <CheckIcon /> Verified Expert
-      </span>
-
-      <h1
-        className="mt-2.5 text-[26px] font-semibold leading-[1.15] text-[#3D3D8F] sm:text-[32px] lg:text-[36px]"
-        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-      >
-        {expert.name}
-      </h1>
-
-      <div
-        className={`mt-2.5 flex items-center gap-2.5 ${center ? "justify-center" : "justify-start"}`}
-      >
-        <span className="h-px w-12 bg-[#C9A06A]/80 sm:w-16" />
-        <Image src="/experts-page/lotus-gold.png" alt="" width={15} height={15} unoptimized />
-        <span className="h-px w-12 bg-[#C9A06A]/80 sm:w-16" />
-      </div>
-
-      <p
-        className="mt-2 text-[12px] font-medium tracking-wide text-[#C5A35E] sm:text-[13px]"
-        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-      >
-        {expert.titles}
-      </p>
-
-      <div className="mt-5 overflow-hidden rounded-xl border border-[#E8EAF4] bg-[#FAFBFF]">
-        <div
-          className={`grid grid-cols-1 divide-y divide-[#E8EAF4] sm:grid-cols-2 sm:divide-x sm:divide-y-0 ${center ? "text-center" : "text-left"}`}
-        >
-          <ProfileMetaItem
-            icon={<LocationIcon />}
-            label="Location"
-            value={expert.location}
-            centered={center}
-          />
-          <ProfileMetaItem
-            icon={<GlobeMiniIcon />}
-            label="Languages Spoken"
-            value={expert.languages.join(", ")}
-            centered={center}
-          />
-        </div>
-      </div>
-    </>
-  );
-}
-
-function ProfileMetaItem({
-  icon,
-  label,
-  value,
-  centered = false,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-  centered?: boolean;
+  eyebrow?: string;
+  title: string;
 }) {
   return (
-    <div
-      className={`flex items-start gap-3 px-4 py-4 sm:px-5 sm:py-5 ${
-        centered ? "flex-col items-center text-center sm:items-center" : ""
-      }`}
-    >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
-        {icon}
-      </span>
-      <div className={`min-w-0 ${centered ? "w-full" : "flex-1"}`}>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
-          {label}
+    <div className="text-center">
+      {eyebrow && (
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#D4AF37]">
+          {eyebrow}
         </p>
-        <p className="mt-1 text-[13px] font-semibold leading-snug text-[#1A1A4A] sm:text-[14px]">
-          {value}
-        </p>
+      )}
+      <h2
+        className={`${eyebrow ? "mt-2" : ""} text-[28px] font-semibold text-[#2E004B] sm:text-[32px]`}
+        style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+      >
+        {title}
+      </h2>
+      <div className="mt-4 flex items-center justify-center gap-3">
+        <span className="h-px w-16 bg-[#D4AF37]/60 sm:w-24" />
+        <Image src="/just99/lotus.png" alt="" width={22} height={22} unoptimized />
+        <span className="h-px w-16 bg-[#D4AF37]/60 sm:w-24" />
       </div>
     </div>
   );
 }
 
-function StatItem({
-  icon,
-  label,
-  value,
-}: {
-  icon: ReactNode;
-  label: string;
-  value: string;
-}) {
+function WhyChooseItem({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <div className="flex flex-col items-center gap-2 text-center">
-      <span className="text-[#3D3D8F]">{icon}</span>
-      <p className="text-[11px] text-[#8A8AA8]">{label}</p>
-      <p className="text-[13px] font-semibold text-[#1A1A4A]">{value}</p>
+      <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 text-[#F0DDB8]">
+        {icon}
+      </span>
+      <p className="text-[12px] font-medium text-white/85">{label}</p>
     </div>
   );
 }
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="mt-3">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
+    <div className="mt-2.5 border-b border-[#F3F4FA] pb-2.5 last:border-b-0 last:pb-0">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[#8A8AA8]">
         {label}
       </p>
-      <p className="mt-0.5 text-[13px] font-medium text-[#1A1A4A]">{value}</p>
+      <p className="mt-0.5 text-[12px] font-medium leading-snug text-[#1A1A4A]">{value}</p>
     </div>
   );
 }
-
-function TrustBadge({
-  icon,
-  title,
-  desc,
-}: {
-  icon: ReactNode;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 text-white">
-        {icon}
-      </span>
-      <div>
-        <p className="text-[13px] font-semibold text-white">{title}</p>
-        <p className="text-[11px] text-white/70">{desc}</p>
-      </div>
-    </div>
-  );
-}
-
 
 function ServiceCardIcon({ index }: { index: number }) {
   const icons = [
