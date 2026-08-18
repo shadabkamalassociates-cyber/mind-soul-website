@@ -257,10 +257,10 @@ a {
   display: none;
 }
 
-/* Responsive visible cards: 1 → 2 → 3 → 5 (no half-cut peeks) */
+/* Responsive visible cards: mobile peek → 2 → 3 → 5 */
 .session-card {
   --session-gap: 16px;
-  width: 100%;
+  width: min(300px, 88vw);
   scroll-snap-align: start;
   scroll-snap-stop: always;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -314,7 +314,6 @@ a {
 }
 
 .carousel-side-btn-light {
-  display: flex;
   height: 42px;
   width: 42px;
   align-items: center;
@@ -625,7 +624,6 @@ a:hover .expert-arrow-circle {
 }
 
 .blog-carousel-side-btn {
-  display: flex;
   height: 42px;
   width: 42px;
   align-items: center;
@@ -689,6 +687,11 @@ a:hover .expert-arrow-circle {
   .blog-card {
     width: calc((100% - (4 * var(--blog-gap))) / 5);
   }
+}
+
+.blog-card-mobile {
+  width: 100%;
+  min-width: 0;
 }
 
 /* Community Reviews */
@@ -1785,6 +1788,12 @@ a:hover .expert-arrow-circle {
     height: 100dvh;
     overflow: hidden;
   }
+
+  .just99-layout-fit:has(.just99-landing-form-step) {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow: visible !important;
+  }
 }
 
 /* Just99 landing page */
@@ -1798,9 +1807,19 @@ a:hover .expert-arrow-circle {
 }
 
 @media (min-width: 1024px) {
-  .just99-landing {
-    height: 100%;
-    overflow: hidden;
+  .just99-layout-fit:has(.just99-landing-form-step) {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow: visible !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .just99-landing:has(.just99-landing-form-step),
+  .just99-landing.just99-landing-form-step {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow: visible !important;
   }
 }
 
@@ -1835,6 +1854,13 @@ a:hover .expert-arrow-circle {
     min-height: 0;
     flex: 1;
     overflow: hidden;
+  }
+
+  .just99-page-form-step.just99-page-fit,
+  .just99-landing-form-step .just99-page-form-step {
+    flex: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
   }
 }
 
@@ -2954,6 +2980,13 @@ a:hover .expert-arrow-circle {
   margin-left: -2.75rem;
 }
 
+.just99-offer-wrap-landing-form {
+  justify-content: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  transform: none !important;
+}
+
 .just99-offer-card-landing {
   position: relative;
   z-index: 5;
@@ -3652,6 +3685,13 @@ a:hover .expert-arrow-circle {
     height: 100%;
     overflow: hidden;
   }
+
+  .just99-landing-fit.just99-landing-form-step,
+  .just99-landing-fit:has(.just99-landing-form-step) {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow: visible !important;
+  }
 }
 
 .just99-landing-fit .just99-page {
@@ -3672,6 +3712,13 @@ a:hover .expert-arrow-circle {
     flex: 1;
     overflow: hidden;
   }
+
+  .just99-landing-fit .just99-shell-form-step,
+  .just99-landing-fit.just99-landing-form-step .just99-shell-fit {
+    flex: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -3682,6 +3729,13 @@ a:hover .expert-arrow-circle {
     overflow: hidden !important;
     align-items: center;
     grid-template-columns: minmax(250px, 0.95fr) minmax(280px, 0.82fr) !important;
+  }
+
+  .just99-landing-fit .just99-main-landing-form-step {
+    flex: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 1rem !important;
   }
 }
 
@@ -3760,6 +3814,13 @@ a:hover .expert-arrow-circle {
     width: 100%;
     z-index: 6;
     transform: translateX(-5.75rem);
+  }
+
+  .just99-landing-fit .just99-offer-wrap-landing-form {
+    transform: none !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
 
   .just99-landing-fit .just99-mid-grid {
@@ -4100,12 +4161,29 @@ a:hover .expert-arrow-circle {
   z-index: 4;
 }
 
+.just99-landing-fit .just99-bottom-form-step,
+.just99-landing-fit .just99-page .just99-bottom-form-step {
+  margin-top: 1rem !important;
+}
+
+@media (min-width: 1024px) {
+  .just99-landing-fit .just99-bottom-form-step,
+  .just99-landing-fit .just99-page .just99-bottom-form-step {
+    margin-top: 1.5rem !important;
+  }
+}
+
 /* 5th SC: full width, tighter height */
 .just99-landing-fit .just99-page .just99-perks-bar {
   padding: 0 !important;
   background: transparent !important;
   width: 100%;
   margin-top: -0.25rem;
+}
+
+.just99-landing-fit .just99-bottom-form-step .just99-perks-bar,
+.just99-landing-fit .just99-page .just99-bottom-form-step .just99-perks-bar {
+  margin-top: 0.5rem !important;
 }
 
 .just99-landing-fit .just99-page .just99-perks {
@@ -4293,6 +4371,12 @@ a:hover .expert-arrow-circle {
     transform: translateX(-6.25rem);
   }
 
+  .just99-landing-fit .just99-offer-wrap-landing-form {
+    transform: none !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+  }
+
   .just99-landing-fit .just99-main-landing .just99-right {
     padding-right: 3.75rem !important;
   }
@@ -4389,6 +4473,15 @@ a:hover .expert-arrow-circle {
     margin: 0.65rem auto 0.85rem !important;
     transform: none !important;
     padding: 0 !important;
+  }
+
+  .just99-landing-fit .just99-offer-wrap-landing-form,
+  .just99-offer-wrap-landing-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    padding: 0.5rem 0.625rem 0.85rem !important;
   }
 
   .just99-landing-fit .just99-offer-card-landing,

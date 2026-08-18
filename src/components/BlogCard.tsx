@@ -5,16 +5,20 @@ import type { BlogArticle } from "@/types/blog";
 type BlogCardProps = {
   article: BlogArticle;
   variant?: "overlay" | "listing";
+  compact?: boolean;
   className?: string;
 };
 
 export default function BlogCard({
   article,
   variant = "listing",
+  compact = false,
   className = "",
 }: BlogCardProps) {
   if (variant === "overlay") {
-    return <BlogCardOverlay article={article} className={className} />;
+    return (
+      <BlogCardOverlay article={article} compact={compact} className={className} />
+    );
   }
 
   return (
@@ -62,9 +66,11 @@ export default function BlogCard({
 
 function BlogCardOverlay({
   article,
+  compact = false,
   className = "",
 }: {
   article: BlogArticle;
+  compact?: boolean;
   className?: string;
 }) {
   return (
@@ -72,29 +78,47 @@ function BlogCardOverlay({
       href={`/blogs/${article.slug}`}
       className={`group block h-full w-full ${className}`}
     >
-      <article className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-[#D8C4EF]/80 bg-[#3B1C5B] shadow-[0_6px_24px_rgba(59,28,91,0.1)] transition duration-300 hover:border-[#C5A059]/50 hover:shadow-[0_12px_32px_rgba(59,28,91,0.16)]">
-        <div className="relative aspect-[3/3.6] w-full overflow-hidden">
+      <article className="relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-[#D8C4EF]/80 bg-[#3B1C5B] shadow-[0_4px_16px_rgba(59,28,91,0.1)] transition duration-300 hover:border-[#C5A059]/50 hover:shadow-[0_10px_24px_rgba(59,28,91,0.14)] sm:rounded-2xl sm:shadow-[0_6px_24px_rgba(59,28,91,0.1)]">
+        <div
+          className={`relative w-full overflow-hidden ${
+            compact ? "aspect-[4/3]" : "aspect-[3/3.6]"
+          }`}
+        >
           <Image
             src={article.image}
             alt={article.title}
             fill
             unoptimized
             className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
-            sizes="(max-width: 640px) 78vw, (max-width: 1280px) 33vw, 20vw"
+            sizes={
+              compact
+                ? "(max-width: 640px) 46vw, 260px"
+                : "(max-width: 640px) 78vw, (max-width: 1280px) 33vw, 20vw"
+            }
             quality={95}
           />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#3B1C5B]/95 via-[#4B2475]/55 to-transparent" />
 
-          <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col p-4">
+          <div
+            className={`absolute inset-x-0 bottom-0 z-10 flex flex-col ${
+              compact ? "p-2.5" : "p-4"
+            }`}
+          >
             <h3
-              className="line-clamp-3 text-[14px] font-semibold leading-snug text-white sm:text-[15px]"
+              className={`line-clamp-2 font-semibold leading-snug text-white ${
+                compact ? "text-[11px]" : "text-[14px] sm:text-[15px]"
+              }`}
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               {article.title}
             </h3>
-            <p className="mt-2 text-[11px] text-white/85 sm:text-[12px]">
+            <p
+              className={`text-white/85 ${
+                compact ? "mt-1 text-[9px]" : "mt-2 text-[11px] sm:text-[12px]"
+              }`}
+            >
               {article.date}
-              <span className="mx-1.5 text-[#C5A059]/80">•</span>
+              <span className="mx-1 text-[#C5A059]/80">•</span>
               {article.readTime}
             </p>
           </div>

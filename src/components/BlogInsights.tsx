@@ -56,52 +56,67 @@ export default function BlogInsights() {
   }
 
   return (
-    <section id="blog" className="blog-insights-section relative w-full overflow-hidden bg-gradient-to-br from-[#F8F2FD] via-[#EDE4F8] to-[#ECE4F8] py-10 sm:py-12 lg:py-14">
-      <div className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-10 xl:px-12">
-        <div className="mb-6 flex items-end justify-between gap-4 sm:mb-8">
-          <div>
-            <h2
-              className="text-[28px] font-medium leading-tight text-[#3B1C5B] sm:text-[34px] lg:text-[40px]"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-            >
-              From Our Blog & Insights
-            </h2>
-            <p className="mt-1.5 text-[13px] text-[#6B5B8A] sm:text-[14px]">
-              Wisdom for your everyday life
-            </p>
-          </div>
+    <section id="blog" className="blog-insights-section relative w-full overflow-hidden bg-gradient-to-br from-[#F8F2FD] via-[#EDE4F8] to-[#ECE4F8] py-8 sm:py-12 lg:py-14">
+      <div className="relative mx-auto max-w-[1400px] px-4 sm:px-8 lg:px-10 xl:px-12">
+        <div className="mb-5 sm:mb-8">
+          <div className="flex items-start justify-between gap-3 sm:items-end sm:gap-4">
+            <div className="min-w-0 flex-1">
+              <h2
+                className="text-[24px] font-medium leading-tight text-[#3B1C5B] sm:text-[34px] lg:text-[40px]"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                From Our Blog & Insights
+              </h2>
+              <p className="mt-1 text-[12px] text-[#6B5B8A] sm:mt-1.5 sm:text-[14px]">
+                Wisdom for your everyday life
+              </p>
+              <Link
+                href="/blogs"
+                className="mt-2.5 inline-flex items-center gap-1 text-[12px] font-semibold text-[#4B2475] sm:hidden"
+              >
+                View All Articles
+                <ArrowRightIcon />
+              </Link>
+            </div>
 
-          <div className="hidden items-center gap-3 sm:flex">
-            <Link
-              href="/blogs"
-              className="text-[13px] font-medium text-[#4B2475] transition hover:text-[#C5A059]"
-            >
-              View All Articles
-            </Link>
-            <div className="flex items-center gap-2">
-              <CarouselBtn direction="prev" onClick={() => scrollByCard(-1)} />
-              <CarouselBtn direction="next" onClick={() => scrollByCard(1)} />
+            <div className="hidden items-center gap-3 sm:flex">
+              <Link
+                href="/blogs"
+                className="text-[13px] font-medium text-[#4B2475] transition hover:text-[#C5A059]"
+              >
+                View All Articles
+              </Link>
+              {articles.length > 1 && (
+                <div className="flex items-center gap-2">
+                  <CarouselBtn direction="prev" onClick={() => scrollByCard(-1)} />
+                  <CarouselBtn direction="next" onClick={() => scrollByCard(1)} />
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         <div className="relative">
-          <button
-            type="button"
-            aria-label="Previous articles"
-            onClick={() => scrollByCard(-1)}
-            className="blog-carousel-side-btn absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
-          >
-            <ChevronLeft />
-          </button>
-          <button
-            type="button"
-            aria-label="Next articles"
-            onClick={() => scrollByCard(1)}
-            className="blog-carousel-side-btn absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
-          >
-            <ChevronRight />
-          </button>
+          {articles.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Previous articles"
+                onClick={() => scrollByCard(-1)}
+                className="blog-carousel-side-btn absolute top-1/2 left-0 z-20 hidden -translate-x-1/2 -translate-y-1/2 lg:flex"
+              >
+                <ChevronLeft />
+              </button>
+              <button
+                type="button"
+                aria-label="Next articles"
+                onClick={() => scrollByCard(1)}
+                className="blog-carousel-side-btn absolute top-1/2 right-0 z-20 hidden translate-x-1/2 -translate-y-1/2 lg:flex"
+              >
+                <ChevronRight />
+              </button>
+            </>
+          )}
 
           {isLoading && (
             <p className="py-12 text-center text-[14px] text-[#8A8AA8]">
@@ -122,27 +137,29 @@ export default function BlogInsights() {
           )}
 
           {!isLoading && !error && articles.length > 0 && (
-            <div
-              ref={scrollerRef}
-              className="blog-scroller flex gap-4 overflow-x-auto scroll-smooth"
-            >
-              {articles.map((article) => (
-                <div key={article.id} data-blog-card className="blog-card shrink-0">
-                  <BlogCard article={article} variant="overlay" />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+            <>
+              {/* Mobile — compact 2-column grid */}
+              <div className="grid grid-cols-2 gap-3 sm:hidden">
+                {articles.slice(0, 4).map((article) => (
+                  <div key={article.id} data-blog-card className="blog-card-mobile shrink-0">
+                    <BlogCard article={article} variant="overlay" compact />
+                  </div>
+                ))}
+              </div>
 
-        <div className="mt-5 flex items-center justify-between sm:hidden">
-          <Link href="/blogs" className="text-[13px] font-medium text-[#4B2475]">
-            View All Articles
-          </Link>
-          <div className="flex items-center gap-2">
-            <CarouselBtn direction="prev" onClick={() => scrollByCard(-1)} />
-            <CarouselBtn direction="next" onClick={() => scrollByCard(1)} />
-          </div>
+              {/* Tablet+ — carousel */}
+              <div
+                ref={scrollerRef}
+                className="blog-scroller hidden gap-4 overflow-x-auto scroll-smooth sm:flex"
+              >
+                {articles.map((article) => (
+                  <div key={article.id} data-blog-card className="blog-card shrink-0">
+                    <BlogCard article={article} variant="overlay" />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>
@@ -187,6 +204,20 @@ function ChevronRight() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
         d="M6 3.5L10.5 8L6 12.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12"
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"

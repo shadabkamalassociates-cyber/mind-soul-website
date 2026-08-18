@@ -118,42 +118,45 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Programs */}
-          <div className="lg:col-span-3">
-            <FooterHeading>Our Programs</FooterHeading>
-            <ul className="mt-4 space-y-3.5">
-              {programs.map((p) => (
-                <li key={p.title}>
-                  <Link href="/#programs" className="block transition hover:opacity-90">
-                    <p className="text-[13px] font-medium text-[#1A1A4A]">{p.title}</p>
-                    <p className="mt-0.5 text-[11px] leading-snug text-[#6B6B88]">
-                      {p.desc}
-                    </p>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/#programs"
-              className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
-            >
-              View All Programs
-              <ArrowRight />
-            </Link>
-          </div>
+          {/* Programs + Support — side-by-side on mobile only */}
+          <div className="grid grid-cols-2 gap-4 sm:contents sm:gap-0">
+            {/* Programs */}
+            <div className="lg:col-span-3">
+              <FooterHeading>Our Programs</FooterHeading>
+              <ul className="mt-4 space-y-3.5">
+                {programs.map((p) => (
+                  <li key={p.title}>
+                    <Link href="/#programs" className="block transition hover:opacity-90">
+                      <p className="text-[13px] font-medium text-[#1A1A4A]">{p.title}</p>
+                      <p className="mt-0.5 text-[11px] leading-snug text-[#6B6B88]">
+                        {p.desc}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/#programs"
+                className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-[#3D3D8F] transition hover:text-[#1A1A4A]"
+              >
+                View All Programs
+                <ArrowRight />
+              </Link>
+            </div>
 
-          {/* Support */}
-          <div className="lg:col-span-2">
-            <FooterHeading>Support</FooterHeading>
-            <ul className="mt-4 space-y-2.5">
-              {supportLinks.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="footer-link text-[13px]">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {/* Support */}
+            <div className="lg:col-span-2">
+              <FooterHeading>Support</FooterHeading>
+              <ul className="mt-4 space-y-2.5">
+                {supportLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link href={link.href} className="footer-link text-[13px]">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Follow + CTA */}

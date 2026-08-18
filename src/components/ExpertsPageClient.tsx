@@ -84,45 +84,49 @@ export default function ExpertsPageClient() {
       <Header />
 
       <section className="relative overflow-hidden bg-white">
-        <div className="mx-auto grid max-w-[1400px] items-center gap-6 px-3 pt-8 pb-10 sm:px-4 lg:grid-cols-[1fr_1.2fr] lg:gap-2 lg:px-5 lg:pt-10 lg:pb-12">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-4 px-4 pt-6 pb-8 sm:gap-6 sm:px-4 sm:pt-8 sm:pb-10 lg:grid-cols-[1fr_1.2fr] lg:gap-2 lg:px-5 lg:pt-10 lg:pb-12">
           <div className="relative z-10 max-w-[520px] lg:pl-2">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C9A06A]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C9A06A] sm:text-[11px] sm:tracking-[0.22em]">
               OUR EXPERTS —
             </p>
             <h1
-              className="mt-3 text-[34px] font-semibold leading-[1.15] tracking-[-0.02em] text-[#3D3D8F] sm:text-[40px] lg:text-[44px]"
+              className="mt-2 text-[28px] font-semibold leading-[1.12] tracking-[-0.02em] text-[#3D3D8F] sm:mt-3 sm:text-[40px] lg:text-[44px]"
               style={{ fontFamily: "var(--font-playfair), serif" }}
             >
               Guided by Experts.
               <br />
               Transformed by Wisdom.
             </h1>
-            <div className="mt-4 flex items-center gap-3">
-              <span className="h-px w-10 bg-[#C9A06A]/70" />
+            <div className="mt-3 flex items-center gap-2.5 sm:mt-4 sm:gap-3">
+              <span className="h-px w-8 bg-[#C9A06A]/70 sm:w-10" />
               <Image
                 src="/experts-page/lotus-gold.png"
                 alt=""
-                width={18}
-                height={18}
+                width={16}
+                height={16}
                 unoptimized
+                className="sm:h-[18px] sm:w-[18px]"
               />
-              <span className="h-px w-10 bg-[#C9A06A]/70" />
+              <span className="h-px w-8 bg-[#C9A06A]/70 sm:w-10" />
             </div>
-            <p className="mt-5 max-w-[460px] text-[14px] leading-[1.75] text-[#5C5C7A] sm:text-[15px]">
+            <p className="mt-3 max-w-[460px] text-[13px] leading-[1.65] text-[#5C5C7A] sm:mt-5 sm:text-[15px] sm:leading-[1.75]">
               Connect with verified guides for clarity, healing, and
               transformation — curated for your unique journey.
             </p>
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-4">
+            <div className="mt-4 grid grid-cols-2 gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-4">
               {heroFeatures.map((f) => (
-                <div key={f.title} className="flex flex-col gap-2">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C9A06A]/35 text-[#C9A06A]">
+                <div
+                  key={f.title}
+                  className="flex items-start gap-2 rounded-xl border border-[#E8EAF4] bg-[#F8F9FC] p-2.5 sm:flex-col sm:items-stretch sm:gap-2 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#C9A06A]/35 text-[#C9A06A] sm:h-10 sm:w-10">
                     {f.icon}
                   </span>
-                  <div>
-                    <p className="text-[12px] font-semibold text-[#1A1A4A] sm:text-[13px]">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold leading-snug text-[#1A1A4A] sm:text-[13px]">
                       {f.title}
                     </p>
-                    <p className="mt-0.5 text-[11px] leading-snug text-[#8A8AA8]">
+                    <p className="mt-0.5 text-[10px] leading-snug text-[#8A8AA8] sm:text-[11px]">
                       {f.desc}
                     </p>
                   </div>

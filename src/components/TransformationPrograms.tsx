@@ -252,48 +252,49 @@ function HowSoulSenseiWorks() {
           How Cosmicguruji Works
         </h3>
 
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4 lg:gap-3">
           {workSteps.map((step, index) => (
-            <div key={step.number} className="relative">
-              <div className="flex items-start gap-2.5">
-                <div className="flex min-w-0 flex-1 items-start gap-2.5">
-                  <div className="shrink-0">
-                    <p className="text-[11px] font-semibold tracking-[0.16em] text-[#C5A059]">
-                      {step.number}
-                    </p>
-                    <div className="relative mt-1.5 flex h-[44px] w-[44px] items-center justify-center rounded-full bg-white/70 shadow-[0_3px_10px_rgba(75,36,117,0.07)] ring-1 ring-[#D8C4EF]/60">
-                      <div className="relative h-[32px] w-[32px]">
-                        <Image
-                          src={step.icon}
-                          alt=""
-                          fill
-                          unoptimized
-                          className="object-contain"
-                          sizes="32px"
-                          quality={95}
-                        />
-                      </div>
+            <article
+              key={step.number}
+              className="works-step-card relative flex flex-col rounded-xl bg-white/85 p-3 ring-1 ring-[#D8C4EF]/70 shadow-[0_4px_14px_rgba(75,36,117,0.06)] sm:p-3.5 lg:flex-row lg:items-start lg:bg-transparent lg:p-0 lg:shadow-none lg:ring-0"
+            >
+              <div className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-start lg:gap-2.5">
+                <div className="shrink-0">
+                  <p className="text-[10px] font-semibold tracking-[0.14em] text-[#C5A059] sm:text-[11px]">
+                    {step.number}
+                  </p>
+                  <div className="relative mt-1.5 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-[0_3px_10px_rgba(75,36,117,0.07)] ring-1 ring-[#D8C4EF]/60 sm:h-11 sm:w-11 lg:h-[44px] lg:w-[44px]">
+                    <div className="relative h-7 w-7 sm:h-8 sm:w-8 lg:h-[32px] lg:w-[32px]">
+                      <Image
+                        src={step.icon}
+                        alt=""
+                        fill
+                        unoptimized
+                        className="object-contain"
+                        sizes="32px"
+                        quality={95}
+                      />
                     </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <h4 className="text-[14px] font-semibold leading-tight text-[#3B1C5B]">
-                      {step.title}
-                    </h4>
-                    <p className="mt-0.5 max-w-[165px] text-[11px] leading-snug text-[#6B5B8A]">
-                      {step.description}
-                    </p>
                   </div>
                 </div>
 
-                {index < workSteps.length - 1 ? (
-                  <div className="works-connector mt-[18px] hidden lg:flex" aria-hidden>
-                    <span className="works-connector-line" />
-                    <span className="works-connector-arrow">→</span>
-                  </div>
-                ) : null}
+                <div className="mt-2 lg:mt-0 lg:pt-2">
+                  <h4 className="text-[12px] font-semibold leading-snug text-[#3B1C5B] sm:text-[14px]">
+                    {step.title}
+                  </h4>
+                  <p className="mt-0.5 text-[10px] leading-snug text-[#6B5B8A] sm:text-[11px] lg:max-w-[165px]">
+                    {step.description}
+                  </p>
+                </div>
               </div>
-            </div>
+
+              {index < workSteps.length - 1 ? (
+                <div className="works-connector mt-[18px] hidden lg:flex" aria-hidden>
+                  <span className="works-connector-line" />
+                  <span className="works-connector-arrow">→</span>
+                </div>
+              ) : null}
+            </article>
           ))}
         </div>
       </div>

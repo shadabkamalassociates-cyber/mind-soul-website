@@ -1121,3 +1121,151 @@
     padding-top: env(safe-area-inset-top);
   }
 }
+
+/* Landing page — details form wrapper (no offer-card offset) */
+.just99-offer-wrap-landing-form {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding: 0.5rem 0.75rem 1rem !important;
+}
+
+@media (min-width: 1024px) {
+  .just99-landing-fit .just99-offer-wrap-landing-form {
+    transform: none !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    padding: 0.5rem 1rem !important;
+  }
+
+  .just99-landing-fit .just99-main-landing-form-step .just99-right {
+    padding-right: 1rem !important;
+    padding-left: 0.75rem !important;
+    overflow: visible !important;
+    align-items: center !important;
+  }
+
+  .just99-landing-fit .just99-main-landing-form-step {
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .just99-landing-fit .just99-main-landing-form-step .just99-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0.5rem 0.75rem 1rem !important;
+    overflow: visible !important;
+    align-items: center !important;
+  }
+
+  .just99-landing-fit .just99-offer-wrap-landing-form,
+  .just99-offer-wrap-landing-form {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0.5rem 0.625rem 0.85rem !important;
+  }
+}
+
+/* Form step — push perks + mid sections down so form has room */
+.just99-landing-form-step {
+  height: auto !important;
+  min-height: 100dvh;
+  overflow-y: auto !important;
+}
+
+.just99-layout-fit:has(.just99-landing-form-step) {
+  height: auto !important;
+  min-height: 100dvh;
+  overflow-y: auto !important;
+}
+
+.just99-landing-form-step .just99-page-fit {
+  flex: none !important;
+  min-height: auto !important;
+  overflow: visible !important;
+}
+
+.just99-shell-form-step {
+  overflow: visible !important;
+}
+
+.just99-shell-form-step .just99-main-landing {
+  flex: none !important;
+  min-height: auto !important;
+  overflow: visible !important;
+  padding-bottom: 0.75rem !important;
+}
+
+.just99-bottom-form-step {
+  margin-top: 1rem !important;
+}
+
+.just99-landing-sections-form-step {
+  margin-top: 0.5rem;
+}
+
+.just99-landing-fit .just99-bottom-form-step {
+  margin-top: 1rem !important;
+}
+
+@media (min-width: 1024px) {
+  .just99-landing-fit .just99-bottom-form-step {
+    margin-top: 1.5rem !important;
+  }
+
+  .just99-landing-fit .just99-bottom-form-step .just99-perks-bar {
+    margin-top: 0.5rem !important;
+  }
+
+  .just99-landing-fit .just99-landing-sections-form-step {
+    margin-top: 1rem;
+  }
+
+  .just99-landing-fit .just99-landing-sections-form-step .just99-mid-section {
+    padding-top: 0.75rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .just99-layout-fit:has(.just99-landing-form-step) {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow: visible !important;
+  }
+
+  .just99-landing.just99-landing-form-step,
+  .just99-landing-fit.just99-landing-form-step {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow: visible !important;
+  }
+
+  .just99-landing-fit.just99-landing-form-step .just99-page-form-step,
+  .just99-page-form-step.just99-page-fit {
+    flex: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  .just99-landing-fit.just99-landing-form-step .just99-shell-form-step,
+  .just99-shell-form-step.just99-shell-fit {
+    flex: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  .just99-landing-fit .just99-main-landing-form-step {
+    flex: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 1.25rem !important;
+  }
+}

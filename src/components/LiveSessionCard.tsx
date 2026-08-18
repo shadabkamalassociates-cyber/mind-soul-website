@@ -14,9 +14,9 @@ type LiveSessionCardProps = {
 
 export default function LiveSessionCard({ session }: LiveSessionCardProps) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_4px_16px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(26,26,74,0.10)]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#E4E2EF] bg-white shadow-[0_4px_20px_rgba(26,26,74,0.06)] transition hover:-translate-y-0.5 hover:border-[rgba(61,61,143,0.28)] hover:shadow-[0_10px_28px_rgba(26,26,74,0.12)]">
       <Link href={`/live-sessions/${session.slug}`} className="block">
-        <div className="relative aspect-[2/1] w-full overflow-hidden bg-gradient-to-br from-[#141432] via-[#1A1A4A] to-[#252560]">
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br from-[#141432] via-[#1A1A4A] to-[#252560] sm:aspect-[2/1]">
           <Image
             src={session.image}
             alt={session.title}
@@ -25,7 +25,7 @@ export default function LiveSessionCard({ session }: LiveSessionCardProps) {
             className="object-contain object-center p-1 transition duration-500 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
-          <span className="absolute left-2 top-2 max-w-[calc(100%-2.75rem)] truncate rounded bg-[#C9A06A] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-[0.1em] text-white">
+          <span className="absolute left-2.5 top-2.5 max-w-[calc(100%-3rem)] truncate rounded-md bg-[#C9A06A] px-2 py-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white sm:text-[9px]">
             {session.category}
           </span>
           <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-md border border-white/10 bg-[#1A1A4A]/88 px-1.5 py-0.5 shadow-sm backdrop-blur-sm">
@@ -50,28 +50,28 @@ export default function LiveSessionCard({ session }: LiveSessionCardProps) {
           </button>
         </div>
 
-        <div className="flex flex-col px-3 pb-2.5 pt-2">
+        <div className="flex flex-col px-3.5 pb-3 pt-2.5 sm:px-3 sm:pb-2.5 sm:pt-2">
           <h3
-            className="line-clamp-2 text-[13px] font-semibold leading-[1.3] text-[#3D3D8F] sm:text-[14px]"
+            className="line-clamp-2 min-h-[2.5rem] text-[14px] font-semibold leading-[1.35] text-[#3D3D8F] sm:min-h-0 sm:text-[14px]"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
           >
             {session.title}
           </h3>
 
-          <div className="mt-1.5 flex items-center gap-1.5">
+          <div className="mt-2 flex items-center gap-2">
             <ExpertAvatar src={session.avatar} alt={session.expert} />
             <div className="min-w-0">
-              <p className="truncate text-[10px] font-semibold text-[#1A1A4A]">
+              <p className="truncate text-[11px] font-semibold text-[#1A1A4A] sm:text-[10px]">
                 with {session.expert}
               </p>
-              <p className="truncate text-[9px] text-[#8A8AA8]">{session.role}</p>
+              <p className="truncate text-[10px] text-[#8A8AA8] sm:text-[9px]">{session.role}</p>
             </div>
           </div>
         </div>
       </Link>
 
-      <div className="mt-auto flex items-center justify-between gap-2 border-t border-[#E8EAF4] px-3 pb-2.5 pt-1.5">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 text-[9px] text-[#5C5C7A] sm:text-[10px]">
+      <div className="mt-auto flex flex-col gap-2.5 border-t border-[#EEF0FA] px-3.5 pb-3 pt-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:px-3 sm:pb-2.5 sm:pt-1.5">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[#5C5C7A] sm:gap-x-2.5 sm:text-[10px]">
           <span className="inline-flex shrink-0 items-center gap-1">
             <CalendarIcon />
             {session.date}
@@ -87,6 +87,7 @@ export default function LiveSessionCard({ session }: LiveSessionCardProps) {
           discount={0}
           label="Book Now →"
           variant="inline"
+          className="w-full justify-center sm:w-auto"
         />
       </div>
     </article>

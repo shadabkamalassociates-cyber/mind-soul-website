@@ -427,6 +427,11 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
     aboutParagraphs.length > 0
       ? aboutParagraphs.slice(0, 1)
       : [expert.bio].filter((text) => text && !/^no bio provided\.?$/i.test(text.trim()));
+  const whyChooseBio =
+    aboutParagraphs[0] ??
+    (expert.bio && !/^no bio provided\.?$/i.test(expert.bio.trim())
+      ? expert.bio
+      : null);
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -598,7 +603,7 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
                 Professional Details
               </h3>
 
-              <div className="mt-4 grid grid-cols-1 gap-x-5 sm:grid-cols-2">
+              <div className="mt-4 grid grid-cols-2 items-start gap-x-3 gap-y-1 sm:gap-x-5 sm:gap-y-0">
                 <DetailRow label="Profession" value={expert.profession} />
                 <DetailRow label="Experience" value={expert.experienceDetail} />
                 <DetailRow label="Location" value={expert.location} />
@@ -709,19 +714,21 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
 
         {/* Highlights — own row, each card height = its content */}
         {expert.highlights.length > 0 && (
-          <div className="mt-5 grid grid-cols-1 items-start gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 items-start gap-2.5 sm:gap-3 lg:grid-cols-4">
             {expert.highlights.map((item) => (
               <article
                 key={item.title}
-                className="rounded-xl border border-[#EEF0FA] bg-[#FAFBFF] px-4 py-3.5"
+                className="rounded-xl border border-[#EEF0FA] bg-[#FAFBFF] px-3 py-3 sm:px-4 sm:py-3.5"
               >
-                <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
+                <div className="flex items-start gap-1.5 sm:items-center sm:gap-2">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F] sm:h-7 sm:w-7">
                     <LotusIcon />
                   </span>
-                  <h4 className="text-[12px] font-semibold text-[#2E004B]">{item.title}</h4>
+                  <h4 className="text-[11px] font-semibold leading-snug text-[#2E004B] sm:text-[12px]">
+                    {item.title}
+                  </h4>
                 </div>
-                <p className="mt-2 text-justify text-[11px] leading-relaxed text-[#6B6B8A]">
+                <p className="mt-1.5 text-justify text-[10px] leading-relaxed text-[#6B6B8A] sm:mt-2 sm:text-[11px]">
                   {item.desc}
                 </p>
               </article>
@@ -830,17 +837,21 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
         <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Choose Your Path" title="Consultation Types" />
 
-          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 items-start gap-3 sm:gap-4 lg:grid-cols-4">
             {enabledConsultations.map((type) => (
               <div
                 key={type.label}
-                className="group rounded-2xl border border-[#E4E2EF] bg-white px-4 py-5 text-center shadow-[0_2px_12px_rgba(46,0,75,0.04)] transition hover:border-[#D4AF37]/35 hover:shadow-[0_8px_24px_rgba(46,0,75,0.08)]"
+                className="group rounded-2xl border border-[#E4E2EF] bg-white px-3 py-4 text-center shadow-[0_2px_12px_rgba(46,0,75,0.04)] transition hover:border-[#D4AF37]/35 hover:shadow-[0_8px_24px_rgba(46,0,75,0.08)] sm:px-4 sm:py-5"
               >
-                <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F2F8] text-[#3D3D8F] transition group-hover:bg-[#EDEAF8]">
+                <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[#F0F2F8] text-[#3D3D8F] transition group-hover:bg-[#EDEAF8] sm:h-11 sm:w-11">
                   {type.icon}
                 </span>
-                <p className="mt-3 text-[14px] font-semibold text-[#2E004B]">{type.label}</p>
-                <p className="mt-1.5 text-[11px] leading-relaxed text-[#6B6B8A]">{type.desc}</p>
+                <p className="mt-2 text-[12px] font-semibold text-[#2E004B] sm:mt-3 sm:text-[14px]">
+                  {type.label}
+                </p>
+                <p className="mt-1 text-[10px] leading-relaxed text-[#6B6B8A] sm:mt-1.5 sm:text-[11px]">
+                  {type.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -848,27 +859,29 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
       </section>
 
       {/* Why Choose — dark banner */}
-      <section className="bg-[#2E004B] py-12 sm:py-14">
+      <section className="bg-[#2E004B] py-7 sm:py-12 lg:py-14">
         <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-start justify-between gap-10 lg:flex-row lg:items-center">
-            <div className="max-w-lg">
+          <div className="flex flex-col items-center gap-5 text-center sm:gap-7 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:text-left">
+            <div className="w-full max-w-lg">
               <h2
-                className="text-[26px] font-semibold text-white sm:text-[30px]"
+                className="text-[20px] font-semibold leading-snug text-white sm:text-[28px] lg:text-[30px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Why Choose {fullName}?
               </h2>
-              <p className="mt-3 text-[13px] leading-relaxed text-white/70 sm:text-[14px]">
-                {expert.bio}
-              </p>
+              {whyChooseBio && (
+                <p className="mt-2 line-clamp-2 text-[12px] leading-relaxed text-white/70 sm:mt-3 sm:line-clamp-none sm:text-[14px]">
+                  {whyChooseBio}
+                </p>
+              )}
               <Link
                 href="/#book"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#F0DDB8] via-[#D4AF37] to-[#A67C4A] px-6 py-3 text-[13px] font-semibold text-[#2E004B] shadow-[0_8px_24px_rgba(212,175,55,0.3)] transition hover:brightness-105"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#F0DDB8] via-[#D4AF37] to-[#A67C4A] px-5 py-2.5 text-[12px] font-semibold text-[#2E004B] shadow-[0_6px_20px_rgba(212,175,55,0.28)] transition hover:brightness-105 sm:mt-6 sm:px-6 sm:py-3 sm:text-[13px]"
               >
                 Book Your Consultation <ArrowIcon />
               </Link>
             </div>
-            <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-4 lg:w-auto lg:gap-6">
+            <div className="grid w-full grid-cols-4 gap-2 sm:gap-4 lg:w-auto lg:gap-6">
               <WhyChooseItem icon={<StarIcon />} label="Trusted Expert" />
               <WhyChooseItem icon={<ShieldIcon />} label="100% Secure" />
               <WhyChooseItem icon={<PeopleIcon />} label="Happy Clients" />
@@ -884,14 +897,14 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
       <section className="bg-gradient-to-br from-[#F7F5FC] via-[#EDEAF8] to-[#F7F5FC] py-8 sm:py-10">
         <div className="mx-auto max-w-[920px] rounded-2xl border border-[#E8EAF4]/80 bg-white/40 px-5 py-6 sm:px-7 sm:py-7">
           <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-[1fr_140px] lg:gap-6">
-            <div>
+            <div className="text-center lg:text-left">
               <h2
                 className="text-[22px] font-semibold leading-tight text-[#2E004B] sm:text-[26px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Start Your Journey Towards a Better Tomorrow
               </h2>
-              <p className="mt-2 max-w-md text-[12px] leading-relaxed text-[#5C5C7A] sm:text-[13px]">
+              <p className="mx-auto mt-2 max-w-md text-[12px] leading-relaxed text-[#5C5C7A] sm:text-[13px] lg:mx-0">
                 Book a session with {firstName} and take the first step towards clarity,
                 healing, and transformation.
               </p>
@@ -952,22 +965,26 @@ function SectionHeading({
 
 function WhyChooseItem({ icon, label }: { icon: ReactNode; label: string }) {
   return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 text-[#F0DDB8]">
+    <div className="flex flex-col items-center gap-1 text-center sm:gap-2">
+      <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D4AF37]/35 bg-[#D4AF37]/10 text-[#F0DDB8] sm:h-10 sm:w-10 lg:h-11 lg:w-11">
         {icon}
       </span>
-      <p className="text-[12px] font-medium text-white/85">{label}</p>
+      <p className="text-[9px] font-medium leading-tight text-white/85 sm:text-[11px] lg:text-[12px]">
+        {label}
+      </p>
     </div>
   );
 }
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="mt-2.5 border-b border-[#F3F4FA] pb-2.5 last:border-b-0 last:pb-0">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[#8A8AA8]">
+    <div className="mt-2.5 border-b border-[#F3F4FA] pb-2.5 sm:last:border-b-0 sm:last:pb-0">
+      <p className="text-[9px] font-semibold uppercase tracking-[0.06em] text-[#8A8AA8] sm:text-[10px]">
         {label}
       </p>
-      <p className="mt-0.5 text-[12px] font-medium leading-snug text-[#1A1A4A]">{value}</p>
+      <p className="mt-0.5 text-[11px] font-medium leading-snug text-[#1A1A4A] sm:text-[12px]">
+        {value}
+      </p>
     </div>
   );
 }

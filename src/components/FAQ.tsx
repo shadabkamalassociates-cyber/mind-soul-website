@@ -127,11 +127,11 @@ export default function FAQ() {
             </div>
           </div>
 
-          {/* Center — nav columns */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:gap-x-8 xl:gap-x-10">
-            <LinkColumn title="Programs" links={programLinks} />
-            <LinkColumn title="Company" links={companyLinks} />
-            <LinkColumn title="Support" links={supportLinks} />
+          {/* Center — nav columns: 3 in one row on mobile */}
+          <div className="grid grid-cols-3 gap-x-3 gap-y-0 sm:gap-x-6 lg:gap-x-8 xl:gap-x-10">
+            <LinkColumn title="Programs" links={programLinks} compact />
+            <LinkColumn title="Company" links={companyLinks} compact />
+            <LinkColumn title="Support" links={supportLinks} compact />
           </div>
 
           {/* Right — decorative image */}
@@ -155,24 +155,32 @@ export default function FAQ() {
 function LinkColumn({
   title,
   links,
+  compact = false,
 }: {
   title: string;
   links: { label: string; href: string }[];
+  compact?: boolean;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <h3
-        className="text-[14px] font-semibold text-[#3B1C5B] sm:text-[15px]"
+        className={`font-semibold text-[#3B1C5B] ${
+          compact ? "text-[12px] leading-snug sm:text-[15px]" : "text-[14px] sm:text-[15px]"
+        }`}
         style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
       >
         {title}
       </h3>
-      <ul className="mt-3.5 space-y-2.5">
+      <ul className={`space-y-2 ${compact ? "mt-2 sm:mt-3.5 sm:space-y-2.5" : "mt-3.5 space-y-2.5"}`}>
         {links.map((link) => (
           <li key={link.label}>
             <a
               href={link.href}
-              className="text-[12px] text-[#6B5B8A] transition hover:text-[#4B2475] sm:text-[13px]"
+              className={`text-[#6B5B8A] transition hover:text-[#4B2475] ${
+                compact
+                  ? "block text-[10px] leading-snug sm:text-[13px]"
+                  : "text-[12px] sm:text-[13px]"
+              }`}
             >
               {link.label}
             </a>

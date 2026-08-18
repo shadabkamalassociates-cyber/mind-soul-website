@@ -1,6 +1,11 @@
 import { apiPost } from "@/services/apiClient";
 import { openRazorpayCheckout } from "@/lib/razorpayCheckout";
 
+/** Community join price in INR (Just ₹99 offer). Override via NEXT_PUBLIC_COMMUNITY_JOIN_AMOUNT. */
+export const COMMUNITY_JOIN_PRICE_INR = Number(
+  process.env.NEXT_PUBLIC_COMMUNITY_JOIN_AMOUNT ?? "99",
+);
+
 export type CommunityJoinDetails = {
   name: string;
   email: string;
@@ -50,7 +55,7 @@ export async function createCommunityJoinOrder(
       email: details.email,
       phone: details.whatsapp,
       payment_type: "full",
-      amount: 99,
+      amount: COMMUNITY_JOIN_PRICE_INR,
       source,
       notes: JSON.stringify({
         type: "community_membership",
