@@ -748,15 +748,15 @@ export default function LoginPage() {
             <p className="text-[12px] text-[#5C5C7A] sm:text-[13px]">
               Need Help? Call or WhatsApp us at{" "}
               <a
-                href="tel:+919205706449"
+                href="tel:+919289444951"
                 className="font-semibold text-[#1A1A4A] hover:underline"
               >
-                +91 9205706449
+                +918920152899
               </a>
             </p>
           </div>
           <a
-            href="https://wa.me/919205706449"
+            href="https://wa.me/919289444951"
             target="_blank"
             rel="noreferrer"
             aria-label="WhatsApp support"

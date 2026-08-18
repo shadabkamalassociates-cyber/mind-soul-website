@@ -24,7 +24,7 @@ export default function Home() {
         <CategoryBar />
       </div>
 
-      <FeaturedLiveSessions />
+      {/* <FeaturedLiveSessions /> */}
       {/* <SoulExperts /> */}
       <WhySoulSensei />
       <TransformationPrograms />

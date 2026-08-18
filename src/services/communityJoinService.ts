@@ -87,8 +87,13 @@ export async function checkCommunityJoinPaymentStatus() {
   return apiPost<CommunityPaymentStatusResponse>(
     "/community/verify-payment",
     {},
-    false,
+    true,
   );
+}
+
+function maskKeyId(key: string) {
+  if (!key || key.length < 12) return "[redacted]";
+  return `${key.slice(0, 12)}...`;
 }
 
 export async function purchaseCommunityJoinWithRazorpay(
@@ -110,11 +115,20 @@ export async function purchaseCommunityJoinWithRazorpay(
     );
   }
 
+  console.log("[community-join] opening Razorpay checkout", {
+    order_id: order.id,
+    amount_paise: order.amount,
+    currency: order.currency,
+    key_id: maskKeyId(order.key),
+    mode: order.key.startsWith("rzp_live") ? "live" : "test",
+    source,
+  });
+
   const payment = await openRazorpayCheckout({
     key: order.key,
     orderId: order.id,
     amount: order.amount,
-    currency: order.currency,
+    currency: order.currency || "INR",
     name: "Cosmic Guruji",
     description: "Healing Community — Lifetime Access",
     prefill: {
@@ -122,6 +136,12 @@ export async function purchaseCommunityJoinWithRazorpay(
       email: details.email,
       contact: details.whatsapp,
     },
+  });
+
+  console.log("[community-join] Razorpay handler response", {
+    order_id: payment.razorpayOrderId,
+    payment_id: payment.razorpayPaymentId,
+    has_signature: Boolean(payment.razorpaySignature),
   });
 
   await verifyCommunityJoinPayment(payment);

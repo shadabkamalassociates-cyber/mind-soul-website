@@ -186,7 +186,7 @@ export default function Footer() {
               </SocialBtn>
               <SocialBtn
                 label="WhatsApp"
-                href="https://wa.me/919205706449"
+                href="https://wa.me/919289444951"
               >
                 <WhatsAppIcon />
               </SocialBtn>

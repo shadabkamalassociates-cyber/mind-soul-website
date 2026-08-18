@@ -8,11 +8,11 @@ import CongratulationsDialog from "@/components/CongratulationsDialog";
 import Just99LandingSections from "@/components/communityJoin/Just99LandingSections";
 import {
   checkCommunityJoinPaymentStatus,
-  COMMUNITY_JOIN_PRICE_INR,
   purchaseCommunityJoinWithRazorpay,
 } from "@/services/communityJoinService";
-import { ApiError } from "@/services/apiClient";
+import { getStoredToken, getStoredUser } from "@/lib/authStorage";
 import { useAppSelector } from "@/store/hooks";
+import type { AuthUser } from "@/types/auth";
 import {
   JUST99_ASSETS,
   JUST99_FEATURES,
@@ -29,6 +29,16 @@ type CommunityJoinExperienceProps = {
   onClose?: () => void;
 };
 
+function buildProfileDetails(user: AuthUser | null | undefined) {
+  return {
+    name:
+      [user?.first_name, user?.last_name].filter(Boolean).join(" ").trim() ||
+      String(user?.name || "").trim(),
+    email: String(user?.email || "").trim(),
+    whatsapp: String(user?.phone || user?.whatsapp_number || "").trim(),
+  };
+}
+
 export default function CommunityJoinExperience({
   variant,
   source = "website_popup",
@@ -36,7 +46,9 @@ export default function CommunityJoinExperience({
 }: CommunityJoinExperienceProps) {
   const router = useRouter();
   const user = useAppSelector((s) => s.auth.user);
-  const [step, setStep] = useState<Step>(variant === "page" ? "form" : "offer");
+  const token = useAppSelector((s) => s.auth.token);
+  const hydrated = useAppSelector((s) => s.auth.hydrated);
+  const [step, setStep] = useState<Step>("offer");
   const [error, setError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
@@ -44,60 +56,37 @@ export default function CommunityJoinExperience({
   const isPage = variant === "page";
 
   const profileDetails = useMemo(
-    () => ({
-      name:
-        [user?.first_name, user?.last_name].filter(Boolean).join(" ").trim() ||
-        String(user?.name || "").trim(),
-      email: String(user?.email || "").trim(),
-      whatsapp: String(user?.phone || "").trim(),
-    }),
+    () => buildProfileDetails(user),
     [user],
   );
-  const [formDetails, setFormDetails] = useState({
-    name: "",
-    email: "",
-    whatsapp: "",
-  });
 
-  useEffect(() => {
-    setFormDetails((prev) => ({
-      name: prev.name || profileDetails.name,
-      email: prev.email || profileDetails.email,
-      whatsapp: prev.whatsapp || profileDetails.whatsapp,
-    }));
-  }, [profileDetails.name, profileDetails.email, profileDetails.whatsapp]);
+  function redirectToLogin() {
+    const returnUrl = isPage ? "/just99" : "/";
+    onClose?.();
+    router.push(`/login?returnUrl=${encodeURIComponent(returnUrl)}`);
+  }
+
+  function hasActiveSession() {
+    return Boolean(token || user || getStoredToken() || getStoredUser());
+  }
 
   useEffect(() => {
     if (!isPage) return;
-
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
     const prev = document.body.style.overflow;
-    const prevHtmlOverflow = document.documentElement.style.overflow;
-
-    const syncBodyScroll = () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    };
-
-    syncBodyScroll();
-    mediaQuery.addEventListener("change", syncBodyScroll);
-
+    document.body.style.overflow = "hidden";
     return () => {
-      mediaQuery.removeEventListener("change", syncBodyScroll);
       document.body.style.overflow = prev;
-      document.documentElement.style.overflow = prevHtmlOverflow;
     };
-  }, [isPage, step]);
+  }, [isPage]);
 
   useEffect(() => {
-    if (!isPage) return;
+    if (!isPage || !hydrated || !token) return;
 
     let cancelled = false;
 
     async function verifyExistingPayment() {
       try {
         const res = await checkCommunityJoinPaymentStatus();
-        console.log("res++++++++++++++++*************", res);
         if (!cancelled && res?.success === true) {
           setShowCongrats(true);
         }
@@ -111,57 +100,21 @@ export default function CommunityJoinExperience({
     return () => {
       cancelled = true;
     };
-  }, [isPage]);
+  }, [isPage, hydrated, token]);
 
-  function onJoinClick() {
-    setError(null);
-    setFormDetails({
-      name: profileDetails.name,
-      email: profileDetails.email,
-      whatsapp: profileDetails.whatsapp,
-    });
-    setStep("form");
-  }
-
-  function updateFormDetail(field: "name" | "email" | "whatsapp", value: string) {
-    setFormDetails((prev) => ({ ...prev, [field]: value }));
-  }
-
-  useEffect(() => {
-    if (!isPage || step !== "form") return;
-    const panel = document.querySelector(".just99-offer-wrap-landing-form");
-    panel?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [isPage, step]);
-
-  function handleCongratsClose() {
-    setShowCongrats(false);
-    onClose?.();
-    if (isPage) {
-      router.push("/");
-    }
-  }
-
-  async function onFormSubmit(e: FormEvent) {
-    e.preventDefault();
+  async function startPayment(details: {
+    name: string;
+    email: string;
+    whatsapp: string;
+  }) {
     if (submitLockRef.current || isPaying) return;
-
-    setError(null);
-
-    const name = formDetails.name.trim();
-    const email = formDetails.email.trim();
-    const whatsapp = formDetails.whatsapp.trim();
-    if (!name || !email || !whatsapp) {
-      setError("Please enter your full name, email and WhatsApp number.");
-      return;
-    }
 
     submitLockRef.current = true;
     setIsPaying(true);
+    setError(null);
+
     try {
-      await purchaseCommunityJoinWithRazorpay(
-        { name, email, whatsapp },
-        source,
-      );
+      await purchaseCommunityJoinWithRazorpay(details, source);
 
       // Confirm membership via community verify endpoint before showing congrats.
       try {
@@ -187,16 +140,61 @@ export default function CommunityJoinExperience({
       }
     } catch (err) {
       setError(
-        err instanceof ApiError
+        err instanceof Error
           ? err.message
-          : err instanceof Error
-            ? err.message
-            : "Payment could not be completed. Please try again.",
+          : "Payment could not be completed. Please try again.",
       );
     } finally {
       submitLockRef.current = false;
       setIsPaying(false);
     }
+  }
+
+  function onJoinClick() {
+    if (!hasActiveSession()) {
+      redirectToLogin();
+      return;
+    }
+
+    setError(null);
+
+    const details = buildProfileDetails(user ?? getStoredUser<AuthUser>());
+    const { name, email, whatsapp } = details;
+    if (name && email && whatsapp) {
+      void startPayment({ name, email, whatsapp });
+      return;
+    }
+
+    setStep("form");
+  }
+
+  function handleCongratsClose() {
+    setShowCongrats(false);
+    onClose?.();
+    if (isPage) {
+      router.push("/");
+    }
+  }
+
+  async function onFormSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (submitLockRef.current || isPaying) return;
+
+    if (!hasActiveSession()) {
+      redirectToLogin();
+      return;
+    }
+
+    const details = buildProfileDetails(user ?? getStoredUser<AuthUser>());
+    const { name, email, whatsapp } = details;
+    if (!name || !email || !whatsapp) {
+      setError(
+        "Your profile is missing name, email or phone. Please update your account first.",
+      );
+      return;
+    }
+
+    await startPayment({ name, email, whatsapp });
   }
 
   const shell = (
@@ -206,7 +204,7 @@ export default function CommunityJoinExperience({
       aria-labelledby="community-popup-title"
       className={
         isPage
-          ? `just99-shell just99-shell-fit relative flex w-full flex-1 flex-col overflow-visible lg:min-h-0${step === "form" ? " just99-shell-form-step lg:overflow-visible" : " lg:overflow-hidden"}`
+          ? "just99-shell just99-shell-fit relative flex min-h-0 w-full flex-1 flex-col overflow-hidden"
           : "community-popup community-popup-animate community-popup-responsive relative flex w-full flex-col overflow-hidden rounded-[16px] border border-white/70 shadow-[0_24px_70px_rgba(46,22,80,0.38)] sm:rounded-[20px]"
       }
     >
@@ -227,12 +225,31 @@ export default function CommunityJoinExperience({
       <div
         className={
           isPage
-            ? "just99-main just99-main-landing just99-main-split relative grid flex-none grid-cols-1 overflow-visible lg:min-h-0"
+            ? "just99-main just99-main-landing relative grid min-h-0 flex-1 grid-cols-1 overflow-x-hidden overflow-y-auto lg:grid-cols-[0.95fr_0.75fr] lg:overflow-hidden"
             : "just99-main just99-main-popup relative flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto lg:grid lg:grid-cols-[1.18fr_0.82fr] lg:overflow-hidden"
         }
       >
+        {isPage ? (
+          <div className="just99-hero-center just99-hero-center-landing" aria-hidden>
+            <div className="just99-hero-ripple-rings" />
+            <div className="just99-hero-portrait-glow" />
+            <div className="just99-hero-portrait-ring">
+              <div className="just99-hero-portrait-crescent" aria-hidden />
+              <Image
+                src={JUST99_ASSETS.heroPortrait}
+                alt=""
+                width={640}
+                height={640}
+                unoptimized
+                className="just99-hero-portrait-img"
+                priority
+              />
+            </div>
+          </div>
+        ) : null}
+
         <div
-          className={`just99-left community-popup-left relative flex min-h-0 flex-col justify-center overflow-visible lg:overflow-hidden ${isPage ? "" : "hidden lg:flex"}`}
+          className={`just99-left community-popup-left relative flex min-h-0 flex-col justify-center overflow-hidden ${isPage ? "" : "hidden lg:flex"}`}
         >
           <div className="just99-left-inner relative z-[1]">
             {!isPage ? (
@@ -328,86 +345,60 @@ export default function CommunityJoinExperience({
           </div>
         </div>
 
-        {isPage ? (
-          <div className="just99-hero-center just99-hero-center-landing" aria-hidden>
-            <div className="just99-hero-ripple-rings" />
-            <div className="just99-hero-portrait-glow" />
-            <div className="just99-hero-portrait-ring">
-              <div className="just99-hero-portrait-crescent" aria-hidden />
-              <Image
-                src={JUST99_ASSETS.heroPortrait}
-                alt=""
-                width={640}
-                height={640}
-                unoptimized
-                className="just99-hero-portrait-img"
-                priority
-              />
-            </div>
-          </div>
-        ) : null}
-
         <div
-          className={`just99-right community-popup-right relative flex min-h-0 flex-col justify-center ${isPage ? "items-stretch overflow-visible lg:items-end" : "order-first flex-1 overflow-visible lg:order-none lg:overflow-hidden"}`}
+          className={`just99-right community-popup-right relative flex min-h-0 flex-col justify-center overflow-hidden ${isPage ? "" : "order-first flex-1 lg:order-none"}`}
         >
           {!isPage && (
             <div className="just99-popup-mobile-head lg:hidden">
               <p className="just99-popup-mobile-brand">Cosmic Guruji</p>
               <h2 className="just99-popup-mobile-title">Healing Community</h2>
-              <p className="just99-popup-mobile-sub">
-                Lifetime access for ₹{COMMUNITY_JOIN_PRICE_INR}
-              </p>
+              <p className="just99-popup-mobile-sub">Lifetime access for ₹99</p>
             </div>
           )}
-          <div
-            className={`just99-offer-wrap ${
-              isPage
-                ? step === "form"
-                  ? "just99-offer-wrap-landing-form"
-                  : "just99-offer-wrap-landing"
-                : "just99-offer-wrap-popup"
-            }`}
-          >
+          <div className={`just99-offer-wrap ${isPage ? "just99-offer-wrap-landing" : "just99-offer-wrap-popup"}`}>
             {step === "offer" && (
               <JoinOfferPanel
                 onJoin={onJoinClick}
+                isPaying={isPaying}
+                error={error}
                 compact={!isPage}
                 landing={isPage}
               />
             )}
             {step === "form" && (
               <FormPanel
-                details={formDetails}
-                onChange={updateFormDetail}
+                details={profileDetails}
                 error={error}
                 isPaying={isPaying}
                 onSubmit={onFormSubmit}
                 onBack={() => setStep("offer")}
                 large={isPage}
-                landing={isPage}
               />
             )}
           </div>
         </div>
       </div>
 
-      {!isPage ? (
-        <div className="just99-bottom just99-bottom-popup shrink-0 just99-bottom-popup-mobile">
-          <div className="just99-perks-bar community-popup-perks just99-perks-bar-popup shrink-0">
-            <div className="community-popup-perks-inner just99-perks">
-              {JUST99_PERKS.map((item) => (
-                <div key={item.title} className="just99-perk-item">
-                  <span className="just99-perk-icon-wrap">
-                    <Just99Asset src={item.image} size={22} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="just99-perk-title">{item.title}</p>
-                    <p className="just99-perk-desc">{item.desc}</p>
-                  </div>
+      <div
+        className={`just99-bottom shrink-0 ${isPage ? "just99-bottom-landing" : "just99-bottom-popup"} ${!isPage ? "just99-bottom-popup-mobile" : ""}`}
+      >
+        <div
+          className={`just99-perks-bar community-popup-perks shrink-0 ${!isPage ? "just99-perks-bar-popup" : ""}`}
+        >
+          <div className="community-popup-perks-inner just99-perks">
+            {JUST99_PERKS.map((item) => (
+              <div key={item.title} className="just99-perk-item">
+                <span className="just99-perk-icon-wrap">
+                  <Just99Asset src={item.image} size={isPage ? 22 : 22} />
+                </span>
+                <div className="min-w-0">
+                  <p className="just99-perk-title">{item.title}</p>
+                  <p className="just99-perk-desc">{item.desc}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+        </div>
 
           <div className="just99-footer community-popup-footer shrink-0">
             <span className="inline-flex items-center justify-center gap-2">
@@ -416,14 +407,10 @@ export default function CommunityJoinExperience({
               <Just99Asset src={JUST99_ASSETS.lotus} size={12} className="just99-footer-lotus" />
             </span>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
-      {isPage ? (
-        <div className={step === "form" ? "just99-landing-sections-form-step" : undefined}>
-          <Just99LandingSections />
-        </div>
-      ) : null}
+      {isPage ? <Just99LandingSections /> : null}
 
       {isPage && showCongrats ? (
         <div className="community-popup-overlay fixed inset-0 z-[250] overflow-y-auto overscroll-contain">
@@ -445,17 +432,11 @@ export default function CommunityJoinExperience({
 
   if (isPage) {
     return (
-      <div
-        className="just99-landing just99-landing-fit just99-split just99-landing-form-step"
-      >
+      <div className="just99-landing just99-landing-fit">
         <div className="just99-site-header shrink-0">
           <Header />
         </div>
-        <div
-          className="just99-page just99-page-fit just99-page-form-step min-h-0 flex-none lg:flex-none lg:overflow-visible"
-        >
-          {shell}
-        </div>
+        <div className="just99-page just99-page-fit">{shell}</div>
       </div>
     );
   }
@@ -473,10 +454,14 @@ function OfferPanel({ onClose }: { onClose?: () => void }) {
 
 function JoinOfferPanel({
   onJoin,
+  isPaying = false,
+  error = null,
   compact = false,
   landing = false,
 }: {
   onJoin: () => void;
+  isPaying?: boolean;
+  error?: string | null;
   compact?: boolean;
   landing?: boolean;
 }) {
@@ -502,9 +487,7 @@ function JoinOfferPanel({
             <span className="community-price-glow" aria-hidden />
             <p className="community-popup-price just99-price">
               <span className="community-popup-price-symbol">₹</span>
-              <span className="community-popup-price-amount">
-                {COMMUNITY_JOIN_PRICE_INR}
-              </span>
+              <span className="community-popup-price-amount">99</span>
             </p>
           </div>
 
@@ -520,7 +503,20 @@ function JoinOfferPanel({
             </div>
           </div>
 
-          <JoinNowButton onClick={onJoin} large useAssetIcon={!landing} sparkle />
+          {error && (
+            <p className="mb-3 rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] text-[#B42318]">
+              {error}
+            </p>
+          )}
+
+          <JoinNowButton
+            onClick={onJoin}
+            label={isPaying ? "Processing..." : "Join Now"}
+            disabled={isPaying}
+            large
+            useAssetIcon={!landing}
+            sparkle
+          />
 
           <div className="community-trust-row">
             <span className="community-trust-item">
@@ -549,18 +545,21 @@ function JoinNowButton({
   large = false,
   useAssetIcon = false,
   sparkle = false,
+  disabled = false,
 }: {
   onClick: () => void;
   label?: string;
   large?: boolean;
   useAssetIcon?: boolean;
   sparkle?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`community-join-btn ${large ? "just99-join-btn" : ""}`}
+      disabled={disabled}
+      className={`community-join-btn disabled:cursor-not-allowed disabled:opacity-70 ${large ? "just99-join-btn" : ""}`}
     >
       <span className="community-join-btn-left">
         {sparkle ? (
@@ -625,195 +624,71 @@ function Just99BackgroundDecor() {
   );
 }
 
-function FormInputField({
+function ReadOnlyField({
   label,
   value,
   placeholder,
-  type = "text",
-  inputMode,
-  landing = false,
-  icon,
-  onChange,
 }: {
   label: string;
   value: string;
   placeholder: string;
-  type?: "text" | "email" | "tel";
-  inputMode?: "text" | "email" | "tel" | "numeric";
-  landing?: boolean;
-  icon?: ReactNode;
-  onChange: (value: string) => void;
 }) {
-  if (landing) {
-    return (
-      <label className="just99-lead-field">
-        <span className="just99-lead-field-icon" aria-hidden>
-          {icon}
-        </span>
-        <span className="sr-only">{label}</span>
-        <input
-          type={type}
-          inputMode={inputMode}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="just99-lead-input"
-          autoComplete={
-            type === "email" ? "email" : type === "tel" ? "tel" : "name"
-          }
-        />
-      </label>
-    );
-  }
-
   return (
     <div className="community-form-field">
-      <label className="community-form-label">{label}</label>
-      <input
-        type={type}
-        inputMode={inputMode}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="community-popup-input w-full bg-white text-[#3D3D8F]"
-        autoComplete={
-          type === "email" ? "email" : type === "tel" ? "tel" : "name"
-        }
-      />
+      <span className="community-form-label">{label}</span>
+      <div
+        aria-readonly="true"
+        className="community-popup-input w-full cursor-not-allowed select-none bg-[#F3F0FA] text-[#3B1C5B] opacity-90"
+      >
+        {value.trim() || (
+          <span className="text-[#A89BC4]">{placeholder}</span>
+        )}
+      </div>
     </div>
   );
 }
 
 function FormPanel({
   details,
-  onChange,
   error,
   isPaying,
   onSubmit,
   onBack,
   large = false,
-  landing = false,
 }: {
   details: { name: string; email: string; whatsapp: string };
-  onChange: (field: "name" | "email" | "whatsapp", value: string) => void;
   error: string | null;
   isPaying: boolean;
   onSubmit: (e: FormEvent) => void;
   onBack: () => void;
   large?: boolean;
-  landing?: boolean;
 }) {
-  const canPay = Boolean(
-    details.name.trim() && details.email.trim() && details.whatsapp.trim(),
-  );
-
-  if (landing) {
-    return (
-      <div className="just99-lead-card">
-        <h2 className="just99-lead-title">Join the Healing Community</h2>
-
-        <form onSubmit={onSubmit} className="just99-lead-form">
-          <FormInputField
-            label="Your Name"
-            value={details.name}
-            placeholder="Your Name"
-            landing
-            icon={<UserFieldIcon />}
-            onChange={(value) => onChange("name", value)}
-          />
-          <FormInputField
-            label="Your Mobile Number"
-            value={details.whatsapp}
-            placeholder="Your Mobile Number"
-            type="tel"
-            inputMode="tel"
-            landing
-            icon={<PhoneFieldIcon />}
-            onChange={(value) => onChange("whatsapp", value)}
-          />
-          <FormInputField
-            label="Your Email"
-            value={details.email}
-            placeholder="Your Email"
-            type="email"
-            inputMode="email"
-            landing
-            icon={<EmailFieldIcon />}
-            onChange={(value) => onChange("email", value)}
-          />
-
-          {error && (
-            <p className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] leading-relaxed text-[#B42318]">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isPaying || !canPay}
-            className="just99-lead-submit"
-          >
-            {isPaying ? "Opening payment..." : `Join for ₹${COMMUNITY_JOIN_PRICE_INR}`}
-          </button>
-        </form>
-
-        <ul className="just99-lead-checks">
-          <li>
-            <GoldCheckIcon />
-            One-time payment of ₹{COMMUNITY_JOIN_PRICE_INR}
-          </li>
-          <li>
-            <GoldCheckIcon />
-            Lifetime community access
-          </li>
-          <li>
-            <GoldCheckIcon />
-            Live healing sessions every week
-          </li>
-        </ul>
-
-        <p className="just99-lead-safe">
-          <LockMiniIcon />
-          Your details are 100% safe with us.
-        </p>
-      </div>
-    );
-  }
+  const canPay = Boolean(details.name && details.email && details.whatsapp);
 
   return (
-    <div
-      className={`community-form-panel community-step-panel ${large ? "community-form-panel-lg" : ""}`}
-    >
+    <div className={`community-form-panel community-step-panel ${large ? "community-form-panel-lg" : ""}`}>
       <div className="community-form-header">
         <h2 className="community-form-title">Your Details</h2>
         <p className="community-form-subtitle">
-          Enter your details — Razorpay secure payment of ₹
-          {COMMUNITY_JOIN_PRICE_INR} for lifetime access.
+          Confirm your account details and pay ₹99 for lifetime access.
         </p>
       </div>
 
       <form onSubmit={onSubmit} className="community-form">
-        <FormInputField
+        <ReadOnlyField
           label="Full Name"
           value={details.name}
-          placeholder="Enter your full name"
-          onChange={(value) => onChange("name", value)}
+          placeholder="Not available on your profile"
         />
-        <FormInputField
+        <ReadOnlyField
           label="Email Address"
           value={details.email}
-          placeholder="Enter your email address"
-          type="email"
-          inputMode="email"
-          onChange={(value) => onChange("email", value)}
+          placeholder="Not available on your profile"
         />
-        <FormInputField
+        <ReadOnlyField
           label="WhatsApp Number"
           value={details.whatsapp}
-          placeholder="Enter your WhatsApp number"
-          type="tel"
-          inputMode="tel"
-          onChange={(value) => onChange("whatsapp", value)}
+          placeholder="Not available on your profile"
         />
 
         {error && (
@@ -832,9 +707,7 @@ function FormPanel({
               <PeopleIcon />
             </span>
             <span className="community-join-btn-label">
-              {isPaying
-                ? "Opening payment..."
-                : `Pay ₹${COMMUNITY_JOIN_PRICE_INR}`}
+              {isPaying ? "Processing..." : "Join Now"}
             </span>
             <span className="community-join-btn-arrow">
               <ArrowIcon />

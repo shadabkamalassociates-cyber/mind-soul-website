@@ -82,17 +82,22 @@ export async function openRazorpayCheckout(options: {
     throw new Error("Unable to load payment gateway. Please try again.");
   }
 
+  if (!options.key || !options.orderId || !options.amount) {
+    throw new Error("Payment configuration is incomplete. Please try again.");
+  }
+
   return new Promise((resolve, reject) => {
-    const checkout = new window.Razorpay!({
+    const amountPaise = Number(options.amount);
+    const checkoutOptions = {
       key: options.key,
-      amount: options.amount,
-      currency: options.currency,
+      amount: amountPaise,
+      currency: options.currency || "INR",
       name: options.name ?? "Cosmicguruji",
       description: options.description ?? "Session purchase",
       order_id: options.orderId,
       prefill: options.prefill,
       theme: { color: "#3D3D8F" },
-      handler(response) {
+      handler(response: RazorpaySuccessResponse) {
         resolve({
           razorpayOrderId: response.razorpay_order_id,
           razorpayPaymentId: response.razorpay_payment_id,
@@ -104,8 +109,16 @@ export async function openRazorpayCheckout(options: {
           reject(new Error("Payment cancelled"));
         },
       },
+    };
+
+    console.log("[razorpay-checkout] init", {
+      key_id: `${String(options.key).slice(0, 12)}...`,
+      order_id: options.orderId,
+      amount_paise: amountPaise,
+      currency: checkoutOptions.currency,
     });
 
+    const checkout = new window.Razorpay!(checkoutOptions);
     checkout.open();
   });
 }
