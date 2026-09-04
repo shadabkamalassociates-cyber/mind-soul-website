@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import Header from "@/components/Header";
 import CongratulationsDialog from "@/components/CongratulationsDialog";
 import Just99LandingSections from "@/components/communityJoin/Just99LandingSections";
@@ -16,6 +16,7 @@ import { useAppSelector } from "@/store/hooks";
 import {
   JUST99_ASSETS,
   JUST99_FEATURES,
+  JUST99_HERO_FEATURES,
   JUST99_PERKS,
 } from "@/components/communityJoin/just99Assets";
 import "./community-popup.css";
@@ -35,7 +36,7 @@ export default function CommunityJoinExperience({
 }: CommunityJoinExperienceProps) {
   const router = useRouter();
   const user = useAppSelector((s) => s.auth.user);
-  const [step, setStep] = useState<Step>("offer");
+  const [step, setStep] = useState<Step>(variant === "page" ? "form" : "offer");
   const [error, setError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
@@ -74,13 +75,8 @@ export default function CommunityJoinExperience({
     const prevHtmlOverflow = document.documentElement.style.overflow;
 
     const syncBodyScroll = () => {
-      if (step === "form") {
-        document.body.style.overflow = "";
-        document.documentElement.style.overflow = "";
-        return;
-      }
-      document.body.style.overflow = mediaQuery.matches ? "hidden" : "";
-      document.documentElement.style.overflow = mediaQuery.matches ? "hidden" : "";
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
 
     syncBodyScroll();
@@ -215,8 +211,7 @@ export default function CommunityJoinExperience({
       }
     >
       {!isPage && <div className="community-popup-accent" aria-hidden />}
-      {isPage && <Just99BackgroundDecor />}
-      <Sparkles />
+      {!isPage && <Sparkles />}
 
       {!isPage && onClose ? (
         <button
@@ -232,29 +227,10 @@ export default function CommunityJoinExperience({
       <div
         className={
           isPage
-            ? `just99-main just99-main-landing relative grid flex-none grid-cols-1 overflow-x-hidden overflow-y-visible lg:min-h-0 lg:grid-cols-[0.95fr_0.75fr]${step === "form" ? " just99-main-landing-form-step lg:flex-none lg:overflow-visible" : " lg:flex-1 lg:overflow-hidden"}`
+            ? "just99-main just99-main-landing just99-main-split relative grid flex-none grid-cols-1 overflow-visible lg:min-h-0"
             : "just99-main just99-main-popup relative flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto lg:grid lg:grid-cols-[1.18fr_0.82fr] lg:overflow-hidden"
         }
       >
-        {isPage ? (
-          <div className="just99-hero-center just99-hero-center-landing" aria-hidden>
-            <div className="just99-hero-ripple-rings" />
-            <div className="just99-hero-portrait-glow" />
-            <div className="just99-hero-portrait-ring">
-              <div className="just99-hero-portrait-crescent" aria-hidden />
-              <Image
-                src={JUST99_ASSETS.heroPortrait}
-                alt=""
-                width={640}
-                height={640}
-                unoptimized
-                className="just99-hero-portrait-img"
-                priority
-              />
-            </div>
-          </div>
-        ) : null}
-
         <div
           className={`just99-left community-popup-left relative flex min-h-0 flex-col justify-center overflow-visible lg:overflow-hidden ${isPage ? "" : "hidden lg:flex"}`}
         >
@@ -278,64 +254,63 @@ export default function CommunityJoinExperience({
               </div>
             ) : null}
 
-            <div className={`just99-hero ${isPage ? "just99-hero-landing" : ""}`}>
-              {isPage ? (
-                <div className="just99-join-row just99-join-row-landing">
-                  <span className="just99-join-ornament" aria-hidden>
-                    <span className="just99-join-line" />
-                    <span className="just99-join-spark">✦</span>
-                    <span className="just99-join-line" />
-                  </span>
-                  <span className="just99-join-label">JOIN OUR</span>
-                  <Just99Asset src={JUST99_ASSETS.lotus} size={16} className="just99-join-lotus" />
-                  <span className="just99-join-ornament" aria-hidden>
-                    <span className="just99-join-line" />
-                    <span className="just99-join-spark">✦</span>
-                    <span className="just99-join-line" />
-                  </span>
+            {isPage ? (
+              <div className="just99-split-copy">
+                <span className="just99-split-badge">
+                  <span className="just99-split-badge-dot" aria-hidden />
+                  Just ₹{COMMUNITY_JOIN_PRICE_INR} Community
+                </span>
+                <h1 id="community-popup-title" className="just99-split-title">
+                  <span>Heal Your Mind.</span>
+                  <span>Uplift Your Soul.</span>
+                  <span className="just99-split-title-gold">Grow Together.</span>
+                </h1>
+                <p className="just99-split-desc">
+                  A sacred space to heal your mind, uplift your soul and connect
+                  with like-minded souls on a guided spiritual journey.
+                </p>
+                <div className="just99-split-features">
+                  {JUST99_HERO_FEATURES.map((item) => (
+                    <div key={item.title} className="just99-split-feature">
+                      <span className="just99-split-feature-icon">
+                        <Just99Asset src={item.image} size={28} />
+                      </span>
+                      <div>
+                        <p className="just99-split-feature-title">{item.title}</p>
+                        <p className="just99-split-feature-desc">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ) : (
+              </div>
+            ) : (
+              <div className="just99-hero">
                 <div className="just99-join-row">
                   <span className="community-popup-line" />
                   <span className="just99-join-label">Join Our</span>
                   <span className="community-popup-line" />
                 </div>
-              )}
 
-              <div className="just99-headline">
-                <h1 id="community-popup-title" className="just99-healing">
-                  Healing
-                </h1>
-                <p className="just99-community">Community</p>
-              </div>
+                <div className="just99-headline">
+                  <h1 id="community-popup-title" className="just99-healing">
+                    Healing
+                  </h1>
+                  <p className="just99-community">Community</p>
+                </div>
 
-              {!isPage ? (
                 <div className="just99-lotus-divider" aria-hidden>
                   <span className="just99-divider-line" />
                   <Just99Asset src={JUST99_ASSETS.lotus} size={18} className="just99-lotus-icon" />
                   <span className="just99-divider-line" />
                 </div>
-              ) : null}
 
-              <p className="just99-tagline">Heal. Connect. Grow Together.</p>
-              {isPage ? (
-                <div className="just99-hero-divider" aria-hidden>
-                  <span className="just99-hero-divider-dots">···</span>
-                  <span className="just99-hero-divider-spark">✦</span>
-                  <span className="just99-hero-divider-dots">···</span>
-                </div>
-              ) : null}
-              <p className="just99-desc">
-                A sacred space to heal your mind, uplift your soul and connect with
-                like-minded souls.
-              </p>
-
-              {isPage ? (
-                <div className="just99-hero-actions">
-                 
-                </div>
-              ) : null}
-            </div>
+                <p className="just99-tagline">Heal. Connect. Grow Together.</p>
+                <p className="just99-desc">
+                  A sacred space to heal your mind, uplift your soul and connect with
+                  like-minded souls.
+                </p>
+              </div>
+            )}
 
             <div className={`just99-features ${isPage ? "just99-features-hidden" : ""}`}>
               {!isPage
@@ -353,8 +328,27 @@ export default function CommunityJoinExperience({
           </div>
         </div>
 
+        {isPage ? (
+          <div className="just99-hero-center just99-hero-center-landing" aria-hidden>
+            <div className="just99-hero-ripple-rings" />
+            <div className="just99-hero-portrait-glow" />
+            <div className="just99-hero-portrait-ring">
+              <div className="just99-hero-portrait-crescent" aria-hidden />
+              <Image
+                src={JUST99_ASSETS.heroPortrait}
+                alt=""
+                width={640}
+                height={640}
+                unoptimized
+                className="just99-hero-portrait-img"
+                priority
+              />
+            </div>
+          </div>
+        ) : null}
+
         <div
-          className={`just99-right community-popup-right relative flex min-h-0 flex-col justify-center ${isPage && step === "form" ? "items-center overflow-visible" : ""} ${isPage ? "overflow-visible lg:overflow-hidden" : "order-first flex-1 overflow-visible lg:order-none lg:overflow-hidden"}`}
+          className={`just99-right community-popup-right relative flex min-h-0 flex-col justify-center ${isPage ? "items-stretch overflow-visible lg:items-end" : "order-first flex-1 overflow-visible lg:order-none lg:overflow-hidden"}`}
         >
           {!isPage && (
             <div className="just99-popup-mobile-head lg:hidden">
@@ -397,28 +391,24 @@ export default function CommunityJoinExperience({
         </div>
       </div>
 
-      <div
-        className={`just99-bottom shrink-0 ${isPage ? "just99-bottom-landing" : "just99-bottom-popup"}${isPage && step === "form" ? " just99-bottom-form-step" : ""} ${!isPage ? "just99-bottom-popup-mobile" : ""}`}
-      >
-        <div
-          className={`just99-perks-bar community-popup-perks shrink-0 ${!isPage ? "just99-perks-bar-popup" : ""}`}
-        >
-          <div className="community-popup-perks-inner just99-perks">
-            {JUST99_PERKS.map((item) => (
-              <div key={item.title} className="just99-perk-item">
-                <span className="just99-perk-icon-wrap">
-                  <Just99Asset src={item.image} size={isPage ? 22 : 22} />
-                </span>
-                <div className="min-w-0">
-                  <p className="just99-perk-title">{item.title}</p>
-                  <p className="just99-perk-desc">{item.desc}</p>
+      {!isPage ? (
+        <div className="just99-bottom just99-bottom-popup shrink-0 just99-bottom-popup-mobile">
+          <div className="just99-perks-bar community-popup-perks just99-perks-bar-popup shrink-0">
+            <div className="community-popup-perks-inner just99-perks">
+              {JUST99_PERKS.map((item) => (
+                <div key={item.title} className="just99-perk-item">
+                  <span className="just99-perk-icon-wrap">
+                    <Just99Asset src={item.image} size={22} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="just99-perk-title">{item.title}</p>
+                    <p className="just99-perk-desc">{item.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {!isPage ? (
           <div className="just99-footer community-popup-footer shrink-0">
             <span className="inline-flex items-center justify-center gap-2">
               <Just99Asset src={JUST99_ASSETS.lotus} size={12} className="just99-footer-lotus" />
@@ -426,8 +416,8 @@ export default function CommunityJoinExperience({
               <Just99Asset src={JUST99_ASSETS.lotus} size={12} className="just99-footer-lotus" />
             </span>
           </div>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       {isPage ? (
         <div className={step === "form" ? "just99-landing-sections-form-step" : undefined}>
@@ -456,13 +446,13 @@ export default function CommunityJoinExperience({
   if (isPage) {
     return (
       <div
-        className={`just99-landing just99-landing-fit${step === "form" ? " just99-landing-form-step" : ""}`}
+        className="just99-landing just99-landing-fit just99-split just99-landing-form-step"
       >
         <div className="just99-site-header shrink-0">
           <Header />
         </div>
         <div
-          className={`just99-page just99-page-fit min-h-0 flex-none${step === "form" ? " just99-page-form-step lg:flex-none lg:overflow-visible" : " lg:flex-1"}`}
+          className="just99-page just99-page-fit just99-page-form-step min-h-0 flex-none lg:flex-none lg:overflow-visible"
         >
           {shell}
         </div>
@@ -642,6 +632,7 @@ function FormInputField({
   type = "text",
   inputMode,
   landing = false,
+  icon,
   onChange,
 }: {
   label: string;
@@ -650,41 +641,45 @@ function FormInputField({
   type?: "text" | "email" | "tel";
   inputMode?: "text" | "email" | "tel" | "numeric";
   landing?: boolean;
+  icon?: ReactNode;
   onChange: (value: string) => void;
 }) {
-  const inputClassName = landing
-    ? "box-border w-full min-w-0 rounded-xl border border-[#e4d8f5] bg-white px-3 py-2.5 text-[14px] leading-snug text-[#3B1C5B] outline-none transition placeholder:text-[#A89BC4] focus:border-[#8b5fbf] focus:ring-2 focus:ring-[#8b5fbf]/15 sm:px-3.5 sm:py-3 sm:text-[15px]"
-    : "community-popup-input w-full bg-white text-[#3B1C5B]";
-
-  const field = (
-    <input
-      type={type}
-      inputMode={inputMode}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className={inputClassName}
-      autoComplete={
-        type === "email" ? "email" : type === "tel" ? "tel" : "name"
-      }
-    />
-  );
-
   if (landing) {
     return (
-      <div className="w-full min-w-0">
-        <label className="mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.08em] text-[#5a3d8c]">
-          {label}
-        </label>
-        {field}
-      </div>
+      <label className="just99-lead-field">
+        <span className="just99-lead-field-icon" aria-hidden>
+          {icon}
+        </span>
+        <span className="sr-only">{label}</span>
+        <input
+          type={type}
+          inputMode={inputMode}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="just99-lead-input"
+          autoComplete={
+            type === "email" ? "email" : type === "tel" ? "tel" : "name"
+          }
+        />
+      </label>
     );
   }
 
   return (
     <div className="community-form-field">
       <label className="community-form-label">{label}</label>
-      {field}
+      <input
+        type={type}
+        inputMode={inputMode}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="community-popup-input w-full bg-white text-[#3D3D8F]"
+        autoComplete={
+          type === "email" ? "email" : type === "tel" ? "tel" : "name"
+        }
+      />
     </div>
   );
 }
@@ -714,75 +709,73 @@ function FormPanel({
 
   if (landing) {
     return (
-      <div className="box-border w-full min-w-0 max-w-[380px] px-1 sm:px-0">
-        <div className="box-border w-full min-w-0 rounded-[22px] border border-[#8B5FBF]/55 bg-white p-4 shadow-[0_14px_40px_rgba(75,36,117,0.12)] sm:p-5">
-          <div className="mb-3 sm:mb-4">
-            <h2
-              className="text-[20px] font-semibold leading-tight text-[#3b1c5b] sm:text-[22px]"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-            >
-              Your Details
-            </h2>
-            <p className="mt-1.5 text-[12px] leading-relaxed text-[#7a6b96] sm:text-[13px]">
-              Enter your details — Razorpay secure payment of ₹
-              {COMMUNITY_JOIN_PRICE_INR} for lifetime access.
+      <div className="just99-lead-card">
+        <h2 className="just99-lead-title">Join the Healing Community</h2>
+
+        <form onSubmit={onSubmit} className="just99-lead-form">
+          <FormInputField
+            label="Your Name"
+            value={details.name}
+            placeholder="Your Name"
+            landing
+            icon={<UserFieldIcon />}
+            onChange={(value) => onChange("name", value)}
+          />
+          <FormInputField
+            label="Your Mobile Number"
+            value={details.whatsapp}
+            placeholder="Your Mobile Number"
+            type="tel"
+            inputMode="tel"
+            landing
+            icon={<PhoneFieldIcon />}
+            onChange={(value) => onChange("whatsapp", value)}
+          />
+          <FormInputField
+            label="Your Email"
+            value={details.email}
+            placeholder="Your Email"
+            type="email"
+            inputMode="email"
+            landing
+            icon={<EmailFieldIcon />}
+            onChange={(value) => onChange("email", value)}
+          />
+
+          {error && (
+            <p className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] leading-relaxed text-[#B42318]">
+              {error}
             </p>
-          </div>
+          )}
 
-          <form onSubmit={onSubmit} className="flex w-full min-w-0 flex-col gap-3">
-            <FormInputField
-              label="Full Name"
-              value={details.name}
-              placeholder="Enter your full name"
-              landing
-              onChange={(value) => onChange("name", value)}
-            />
-            <FormInputField
-              label="Email Address"
-              value={details.email}
-              placeholder="Enter your email address"
-              type="email"
-              inputMode="email"
-              landing
-              onChange={(value) => onChange("email", value)}
-            />
-            <FormInputField
-              label="WhatsApp Number"
-              value={details.whatsapp}
-              placeholder="Enter your WhatsApp number"
-              type="tel"
-              inputMode="tel"
-              landing
-              onChange={(value) => onChange("whatsapp", value)}
-            />
+          <button
+            type="submit"
+            disabled={isPaying || !canPay}
+            className="just99-lead-submit"
+          >
+            {isPaying ? "Opening payment..." : `Join for ₹${COMMUNITY_JOIN_PRICE_INR}`}
+          </button>
+        </form>
 
-            {error && (
-              <p className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] leading-relaxed text-[#B42318]">
-                {error}
-              </p>
-            )}
+        <ul className="just99-lead-checks">
+          <li>
+            <GoldCheckIcon />
+            One-time payment of ₹{COMMUNITY_JOIN_PRICE_INR}
+          </li>
+          <li>
+            <GoldCheckIcon />
+            Lifetime community access
+          </li>
+          <li>
+            <GoldCheckIcon />
+            Live healing sessions every week
+          </li>
+        </ul>
 
-            <div className="mt-1 flex w-full min-w-0 flex-col gap-2">
-              <button
-                type="submit"
-                disabled={isPaying || !canPay}
-                className="flex w-full min-w-0 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#8b5cf6] via-[#7c3aed] to-[#4c1d95] px-4 py-3 text-[13px] font-bold tracking-[0.14em] text-white uppercase shadow-[0_8px_24px_rgba(76,29,149,0.28)] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70 sm:text-[14px]"
-              >
-                <PeopleIcon />
-                {isPaying ? "Opening payment..." : `Pay ₹${COMMUNITY_JOIN_PRICE_INR}`}
-                <ArrowIcon />
-              </button>
-              <button
-                type="button"
-                onClick={onBack}
-                disabled={isPaying}
-                className="w-full rounded-full border border-[#d8c4ef] bg-white/80 px-4 py-2.5 text-[13px] font-semibold text-[#4b2475] transition hover:bg-[#f3eafd] disabled:opacity-60"
-              >
-                Back
-              </button>
-            </div>
-          </form>
-        </div>
+        <p className="just99-lead-safe">
+          <LockMiniIcon />
+          Your details are 100% safe with us.
+        </p>
       </div>
     );
   }
@@ -988,6 +981,66 @@ function BoltIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M13 2L5 14H12L11 22L19 10H12L13 2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function UserFieldIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="8" r="3.25" stroke="currentColor" strokeWidth="1.6" />
+      <path
+        d="M5.2 19.2c.9-3.3 3.5-5.1 6.8-5.1s5.9 1.8 6.8 5.1"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function PhoneFieldIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M8 3.8h8c.9 0 1.6.7 1.6 1.6v13.2c0 .9-.7 1.6-1.6 1.6H8c-.9 0-1.6-.7-1.6-1.6V5.4c0-.9.7-1.6 1.6-1.6Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path d="M10.5 18.2h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function EmailFieldIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M4.2 7.2 12 12.4 19.8 7.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function GoldCheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="8" r="7.1" fill="currentColor" />
+      <path
+        d="M4.7 8.15 6.9 10.3 11.3 5.7"
+        stroke="#1b1b4d"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function LockMiniIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="6" y="11" width="12" height="9" rx="1.6" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8.4 11V8.4a3.6 3.6 0 0 1 7.2 0V11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   );
 }
