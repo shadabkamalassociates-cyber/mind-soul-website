@@ -5,7 +5,7 @@
   --bg-elevated: #0a0b10;
   --bg-glass: rgba(10, 12, 18, 0.72);
   --bg-glass-strong: rgba(8, 10, 14, 0.85);
-  --gold: #d4af37;
+  --gold: #c7c7c7;
   --gold-light: #f0d78c;
   --gold-champagne: #e8c69f;
   --gold-bronze: #9b754d;
@@ -64,7 +64,7 @@ a {
 }
 
 .gold-gradient-text {
-  background: linear-gradient(90deg, #f0d78c 0%, #d4af37 50%, #c9a06a 100%);
+  background: linear-gradient(90deg, #f0d78c 0%, #c7c7c7 50%, #c9a06a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -340,7 +340,7 @@ a {
 }
 
 .carousel-nav-btn:hover {
-  border-color: #d4af37;
+  border-color: #c7c7c7;
   background: rgba(212, 175, 55, 0.12);
   color: #f0d78c;
 }
@@ -359,7 +359,7 @@ a {
 }
 
 .carousel-side-btn:hover {
-  border-color: #d4af37;
+  border-color: #c7c7c7;
   background: rgba(212, 175, 55, 0.14);
   color: #f0d78c;
 }
@@ -3200,7 +3200,7 @@ a:hover .expert-arrow-circle {
   font-size: clamp(0.8125rem, 1.45vh, 0.9375rem);
   font-weight: 700;
   line-height: 1.25;
-  color: #e8c69f;
+  color: #ffffff;
 }
 
 .just99-why-card-divider {
@@ -3213,7 +3213,7 @@ a:hover .expert-arrow-circle {
 .just99-why-card-divider-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(197, 160, 89, 0.15), rgba(197, 160, 89, 0.75), rgba(197, 160, 89, 0.15));
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.15));
 }
 
 .just99-why-card-divider-diamond {
@@ -3221,7 +3221,7 @@ a:hover .expert-arrow-circle {
   height: 5px;
   flex-shrink: 0;
   transform: rotate(45deg);
-  background: #c5a059;
+  background: #ffffff;
 }
 
 .just99-why-card-list {
@@ -3250,9 +3250,9 @@ a:hover .expert-arrow-circle {
   height: 14px;
   margin-top: 1px;
   border-radius: 999px;
-  border: 1px solid rgba(232, 198, 159, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.55);
   background: transparent;
-  color: #e8c69f;
+  color: #ffffff;
 }
 
 .just99-mid-features {
@@ -3340,7 +3340,7 @@ a:hover .expert-arrow-circle {
   display: inline-block;
   width: 2rem;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #c5a059, transparent);
+  background: linear-gradient(90deg, transparent, #563fb2, transparent);
 }
 
 .just99-quote-vine {
@@ -4934,21 +4934,21 @@ a:hover .expert-arrow-circle {
   align-items: center;
   gap: 0.45rem;
   border-radius: 999px;
-  background: #f4ecd0;
+  background: rgba(86, 63, 178, 0.1);
   padding: 0.38rem 0.85rem 0.38rem 0.7rem;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #3d3d8f;
+  color: #563fb2;
 }
 
 .just99-split-badge-dot {
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 999px;
-  background: #d4af37;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.22);
+  background: #563fb2;
+  box-shadow: 0 0 0 3px rgba(86, 63, 178, 0.22);
 }
 
 .just99-split-title {
@@ -4958,7 +4958,7 @@ a:hover .expert-arrow-circle {
   font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.02em;
-  color: #7c3aed;
+  color: #563fb2;
 }
 
 .just99-split-title span {
@@ -4966,7 +4966,7 @@ a:hover .expert-arrow-circle {
 }
 
 .just99-split-title span:not(.just99-split-title-gold) {
-  background-image: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 38%, #5b21b6 72%, #4c1d95 100%);
+  background-image: linear-gradient(90deg, #7a63d0 0%, #563fb2 42%, #3d2a8a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -4975,8 +4975,8 @@ a:hover .expert-arrow-circle {
 
 .just99-split-title-gold {
   background: none;
-  color: #d4af37;
-  -webkit-text-fill-color: #d4af37;
+  color: #563fb2;
+  -webkit-text-fill-color: #563fb2;
 }
 
 .just99-split-desc {
@@ -5008,14 +5008,14 @@ a:hover .expert-arrow-circle {
   justify-content: center;
   width: 2.35rem;
   height: 2.35rem;
-  color: #d4af37;
-  filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.28));
+  color: #563fb2;
+  filter: drop-shadow(0 2px 6px rgba(86, 63, 178, 0.28));
 }
 
 .just99-split-feature-title {
   font-size: 0.92rem;
   font-weight: 700;
-  color: #3d3d8f;
+  color: #563fb2;
 }
 
 .just99-split-feature-desc {
@@ -5059,11 +5059,11 @@ a:hover .expert-arrow-circle {
   box-sizing: border-box;
   width: 100%;
   border-radius: 22px;
-  background: linear-gradient(180deg, #3d3d8f 0%, #1b1b4d 100%);
+  background: linear-gradient(180deg, #563fb2 0%, #3d2a8a 100%);
   padding: 1.45rem 1.25rem 1.2rem;
   box-shadow:
-    0 22px 48px rgba(27, 27, 77, 0.28),
-    0 0 0 1px rgba(212, 175, 55, 0.12);
+    0 22px 48px rgba(86, 63, 178, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.14);
 }
 
 .just99-lead-title {
@@ -5074,7 +5074,7 @@ a:hover .expert-arrow-circle {
   letter-spacing: 0.06em;
   text-align: center;
   text-transform: uppercase;
-  color: #d4af37;
+  color: #ffffff;
 }
 
 .just99-lead-form {
@@ -5131,7 +5131,7 @@ a:hover .expert-arrow-circle {
 }
 
 .just99-lead-input:focus {
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 0 2px rgba(86, 63, 178, 0.45);
 }
 
 .just99-lead-submit {
@@ -5139,14 +5139,14 @@ a:hover .expert-arrow-circle {
   margin-top: 0.25rem;
   border: 0;
   border-radius: 10px;
-  background: #d4af37;
+  background: #ffffff;
   padding: 0.95rem 1rem;
   font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #3d3d8f;
-  box-shadow: 0 10px 24px rgba(212, 175, 55, 0.35);
+  color: #563fb2;
+  box-shadow: 0 10px 24px rgba(86, 63, 178, 0.28);
   cursor: pointer;
   transition: filter 0.15s ease, transform 0.15s ease;
 }
@@ -5180,7 +5180,7 @@ a:hover .expert-arrow-circle {
 
 .just99-lead-checks svg {
   flex-shrink: 0;
-  color: #d4af37;
+  color: #c7c7c7;
 }
 
 .just99-lead-safe {
@@ -5339,14 +5339,14 @@ a:hover .expert-arrow-circle {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  color: #d4af37;
+  color: #c7c7c7;
 }
 
 .just99-trust-value {
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.2;
-  color: #d4af37;
+  color: #c7c7c7;
 }
 
 .just99-trust-label {
@@ -5427,8 +5427,8 @@ a:hover .expert-arrow-circle {
 
 .just99-energy-title span {
   background: none;
-  color: #d4af37;
-  -webkit-text-fill-color: #d4af37;
+  color: #c7c7c7;
+  -webkit-text-fill-color: #c7c7c7;
 }
 
 .just99-energy-sub {
@@ -5529,20 +5529,21 @@ a:hover .expert-arrow-circle {
 }
 
 .just99-energy-node-navy {
-  background: #3d3d8f;
+  background: #563fb2;
   color: #fff;
 }
 
 .just99-energy-node-gold {
-  background: #d4af37;
-  color: #3d3d8f;
+  background: #ffffff;
+  color: #563fb2;
+  box-shadow: inset 0 0 0 2px #563fb2;
 }
 
 .just99-energy-node-purple {
   width: 148px;
   min-height: 72px;
   border-radius: 999px;
-  background: #4b4ba8;
+  background: #3d2a8a;
   color: #fff;
 }
 
@@ -5645,8 +5646,8 @@ a:hover .expert-arrow-circle {
 
 .just99-compare-title span {
   background: none;
-  color: #d4af37;
-  -webkit-text-fill-color: #d4af37;
+  color: #c7c7c7;
+  -webkit-text-fill-color: #c7c7c7;
 }
 
 .just99-compare-wrap {
@@ -5860,7 +5861,7 @@ a:hover .expert-arrow-circle {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  color: #d4af37;
+  color: #c7c7c7;
 }
 
 .just99-life-card h3 {
@@ -5963,21 +5964,21 @@ a:hover .expert-arrow-circle {
   align-items: center;
   gap: 0.45rem;
   border-radius: 999px;
-  background: #f4ecd0;
+  background: rgba(86, 63, 178, 0.1);
   padding: 0.38rem 0.85rem 0.38rem 0.7rem;
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #5b21b6;
+  color: #563fb2;
 }
 
 .just99-mentor-badge-dot {
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 999px;
-  background: #d4af37;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.22);
+  background: #563fb2;
+  box-shadow: 0 0 0 3px rgba(86, 63, 178, 0.22);
 }
 
 .just99-mentor-name {
@@ -6007,7 +6008,7 @@ a:hover .expert-arrow-circle {
 }
 
 .just99-mentor-role span {
-  color: #d4af37;
+  color: #c7c7c7;
 }
 
 .just99-mentor-bio {
@@ -6137,8 +6138,8 @@ a:hover .expert-arrow-circle {
   width: 56px;
   height: 56px;
   border-radius: 10px;
-  background: linear-gradient(160deg, #f4ecd0 0%, #f0e4c4 100%);
-  color: #d4af37;
+  background: linear-gradient(160deg, rgba(86, 63, 178, 0.14) 0%, rgba(86, 63, 178, 0.28) 100%);
+  color: #563fb2;
 }
 
 .just99-audience-card h3 {
@@ -6246,7 +6247,7 @@ a:hover .expert-arrow-circle {
   justify-content: center;
   width: 2.1rem;
   height: 2.1rem;
-  border: 1.5px solid #d4af37;
+  border: 1.5px solid #c7c7c7;
   border-radius: 999px;
   background: #3d3d8f;
   font-size: 0.78rem;
@@ -6306,8 +6307,8 @@ a:hover .expert-arrow-circle {
   width: 1.1rem;
   height: 0;
   margin: 0 0.2rem 0 0.15rem;
-  border-top: 1.5px solid #d4af37;
-  box-shadow: 4px -3px 0 -2px #d4af37, 4px 3px 0 -2px #d4af37;
+  border-top: 1.5px solid #c7c7c7;
+  box-shadow: 4px -3px 0 -2px #c7c7c7, 4px 3px 0 -2px #c7c7c7;
 }
 
 @media (min-width: 700px) {
@@ -6734,61 +6735,68 @@ a:hover .expert-arrow-circle {
   }
 }
 
-/* Just99 page — website indigo theme + responsive polish */
+/* Just99 page — brand purple (#563fb2) + white, no gold */
 .just99-split,
 .just99-landing-sections {
-  --just99-indigo: #3d3d8f;
-  --just99-indigo-deep: #1b1b4d;
-  --just99-indigo-mid: #4b4ba8;
-  --just99-gold: #d4af37;
-  --just99-bg: #f7f7fc;
+  --just99-indigo: #563fb2;
+  --just99-indigo-deep: #3d2a8a;
+  --just99-indigo-mid: #6b54c4;
+  --just99-gold: #ffffff;
+  --just99-bg: #f7f5fc;
   --just99-muted: #5a5a7a;
 }
 
 .just99-split.just99-landing,
 .just99-split.just99-landing-fit,
 .just99-landing-fit {
-  background: #f7f7fc !important;
+  background: #ffffff !important;
 }
 
 .just99-split .just99-page,
 .just99-landing-fit .just99-page {
   background:
-    radial-gradient(ellipse 70% 48% at 50% 0%, rgba(240, 215, 140, 0.18) 0%, transparent 58%),
-    linear-gradient(180deg, #f7f7fc 0%, #f3f3fa 50%, #f7f7fc 100%) !important;
+    radial-gradient(ellipse 70% 48% at 50% 0%, rgba(86, 63, 178, 0.12) 0%, transparent 58%),
+    linear-gradient(180deg, #ffffff 0%, #f7f5fc 50%, #ffffff 100%) !important;
 }
 
 .just99-split .just99-why-card,
 .just99-landing-fit .just99-why-card {
-  background: linear-gradient(180deg, #3d3d8f 0%, #1b1b4d 100%) !important;
-  box-shadow: 0 12px 28px rgba(27, 27, 77, 0.18) !important;
+  background: linear-gradient(180deg, #563fb2 0%, #3d2a8a 100%) !important;
+  box-shadow: 0 12px 28px rgba(86, 63, 178, 0.22) !important;
 }
 
 .just99-lead-card {
-  background: linear-gradient(180deg, #3d3d8f 0%, #1b1b4d 100%);
+  background: linear-gradient(180deg, #563fb2 0%, #3d2a8a 100%);
   box-shadow:
-    0 22px 48px rgba(27, 27, 77, 0.22),
-    0 0 0 1px rgba(212, 175, 55, 0.16);
+    0 22px 48px rgba(86, 63, 178, 0.24),
+    0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .just99-lead-submit {
-  background: linear-gradient(90deg, #f0d78c 0%, #d4af37 50%, #c9a06a 100%);
-  color: #1b1b4d;
+  background: #ffffff;
+  color: #563fb2;
+}
+
+.just99-lead-submit:hover:not(:disabled) {
+  background: #f3effc;
+  color: #3d2a8a;
 }
 
 .just99-trust-bar,
 .just99-energy-node-navy,
 .just99-learn-num,
 .just99-learn-flow li span {
-  background: #3d3d8f;
+  background: #563fb2;
 }
 
 .just99-energy-node-purple {
-  background: #1b1b4d;
+  background: #3d2a8a;
 }
 
 .just99-energy-node-gold {
-  background: #d4af37;
+  background: #ffffff;
+  color: #563fb2;
+  box-shadow: inset 0 0 0 2px #563fb2;
 }
 
 @media (max-width: 699px) {
@@ -6875,4 +6883,106 @@ a:hover .expert-arrow-circle {
   .just99-life-card {
     min-height: auto;
   }
+}
+
+/* Just99 — force brand purple #563fb2 + white (no gold) */
+.just99-split,
+.just99-landing-sections,
+.just99-landing-fit {
+  --just99-indigo: #563fb2;
+  --just99-indigo-deep: #3d2a8a;
+  --just99-gold: #ffffff;
+  --gold: #563fb2;
+  --gold-light: #7a63d0;
+  --gold-champagne: #ffffff;
+  --border-gold: rgba(86, 63, 178, 0.35);
+  --gradient-gold: linear-gradient(90deg, #7a63d0 0%, #563fb2 50%, #3d2a8a 100%);
+  --gradient-gold-btn: linear-gradient(90deg, #ffffff 0%, #f3effc 100%);
+}
+
+.just99-split .just99-split-title-gold,
+.just99-landing-fit .just99-split-title-gold,
+.just99-landing-sections .just99-energy-title span,
+.just99-landing-sections [class*="gold"],
+.just99-split [class*="gold"] {
+  color: #563fb2 !important;
+  -webkit-text-fill-color: #563fb2 !important;
+  background: none !important;
+}
+
+.just99-landing-sections .just99-why-card-divider-diamond,
+.just99-landing-fit .just99-why-card-divider-diamond,
+.just99-landing-sections .just99-why-card-check,
+.just99-landing-fit .just99-lead-checks svg,
+.just99-landing-fit .just99-lead-safe svg {
+  color: #ffffff !important;
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.just99-landing-fit .just99-lead-submit,
+.just99-split .just99-lead-submit {
+  background: #ffffff !important;
+  color: #563fb2 !important;
+  box-shadow: 0 10px 24px rgba(86, 63, 178, 0.28) !important;
+}
+
+.just99-landing-fit .just99-lead-title,
+.just99-split .just99-lead-title {
+  color: #ffffff !important;
+}
+
+.just99-landing-sections .just99-energy-node-gold,
+.just99-landing-fit .just99-energy-node-gold {
+  background: #ffffff !important;
+  color: #563fb2 !important;
+  box-shadow: inset 0 0 0 2px #563fb2 !important;
+}
+
+.just99-landing-sections .just99-mentor-badge,
+.just99-landing-sections .just99-audience-badge,
+.just99-landing-fit .just99-split-badge {
+  background: rgba(86, 63, 178, 0.1) !important;
+  color: #563fb2 !important;
+}
+
+.just99-landing-sections .just99-mentor-badge-dot,
+.just99-landing-fit .just99-split-badge-dot {
+  background: #563fb2 !important;
+  box-shadow: 0 0 0 3px rgba(86, 63, 178, 0.22) !important;
+}
+
+.just99-landing-sections .just99-quote-line,
+.just99-landing-fit .just99-quote-line,
+.just99-landing-sections .just99-why-card-divider-line {
+  background: linear-gradient(90deg, transparent, #563fb2, transparent) !important;
+}
+
+.just99-landing-fit .community-join-btn,
+.just99-landing-fit .just99-join-btn,
+.just99-split .community-join-btn,
+.just99-split .just99-join-btn,
+.just99-landing-fit .just99-hero-join-btn {
+  background: linear-gradient(90deg, #6b54c4 0%, #563fb2 55%, #3d2a8a 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 12px 28px rgba(86, 63, 178, 0.32) !important;
+}
+
+.just99-landing-fit .community-offer-ribbon,
+.just99-landing-fit .community-payment-badge,
+.just99-split .community-offer-ribbon,
+.just99-split .community-payment-badge {
+  background: linear-gradient(180deg, #6b54c4 0%, #563fb2 100%) !important;
+  color: #ffffff !important;
+}
+
+.just99-landing-fit .community-popup-price,
+.just99-landing-fit .just99-price,
+.just99-split .community-popup-price,
+.just99-split .just99-price {
+  background-image: linear-gradient(135deg, #7a63d0 0%, #563fb2 55%, #3d2a8a 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
 }

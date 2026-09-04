@@ -214,10 +214,10 @@ export default function Just99LandingSections() {
             />
           </div>
           <div className="just99-mentor-copy">
-            <span className="just99-mentor-badge">
+            {/* <span className="just99-mentor-badge">
               <span className="just99-mentor-badge-dot" aria-hidden />
               Meet Your Mentor
-            </span>
+            </span> */}
             <h2 className="just99-mentor-name">{JUST99_MENTOR.name}</h2>
             <p className="just99-mentor-role">
               {JUST99_MENTOR.titleLead}{" "}
@@ -259,11 +259,10 @@ export default function Just99LandingSections() {
         <div className="just99-learn-inner">
           <header className="just99-learn-head">
             <h2 className="just99-learn-title">
-              What you&apos;ll learn in the masterclass
+            WHAT YOU'LL DISCOVER IN YOUR SESSION
             </h2>
             <p className="just99-learn-sub">
-              A clear framework to understand your numbers, your home, and how
-              they work together.
+            A practical approach to understanding your mind, your environment, and the patterns affecting your life.
             </p>
           </header>
           <div className="just99-learn-grid">
@@ -579,7 +578,7 @@ function ShieldCheckIcon() {
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M12 3.4 19 6.5v5.3c0 4.3-3.2 7.5-7 8.8-3.8-1.3-7-4.5-7-8.8V6.5L12 3.4Z"
-        fill="#d4af37"
+        fill="#563fb2"
       />
       <path
         d="M8.6 12.1 11 14.4 15.5 9.6"
@@ -595,7 +594,7 @@ function ShieldCheckIcon() {
 function GoldCheckIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <circle cx="8" cy="8" r="7.1" fill="#d4af37" />
+      <circle cx="8" cy="8" r="7.1" fill="#563fb2" />
       <path
         d="M4.7 8.15 6.9 10.3 11.3 5.7"
         stroke="#1b1b4d"

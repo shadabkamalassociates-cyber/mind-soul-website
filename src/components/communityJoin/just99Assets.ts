@@ -162,75 +162,75 @@ export const JUST99_LIFE_AREAS = [
 ] as const;
 
 export const JUST99_MENTOR = {
-  name: "Dr. Ankiit Btra",
+  name: "Vikas Bhardwaj",
   titleLead: "India's Leading",
-  titleGold: "Numerologist & Vastu",
+  titleGold: "Hypnotherapist & Vastu",
   titleTail: "Consultant",
-  bio: "Dr. Ankiit Btra has helped business owners, factory operators, hospitals, and commercial property investors identify hidden Vastu imbalances — using a practical, no-demolition approach that aligns space energy with personal energy.",
+  bio: "Vikas Bhardwaj is a trusted Hypnotherapist and Vastu Consultant dedicated to helping individuals create positive changes in their lives. With a holistic approach combining hypnotherapy, mindset transformation, and Vastu principles, he helps people overcome challenges, improve well-being, and create a more balanced and positive environment.",
   highlights: [
-    "20,000+ Factories Audited",
-    "50,000+ Businesses Transformed",
-    "Commercial Vastu Specialist",
-    "No-Demolition Solutions",
-    "4.9/5 Client Rating",
+    "Mindset & Behavioral Transformation",
+    "Personalized Hypnotherapy Sessions",
+    "Expert Vastu Consultation",
+    "Positive Energy & Space Alignment",
+    "Holistic Approach to Life & Well-Being",
   ],
 } as const;
 
 export const JUST99_AUDIENCES = [
   {
-    icon: "homeowners",
+    icon: "individuals",
     title: "Homeowners",
-    desc: "who want peace & harmony at home",
+    desc: "Looking to overcome limiting thoughts, fears & emotional challenges",
   },
   {
     icon: "business",
-    title: "Business Owners",
-    desc: "seeking growth & stability",
+    title: "Professionals",
+    desc: "Seeking better focus, confidence & career growth.",
   },
   {
     icon: "professionals",
-    title: "Professionals",
-    desc: "facing career blocks",
+    title: "Families & Homeowners",
+    desc: "Wanting peace, harmony & positive energy at home.",
   },
   {
     icon: "individuals",
-    title: "Individuals",
-    desc: "with relationship or health concerns",
+    title: "Business Owners",
+    desc: "Looking to create a balanced environment for growth & success",
   },
 ] as const;
 
 export const JUST99_LEARN_ITEMS = [
   {
-    title: "Read Your Lo Shu Grid",
-    desc: "Identify missing, weak and excessive energies.",
+    title: "Understand Your Mindset",
+    desc: "Identify thought patterns, limiting beliefs, and emotional blocks that may be holding you back.",
   },
   {
-    title: "Understand Your Name & DOB Energy",
-    desc: "Understand how your name and date of birth contribute to your personal energy profile.",
+    title: "Unlock Your Inner Potential",
+    desc: "Learn how your subconscious mind can influence confidence, habits, emotions, and everyday decisions.",
   },
   {
-    title: "Decode Vastu Directions",
-    desc: "Understand the energy associated with different directions.",
+    title: "Identify Areas of Imbalance",
+    desc: "Explore the areas of life where you may be experiencing stress, uncertainty, or lack of harmony.",
   },
   {
-    title: "Connect Numbers with Directions",
-    desc: "Learn how number energies relate to specific Vastu directions.",
+    title: "Understand Your Space",
+    desc: "Discover how Vastu principles can help create a more balanced and harmonious environment.",
   },
   {
-    title: "Identify Life-Area Indicators",
-    desc: "Understand how different energies may correspond with different life areas.",
+    title: "Connect Mind & Environment",
+    desc: "Understand how your mindset and surroundings can work together to support positive change.",
   },
   {
-    title: "Analyse Person + House Together",
-    desc: "Understand why analysing only the house may not be enough.",
+    title: "Find Personalized Solutions",
+    desc: "Receive guidance based on your individual goals, concerns, and circumstances.",
   },
   {
-    title: "Identify Where the Imbalance May Be",
-    desc: "Connect your energy, life concerns and relevant areas of the house.",
+    title: "Build Positive Patterns",
+    desc: "Learn practical approaches to develop healthier thoughts, habits, confidence, and emotional balance.",
   },
   {
-    title: "Understand Personalised Vastu Guidance",
-    desc: "Learn the framework for creating Vastu remedies based on individual analysis.",
+    title: "Create Lasting Transformation",
+    desc: "Take away actionable guidance to move toward greater clarity, harmony, and personal growth.",
   },
 ] as const;
 
