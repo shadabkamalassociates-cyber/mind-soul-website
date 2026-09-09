@@ -148,7 +148,7 @@ export default function BannerJoinLeadForm({
               Join Cosmic Guruji
             </h2>
             <p className="mt-1 text-sm text-[#7A6B96]">
-              Confirm your account details and pay ₹99 for lifetime access.
+              Confirm your account details and pay ₹11 for lifetime access.
             </p>
           </div>
 

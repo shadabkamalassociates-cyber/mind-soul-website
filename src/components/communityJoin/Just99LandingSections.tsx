@@ -14,9 +14,11 @@ import {
   JUST99_LIFE_AREAS,
   JUST99_MENTOR,
   JUST99_TRUST_STATS,
+  JUST99_WEBINAR,
   JUST99_WHY_JOIN_CHECKLIST,
 } from "@/components/communityJoin/just99Assets";
 import Just99ChatReviews from "@/components/communityJoin/Just99ChatReviews";
+import { COMMUNITY_JOIN_PRICE_INR } from "@/services/communityJoinService";
 
 function Just99Asset({
   src,
@@ -56,6 +58,51 @@ export default function Just99LandingSections() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="just99-webinar-section" aria-labelledby="just99-webinar-heading">
+        <div className="just99-webinar-inner">
+          <div className="just99-webinar-panel">
+            <header className="just99-webinar-head">
+              <span className="just99-webinar-eyebrow">{JUST99_WEBINAR.eyebrow}</span>
+              <h2 id="just99-webinar-heading" className="just99-webinar-title">
+                {JUST99_WEBINAR.title}
+              </h2>
+              <p className="just99-webinar-dates">{JUST99_WEBINAR.dates}</p>
+              <p className="just99-webinar-days">{JUST99_WEBINAR.days}</p>
+              <p className="just99-webinar-desc">{JUST99_WEBINAR.description}</p>
+            </header>
+
+            <div className="just99-webinar-days-grid">
+              {JUST99_WEBINAR.daysDetail.map((item) => (
+                <article key={item.day} className="just99-webinar-day-card">
+                  <span className="just99-webinar-day-tag">{item.day}</span>
+                  <h3>{item.date}</h3>
+                  <p className="just99-webinar-day-weekday">{item.weekday}</p>
+                  <p className="just99-webinar-day-focus">{item.focus}</p>
+                </article>
+              ))}
+            </div>
+
+            <ul className="just99-webinar-highlights">
+              {JUST99_WEBINAR.highlights.map((item) => (
+                <li key={item}>
+                  <WebinarCheckIcon />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href={JUST99_WEBINAR.paymentLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="just99-webinar-cta"
+            >
+              Join Webinar for ₹{COMMUNITY_JOIN_PRICE_INR}
+            </a>
+          </div>
         </div>
       </section>
 
@@ -598,6 +645,21 @@ function GoldCheckIcon() {
       <path
         d="M4.7 8.15 6.9 10.3 11.3 5.7"
         stroke="#1b1b4d"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function WebinarCheckIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <circle cx="8" cy="8" r="7.1" fill="#ffffff" />
+      <path
+        d="M4.7 8.15 6.9 10.3 11.3 5.7"
+        stroke="#563fb2"
         strokeWidth="1.7"
         strokeLinecap="round"
         strokeLinejoin="round"

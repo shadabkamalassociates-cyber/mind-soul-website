@@ -1,9 +1,9 @@
 import { apiPost } from "@/services/apiClient";
 import { openRazorpayCheckout } from "@/lib/razorpayCheckout";
 
-/** Community join price in INR (Just ₹99 offer). Override via NEXT_PUBLIC_COMMUNITY_JOIN_AMOUNT. */
+/** Community join price in INR (Just ₹11 offer). Override via NEXT_PUBLIC_COMMUNITY_JOIN_AMOUNT. */
 export const COMMUNITY_JOIN_PRICE_INR = Number(
-  process.env.NEXT_PUBLIC_COMMUNITY_JOIN_AMOUNT ?? "99",
+  process.env.NEXT_PUBLIC_COMMUNITY_JOIN_AMOUNT ?? "11",
 );
 
 export type CommunityJoinDetails = {
@@ -49,7 +49,7 @@ export async function createCommunityJoinOrder(
   source = "website_popup",
 ) {
   return apiPost<CommunityJoinOrderResponse>(
-    "/payment/community-join/create",
+    "/community/join-payment",
     {
       name: details.name,
       email: details.email,
@@ -64,7 +64,7 @@ export async function createCommunityJoinOrder(
         whatsapp: details.whatsapp,
       }),
     },
-    false,
+    true,
   );
 }
 
@@ -73,7 +73,7 @@ export async function verifyCommunityJoinPayment(body: {
   razorpayPaymentId: string;
   razorpaySignature: string;
 }) {
-  return apiPost("/payment/community-join/verify-payment", body, false);
+  return apiPost("/community/confirm-payment", body, true);
 }
 
 export type CommunityPaymentStatusResponse = {

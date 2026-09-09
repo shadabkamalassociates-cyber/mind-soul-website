@@ -13,6 +13,8 @@ import {
 } from "@/services/communityJoinService";
 import { ApiError } from "@/services/apiClient";
 import { useAppSelector } from "@/store/hooks";
+import { getStoredToken, getStoredUser } from "@/lib/authStorage";
+import type { AuthUser } from "@/types/auth";
 import {
   JUST99_ASSETS,
   JUST99_FEATURES,
@@ -38,7 +40,7 @@ export default function CommunityJoinExperience({
   const user = useAppSelector((s) => s.auth.user);
   const token = useAppSelector((s) => s.auth.token);
   const authHydrated = useAppSelector((s) => s.auth.hydrated);
-  const isLoggedIn = Boolean(token && user);
+  const isLoggedIn = Boolean(token);
   const [step, setStep] = useState<Step>(variant === "page" ? "form" : "offer");
   const [error, setError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
@@ -70,17 +72,52 @@ export default function CommunityJoinExperience({
       return;
     }
 
+    const storedUser = user || getStoredUser<AuthUser>();
     setFormDetails({
-      name: profileDetails.name,
-      email: profileDetails.email,
-      whatsapp: profileDetails.whatsapp,
+      name:
+        [storedUser?.first_name, storedUser?.last_name].filter(Boolean).join(" ").trim() ||
+        String(storedUser?.name || "").trim() ||
+        profileDetails.name,
+      email: String(storedUser?.email || "").trim() || profileDetails.email,
+      whatsapp:
+        String(
+          storedUser?.phone ||
+            storedUser?.whatsapp_number ||
+            storedUser?.alternate_phone ||
+            "",
+        ).trim() || profileDetails.whatsapp,
     });
   }, [
     isLoggedIn,
+    user,
     profileDetails.name,
     profileDetails.email,
     profileDetails.whatsapp,
   ]);
+
+  function getLoggedInPaymentDetails() {
+    const storedUser = user || getStoredUser<AuthUser>();
+    return {
+      name:
+        formDetails.name.trim() ||
+        [storedUser?.first_name, storedUser?.last_name].filter(Boolean).join(" ").trim() ||
+        String(storedUser?.name || "").trim() ||
+        profileDetails.name,
+      email:
+        formDetails.email.trim() ||
+        String(storedUser?.email || "").trim() ||
+        profileDetails.email,
+      whatsapp:
+        formDetails.whatsapp.trim() ||
+        String(
+          storedUser?.phone ||
+            storedUser?.whatsapp_number ||
+            storedUser?.alternate_phone ||
+            "",
+        ).trim() ||
+        profileDetails.whatsapp,
+    };
+  }
 
   useEffect(() => {
     if (!isPage) return;
@@ -116,7 +153,7 @@ export default function CommunityJoinExperience({
           setShowCongrats(true);
         }
       } catch {
-        // Keep the Just99 page when verification fails or payment is pending.
+        // Keep the just99 page when verification fails or payment is pending.
       }
     }
 
@@ -138,7 +175,9 @@ export default function CommunityJoinExperience({
   }
 
   function updateFormDetail(field: "name" | "email" | "whatsapp", value: string) {
-    setFormDetails((prev) => ({ ...prev, [field]: value }));
+    const nextValue =
+      field === "whatsapp" ? value.replace(/\D/g, "").slice(0, 10) : value;
+    setFormDetails((prev) => ({ ...prev, [field]: nextValue }));
   }
 
   useEffect(() => {
@@ -161,16 +200,17 @@ export default function CommunityJoinExperience({
 
     setError(null);
 
-    if (!isLoggedIn) {
-      setError("Please log in to join the community.");
+    const name = formDetails.name.trim() || profileDetails.name;
+    const email = formDetails.email.trim() || profileDetails.email;
+    const whatsapp = (
+      formDetails.whatsapp.trim() || profileDetails.whatsapp
+    ).replace(/\D/g, "").slice(0, 10);
+    if (!name || !email || !whatsapp) {
+      setError("Please enter your name, email and phone to continue payment.");
       return;
     }
-
-    const name = formDetails.name.trim();
-    const email = formDetails.email.trim();
-    const whatsapp = formDetails.whatsapp.trim();
-    if (!name || !email || !whatsapp) {
-      setError("Please enter your full name, email and WhatsApp number.");
+    if (whatsapp.length !== 10) {
+      setError("Please enter a 10-digit WhatsApp number.");
       return;
     }
 
@@ -182,7 +222,6 @@ export default function CommunityJoinExperience({
         source,
       );
 
-      // Confirm membership via community verify endpoint before showing congrats.
       try {
         const status = await checkCommunityJoinPaymentStatus();
         if (status?.success === true) {
@@ -279,6 +318,13 @@ export default function CommunityJoinExperience({
                   <span className="just99-split-badge-dot" aria-hidden />
                   Just ₹{COMMUNITY_JOIN_PRICE_INR} Community
                 </span>
+                <div className="just99-webinar-chip">
+                  <span className="just99-webinar-chip-label">Upcoming Webinar</span>
+                  <p className="just99-webinar-chip-dates">
+                    10th &amp; 11th October
+                  </p>
+                  <p className="just99-webinar-chip-days">Saturday and Sunday</p>
+                </div>
                 <h1 id="community-popup-title" className="just99-split-title">
                   <span>Heal Your Mind.</span>
                   <span>Uplift Your Soul.</span>
@@ -654,6 +700,8 @@ function FormInputField({
   inputMode,
   landing = false,
   icon,
+  maxLength,
+  minLength,
   onChange,
 }: {
   label: string;
@@ -663,6 +711,8 @@ function FormInputField({
   inputMode?: "text" | "email" | "tel" | "numeric";
   landing?: boolean;
   icon?: ReactNode;
+  maxLength?: number;
+  minLength?: number;
   onChange: (value: string) => void;
 }) {
   if (landing) {
@@ -676,6 +726,8 @@ function FormInputField({
           type={type}
           inputMode={inputMode}
           value={value}
+          maxLength={maxLength}
+          minLength={minLength}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className="just99-lead-input"
@@ -694,6 +746,8 @@ function FormInputField({
         type={type}
         inputMode={inputMode}
         value={value}
+        maxLength={maxLength}
+        minLength={minLength}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="community-popup-input w-full bg-white text-[#3D3D8F]"
@@ -732,80 +786,65 @@ function FormPanel({
   const canPay = Boolean(
     details.name.trim() && details.email.trim() && details.whatsapp.trim(),
   );
-  const canSubmit =
-    authHydrated && isLoggedIn && !isPaying && canPay;
+  const canSubmit = !isPaying && canPay;
 
   if (landing) {
     return (
       <div className="just99-lead-card">
         <h2 className="just99-lead-title">Join the Healing Community</h2>
+        <p className="just99-lead-subtitle">
+          Pay just ₹{COMMUNITY_JOIN_PRICE_INR} to join our community
+        </p>
+        <p className="just99-lead-webinar">
+          <span className="just99-lead-webinar-label">Upcoming Webinar</span>
+          <span className="just99-lead-webinar-dates">
+            10th &amp; 11th October
+          </span>
+          <span className="just99-lead-webinar-days">Saturday and Sunday</span>
+        </p>
 
         <form onSubmit={onSubmit} className="just99-lead-form">
           <FormInputField
-            label="Your Name"
-            value={details.name}
-            placeholder="Your Name"
             landing
+            label="Full Name"
+            value={details.name}
+            placeholder="Full name"
             icon={<UserFieldIcon />}
             onChange={(value) => onChange("name", value)}
           />
           <FormInputField
-            label="Your Mobile Number"
-            value={details.whatsapp}
-            placeholder="Your Mobile Number"
-            type="tel"
-            inputMode="tel"
             landing
-            icon={<PhoneFieldIcon />}
-            onChange={(value) => onChange("whatsapp", value)}
-          />
-          <FormInputField
-            label="Your Email"
+            label="Email Address"
             value={details.email}
-            placeholder="Your Email"
+            placeholder="Email address"
             type="email"
             inputMode="email"
-            landing
             icon={<EmailFieldIcon />}
             onChange={(value) => onChange("email", value)}
           />
-
-          {error && (
-            <p className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] leading-relaxed text-[#B42318]">
+          <FormInputField
+            landing
+            label="WhatsApp Number"
+            value={details.whatsapp}
+            placeholder="WhatsApp number"
+            type="tel"
+            maxLength={10}
+            minLength={10}
+            inputMode="numeric"
+            icon={<PhoneFieldIcon />}
+            onChange={(value) => onChange("whatsapp", value)}
+          />
+          {error ? (
+            <p className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[12px] text-[#B42318]">
               {error}
             </p>
-          )}
-
-          {!authHydrated ? null : !isLoggedIn ? (
-            <p className="rounded-lg border border-[#E9E3FF] bg-[#F7F4FF] px-3 py-2 text-[11px] leading-relaxed text-[#563fb2]">
-              Please{" "}
-              <button
-                type="button"
-                className="font-semibold underline underline-offset-2"
-                onClick={() =>
-                  router.push(
-                    `/login?returnUrl=${encodeURIComponent("/just99")}`,
-                  )
-                }
-              >
-                log in
-              </button>{" "}
-              to join. Your details will fill in automatically.
-            </p>
           ) : null}
-
           <button
             type="submit"
-            disabled={!canSubmit}
-            className="just99-lead-submit"
+            disabled={isPaying}
+            className="just99-lead-submit disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isPaying
-              ? "Opening payment..."
-              : !authHydrated
-                ? "Checking login..."
-                : !isLoggedIn
-                  ? "Log in to join"
-                  : `Join for ₹${COMMUNITY_JOIN_PRICE_INR}`}
+            {isPaying ? "Opening payment..." : "Pay Now"}
           </button>
         </form>
 
@@ -816,11 +855,11 @@ function FormPanel({
           </li>
           <li>
             <GoldCheckIcon />
-            Lifetime community access
+            Live webinar on 10th &amp; 11th October
           </li>
           <li>
             <GoldCheckIcon />
-            Live healing sessions every week
+            Lifetime community access
           </li>
         </ul>
 
@@ -864,7 +903,9 @@ function FormPanel({
           value={details.whatsapp}
           placeholder="Enter your WhatsApp number"
           type="tel"
-          inputMode="tel"
+          maxLength={10}
+          minLength={10}
+          inputMode="numeric"
           onChange={(value) => onChange("whatsapp", value)}
         />
 
@@ -873,22 +914,6 @@ function FormPanel({
             {error}
           </p>
         )}
-
-        {!authHydrated ? null : !isLoggedIn ? (
-          <p className="rounded-lg border border-[#E9E3FF] bg-[#F7F4FF] px-3 py-2 text-[11px] leading-relaxed text-[#563fb2]">
-            Please{" "}
-            <button
-              type="button"
-              className="font-semibold underline underline-offset-2"
-              onClick={() =>
-                router.push(`/login?returnUrl=${encodeURIComponent("/")}`)
-              }
-            >
-              log in
-            </button>{" "}
-            to join. Your details will fill in automatically.
-          </p>
-        ) : null}
 
         <div className="community-form-actions">
           <button
@@ -900,13 +925,7 @@ function FormPanel({
               <PeopleIcon />
             </span>
             <span className="community-join-btn-label">
-              {isPaying
-                ? "Opening payment..."
-                : !authHydrated
-                  ? "Checking login..."
-                  : !isLoggedIn
-                    ? "Log in to join"
-                    : `Pay ₹${COMMUNITY_JOIN_PRICE_INR}`}
+              {isPaying ? "Opening payment..." : `Pay ₹${COMMUNITY_JOIN_PRICE_INR}`}
             </span>
             <span className="community-join-btn-arrow">
               <ArrowIcon />

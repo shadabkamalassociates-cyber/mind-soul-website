@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+const WHATSAPP_COMMUNITY_LINK =
+  "https://chat.whatsapp.com/E0SZ7y0LPRdCycX308e9Lb";
+
 type CongratulationsDialogProps = {
   onClose?: () => void;
 };
@@ -65,13 +68,27 @@ export default function CongratulationsDialog({ onClose }: CongratulationsDialog
             We have sent the join link on your WhatsApp
           </p>
           <p className="congrats-whatsapp-desc">
-            Please check WhatsApp and tap the link to join our exclusive community.
+            Please check WhatsApp and tap the link to join our exclusive community, or tap Join Now below.
           </p>
         </div>
       </div>
 
       <div className="congrats-actions">
-        <Link href="/live-sessions" className="congrats-btn-secondary">
+        <a
+          href={WHATSAPP_COMMUNITY_LINK}
+          className="congrats-btn-join"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="congrats-btn-icon" aria-hidden>
+            <WhatsAppIcon />
+          </span>
+          <span className="congrats-btn-label">Join Now</span>
+          <span className="congrats-btn-arrow" aria-hidden>
+            →
+          </span>
+        </a>
+        {/* <Link href="/live-sessions" className="congrats-btn-secondary">
           <span className="congrats-btn-icon" aria-hidden>
             <LotusIcon />
           </span>
@@ -79,7 +96,7 @@ export default function CongratulationsDialog({ onClose }: CongratulationsDialog
           <span className="congrats-btn-arrow" aria-hidden>
             →
           </span>
-        </Link>
+        </Link> */}
       </div>
 
       <p className="congrats-secure">

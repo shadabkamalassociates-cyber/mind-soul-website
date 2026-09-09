@@ -46,6 +46,35 @@ export const JUST99_TRUST_STATS = [
   { value: "Trusted by", label: "Thousands of Families" },
 ] as const;
 
+export const JUST99_WEBINAR = {
+  eyebrow: "Upcoming Webinar",
+  title: "Live Healing Webinar",
+  dates: "10th & 11th October",
+  days: "Saturday and Sunday",
+  description:
+    "Join our live two-day webinar and take the first step toward healing your mind, uplifting your soul, and growing with a guided community.",
+  paymentLink: "https://razorpay.com/payment-link/plink_TXSTLlqmIH5o1N",
+  daysDetail: [
+    {
+      day: "Day 1",
+      date: "10th October",
+      weekday: "Saturday",
+      focus: "Mindset, inner blocks & emotional clarity",
+    },
+    {
+      day: "Day 2",
+      date: "11th October",
+      weekday: "Sunday",
+      focus: "Vastu harmony, space energy & lasting growth",
+    },
+  ],
+  highlights: [
+    "Live interactive sessions",
+    "Practical healing guidance",
+    "Community support beyond the webinar",
+  ],
+} as const;
+
 export const JUST99_ENERGY_FLOW = [
   { title: "Your Energy", detail: "Lo Shu Grid\nName + DOB", tone: "navy" },
   { title: "Your Home", detail: "Vastu Directions\n+ Zones", tone: "navy" },

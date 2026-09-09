@@ -22,7 +22,7 @@ type HeroSlide = {
 /** Update images and links here */
 const heroSlides: HeroSlide[] = [
   {
-    src: "/works/CosmiGurujibanner.png",
+    src: "/works/Cosmic-Guruji-banner-RE1.png",
     alt: "Cosmic Guruji — Healing Spirituality. Heal your mind. Awaken your soul.",
     label: "Join Cosmic Guruji healing sessions",
     captureLead: true,
@@ -92,7 +92,7 @@ export default function HeroBannerCarousel() {
         >
           {heroSlides.map((slide, index) => (
             <div
-              key={slide.src}
+              key={`hero-slide-${index}`}
               className="relative w-full shrink-0"
               aria-hidden={index !== activeIndex}
             >
@@ -149,7 +149,7 @@ export default function HeroBannerCarousel() {
         <div className="flex items-center justify-center gap-2 py-3">
           {heroSlides.map((slide, index) => (
             <button
-              key={`dot-${slide.src}`}
+              key={`hero-dot-${index}`}
               type="button"
               aria-label={`Go to banner ${index + 1}`}
               aria-current={index === activeIndex ? "true" : undefined}

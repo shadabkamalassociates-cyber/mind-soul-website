@@ -20,6 +20,7 @@ const navItems = [
   { label: "Blogs", href: "/blogs" },
   { label: "Categories", href: "/categories", hasDropdown: true },
   { label: "Contact", href: "/contact" },
+  { label: "At Just 11", href: "/just11" },
 ];
 
 function isNavItemActive(pathname: string, href: string) {
@@ -270,7 +271,9 @@ export default function Header() {
           )}
 
           <Link
-            href="/just99"
+            // target="_blank"
+            // rel="noopener noreferrer"
+            href="/just11"
             className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-[#8B5CF6] via-[#7C3AED] to-[#3d3d8f] px-3 py-1.5 text-[11px] font-semibold text-white shadow-[0_8px_20px_rgba(109,40,217,0.32)] transition hover:brightness-105 hover:shadow-[0_10px_24px_rgba(109,40,217,0.4)] sm:gap-2 sm:px-5 sm:py-2.5 sm:text-[13px]"
           >
             <SparkleIcon />
