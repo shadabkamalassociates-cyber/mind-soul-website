@@ -94,14 +94,14 @@ export default function Just99LandingSections() {
               ))}
             </ul>
 
-            <a
+            {/* <a
               href={JUST99_WEBINAR.paymentLink}
               target="_blank"
               rel="noopener noreferrer"
               className="just99-webinar-cta"
             >
               Join Webinar for ₹{COMMUNITY_JOIN_PRICE_INR}
-            </a>
+            </a> */}
           </div>
         </div>
       </section>

@@ -222,6 +222,17 @@ export default function CommunityJoinExperience({
         source,
       );
 
+
+      // OpenAI Pixel Code 
+      if (typeof window !== "undefined" && window.oaiq) {
+        window.oaiq(
+          "measure",
+          "order_created",
+          { type: "contents" }
+        );
+      }
+  
+
       try {
         const status = await checkCommunityJoinPaymentStatus();
         if (status?.success === true) {
@@ -847,7 +858,7 @@ function FormPanel({
             {isPaying ? "Opening payment..." : "Pay Now"}
           </button>
         </form>
-
+ 
         <ul className="just99-lead-checks">
           <li>
             <GoldCheckIcon />

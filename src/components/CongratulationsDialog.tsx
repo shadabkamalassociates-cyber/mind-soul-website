@@ -10,9 +10,19 @@ type CongratulationsDialogProps = {
   onClose?: () => void;
 };
 
+declare global {
+  interface Window {
+    oaiq?: (...args: unknown[]) => void;
+  }
+}
+
 export default function CongratulationsDialog({ onClose }: CongratulationsDialogProps) {
   const router = useRouter();
-
+  const handleJoinNowClick = () => {
+    if (typeof window !== "undefined" && window.oaiq) {
+      window.oaiq("measure", "lead_created", { type: "customer_action" });
+    }
+  };
   const handleClose = () => {
     if (onClose) {
       onClose();
@@ -74,7 +84,27 @@ export default function CongratulationsDialog({ onClose }: CongratulationsDialog
       </div>
 
       <div className="congrats-actions">
-        <a
+
+      <a
+  href={WHATSAPP_COMMUNITY_LINK}
+  className="congrats-btn-join"
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={handleJoinNowClick}
+>
+  <span className="congrats-btn-icon" aria-hidden>
+    <WhatsAppIcon />
+  </span>
+
+  <span className="congrats-btn-label">
+    Join Now
+  </span>
+
+  <span className="congrats-btn-arrow" aria-hidden>
+    →
+  </span>
+</a>
+        {/* <a
           href={WHATSAPP_COMMUNITY_LINK}
           className="congrats-btn-join"
           target="_blank"
@@ -87,7 +117,7 @@ export default function CongratulationsDialog({ onClose }: CongratulationsDialog
           <span className="congrats-btn-arrow" aria-hidden>
             →
           </span>
-        </a>
+        </a> */}
         {/* <Link href="/live-sessions" className="congrats-btn-secondary">
           <span className="congrats-btn-icon" aria-hidden>
             <LotusIcon />
