@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -115,6 +115,35 @@ function parseListField(value: unknown): string[] {
   return [];
 }
 
+function hasDisplayValue(value: unknown): boolean {
+  if (value == null) return false;
+  const text = String(value).trim();
+  if (!text) return false;
+  const normalized = text.replace(/[—–−]/g, "-").toLowerCase();
+  if (
+    normalized === "-" ||
+    normalized === "n/a" ||
+    normalized === "na" ||
+    normalized === "no bio provided" ||
+    normalized === "no bio provided."
+  ) {
+    return false;
+  }
+  if (/^0+(\.0+)?$/.test(normalized)) return false;
+  if (/^0+(\.0+)?\s*\/\s*5/.test(normalized)) return false;
+  return true;
+}
+
+function pushHighlight(
+  list: { title: string; desc: string }[],
+  title: string,
+  value: unknown,
+) {
+  if (typeof value === "string" && value.trim()) {
+    list.push({ title, desc: value.trim() });
+  }
+}
+
 function findStaticExpertMatch(expert: Expert): ExpertProfile | undefined {
   const email = String(expert.email ?? "").trim().toLowerCase();
   if (email) {
@@ -139,14 +168,14 @@ function findStaticExpertMatch(expert: Expert): ExpertProfile | undefined {
   );
 }
 
-function buildAboutParagraphs(expert: Expert, name: string): string[] {
+function buildAboutParagraphs(expert: Expert): string[] {
   const rawParts = [expert.about, expert.bio, expert.why_started, expert.mission]
-    .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
+    .filter((v): v is string => typeof v === "string" && hasDisplayValue(v))
     .flatMap((text) =>
       text
         .split(/\r?\n\r?\n+/)
         .map((p) => p.replace(/\r\n/g, " ").replace(/\s+/g, " ").trim())
-        .filter(Boolean),
+        .filter((para) => hasDisplayValue(para)),
     );
 
   const seen = new Set<string>();
@@ -159,11 +188,7 @@ function buildAboutParagraphs(expert: Expert, name: string): string[] {
     }
   }
 
-  if (unique.length > 0) return unique;
-
-  return [
-    `${name} is a verified Cosmicguruji expert dedicated to helping seekers with clarity and transformation.`,
-  ];
+  return unique;
 }
 
 function mapExpertServices(
@@ -250,21 +275,21 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
     : [];
 
   const languages = Array.isArray(expert.languages)
-    ? expert.languages.map(String)
+    ? expert.languages.map(String).map((s) => s.trim()).filter(Boolean)
     : typeof expert.languages === "string" && expert.languages
-      ? expert.languages.split(",").map((s) => s.trim())
+      ? expert.languages.split(",").map((s) => s.trim()).filter(Boolean)
       : ["English", "Hindi"];
 
   const education = Array.isArray(expert.education)
-    ? expert.education.map(String)
+    ? expert.education.map(String).map((s) => s.trim()).filter(Boolean)
     : typeof expert.education === "string" && expert.education
-      ? [expert.education]
+      ? [expert.education.trim()].filter(Boolean)
       : [];
 
   const certifications = Array.isArray(expert.certifications)
-    ? expert.certifications.map(String)
+    ? expert.certifications.map(String).map((s) => s.trim()).filter(Boolean)
     : typeof expert.certifications === "string" && expert.certifications
-      ? [expert.certifications]
+      ? [expert.certifications.trim()].filter(Boolean)
       : [];
 
   const specializations =
@@ -299,15 +324,14 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
         ? `${expert.experience_years}+ YEARS EXPERIENCE`
         : "EXPERIENCED GUIDE",
     bio: String(
-      expert.bio?.trim() ||
-        expert.about?.trim() ||
+      [expert.bio, expert.about].find((value) => hasDisplayValue(value)) ||
         `${name} is a verified Cosmicguruji expert ready to guide your journey.`,
-    ),
+    ).trim(),
     specialization: primarySpecialization,
     experienceDetail:
       expert.experience_years != null
         ? `${expert.experience_years}+ Years`
-        : "—",
+        : "",
     image: resolveExpertImage(expert),
     titles: String(
       expert.professional_title ||
@@ -316,47 +340,91 @@ function mapApiExpertToProfile(expert: Expert): ExpertProfile {
         "Cosmicguruji Expert",
     ).trim(),
     profession: String(expert.profession || expert.role || "Expert").trim(),
-    clients: "—",
-    sessions: String(expert.total_sessions ?? "—"),
+    clients: "",
+    sessions:
+      expert.total_sessions != null ? String(expert.total_sessions) : "",
     rating: `${expert.average_rating ?? "0.00"}/5 (${expert.total_reviews ?? 0}+)`,
     phone: String(expert.phone || expert.whatsapp_number || "—").trim(),
     whatsapp: String(expert.whatsapp_number || expert.phone || "—").trim(),
     email: String(expert.email || "—").trim(),
-    location: [expert.city, expert.state, expert.country]
-      .filter(Boolean)
-      .join(", ") || "India",
+    location: formatExpertLocation(expert.city, expert.state, expert.country),
     languages,
     education,
     certifications,
     specializations,
-    about: buildAboutParagraphs(expert, name),
-    highlights: [
-      {
-        title: "Why I Started",
-        desc: String(expert.why_started || "To support seekers on their growth journey."),
-      },
-      {
-        title: "My Mission",
-        desc: String(expert.mission || "Empower lasting clarity, healing, and confidence."),
-      },
-      {
-        title: "My Approach",
-        desc: String(
-          expert.client_approach ||
-            "Compassionate, practical guidance tailored to each person.",
-        ),
-      },
-      {
-        title: "What Makes Me Different",
-        desc: String(
-          expert.uniqueness ||
-            "A personalized, trustworthy approach rooted in care and clarity.",
-        ),
-      },
-    ],
+    about: buildAboutParagraphs(expert),
+    highlights: (() => {
+      const items: { title: string; desc: string }[] = [];
+      pushHighlight(items, "Why I Started", expert.why_started);
+      pushHighlight(items, "My Mission", expert.mission);
+      pushHighlight(items, "My Approach", expert.client_approach);
+      pushHighlight(items, "What Makes Me Different", expert.uniqueness);
+      return items;
+    })(),
     services: mapExpertServices(expert, staticMatch),
     consultationTypes: staticMatch?.consultationTypes,
   };
+}
+
+function FadeScroll({
+  children,
+  className,
+  dark,
+  fadeFrom = "from-white",
+}: {
+  children: ReactNode;
+  className?: string;
+  dark?: boolean;
+  fadeFrom?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [canScroll, setCanScroll] = useState(false);
+  const [atEnd, setAtEnd] = useState(true);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const update = () => {
+      const overflow = el.scrollHeight > el.clientHeight + 2;
+      setCanScroll(overflow);
+      setAtEnd(!overflow || el.scrollTop + el.clientHeight >= el.scrollHeight - 4);
+    };
+
+    update();
+    el.addEventListener("scroll", update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    if (el.firstElementChild) ro.observe(el.firstElementChild);
+
+    return () => {
+      el.removeEventListener("scroll", update);
+      ro.disconnect();
+    };
+  }, [children]);
+
+  return (
+    <div className={`relative flex min-h-0 flex-col ${className ?? ""}`}>
+      <div
+        ref={ref}
+        className={`min-h-0 flex-1 ${dark ? "expert-card-scroll-dark" : "expert-card-scroll"}`}
+      >
+        {children}
+      </div>
+      {canScroll && !atEnd && (
+        <div
+          className={`pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t ${fadeFrom} to-transparent`}
+        />
+      )}
+    </div>
+  );
+}
+
+function highlightsGridClass(count: number) {
+  if (count <= 1) return "grid-cols-1";
+  if (count === 2) return "grid-cols-1 sm:grid-cols-2";
+  if (count === 3) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  return "grid-cols-2 lg:grid-cols-4";
 }
 
 const consultationTypes = [
@@ -412,26 +480,66 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
       )
     : consultationTypes;
 
-  const stats = [
-    { icon: <VideoIcon />, value: expert.sessions, label: "Sessions Completed" },
-    { icon: <PeopleIcon />, value: expert.clients, label: "Clients Guided" },
-    { icon: <CalendarIcon />, value: expert.experienceDetail, label: "Years Experience" },
-    { icon: <ShieldIcon />, value: "100%", label: "Confidential" },
-    { icon: <StarIcon />, value: expert.rating, label: "Ratings" },
-  ];
-
-  const aboutParagraphs = expert.about.filter(
-    (para) => !/^no bio provided\.?$/i.test(para.trim()),
+  const visibleHighlights = expert.highlights.filter((item) =>
+    hasDisplayValue(item.desc),
   );
+  const visibleServices = expert.services.filter(
+    (service) =>
+      hasDisplayValue(service.title) || hasDisplayValue(service.desc),
+  );
+  const uniquenessHighlight = visibleHighlights.find(
+    (item) => item.title === "What Makes Me Different",
+  );
+  const missionHighlight = visibleHighlights.find(
+    (item) => item.title === "My Mission",
+  );
+  const wisdomSupport = hasDisplayValue(missionHighlight?.desc)
+    ? missionHighlight!.desc
+    : hasDisplayValue(expert.bio)
+      ? expert.bio
+      : "";
+
+  const profileStats: { value: string; label: string }[] = [];
+  if (hasDisplayValue(expert.sessions)) {
+    profileStats.push({ value: expert.sessions, label: "Sessions" });
+  }
+  if (hasDisplayValue(expert.clients)) {
+    profileStats.push({ value: expert.clients, label: "Clients" });
+  }
+  if (hasDisplayValue(expert.rating)) {
+    profileStats.push({
+      value: expert.rating.split("/")[0]?.trim() || expert.rating,
+      label: "Rating",
+    });
+  }
+
+  const stats: { icon: ReactNode; value: string; label: string }[] = [];
+  if (hasDisplayValue(expert.sessions)) {
+    stats.push({ icon: <VideoIcon />, value: expert.sessions, label: "Sessions Completed" });
+  }
+  if (hasDisplayValue(expert.clients)) {
+    stats.push({ icon: <PeopleIcon />, value: expert.clients, label: "Clients Guided" });
+  }
+  if (hasDisplayValue(expert.experienceDetail)) {
+    stats.push({
+      icon: <CalendarIcon />,
+      value: expert.experienceDetail,
+      label: "Years Experience",
+    });
+  }
+  stats.push({ icon: <ShieldIcon />, value: "100%", label: "Confidential" });
+  if (hasDisplayValue(expert.rating)) {
+    stats.push({ icon: <StarIcon />, value: expert.rating, label: "Ratings" });
+  }
+
+  const aboutParagraphs = expert.about.filter((para) => hasDisplayValue(para));
   const summaryAbout =
     aboutParagraphs.length > 0
       ? aboutParagraphs.slice(0, 1)
-      : [expert.bio].filter((text) => text && !/^no bio provided\.?$/i.test(text.trim()));
-  const whyChooseBio =
-    aboutParagraphs[0] ??
-    (expert.bio && !/^no bio provided\.?$/i.test(expert.bio.trim())
-      ? expert.bio
-      : null);
+      : [expert.bio].filter((text) => hasDisplayValue(text));
+  const whyChooseBio = aboutParagraphs[0] ?? (hasDisplayValue(expert.bio) ? expert.bio : null);
+  const showKnowMore = aboutParagraphs.length > 1;
+  const showFullAbout = aboutParagraphs.length > 1;
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A4A]">
@@ -468,10 +576,12 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
                     />
                   </div>
                 </div>
-                <div className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-[#D4AF37]/50 bg-[#2E004B]/90 px-2.5 py-0.5 text-[9px] font-semibold text-[#F0DDB8] shadow-lg backdrop-blur-sm sm:text-[10px]">
-                  <CheckIcon />
-                  {expert.experienceDetail} Experience
-                </div>
+                {hasDisplayValue(expert.experienceDetail) && (
+                  <div className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-[#D4AF37]/50 bg-[#2E004B]/90 px-2.5 py-0.5 text-[9px] font-semibold text-[#F0DDB8] shadow-lg backdrop-blur-sm sm:text-[10px]">
+                    <CheckIcon />
+                    {expert.experienceDetail} Experience
+                  </div>
+                )}
               </div>
             </div>
 
@@ -497,18 +607,26 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
                 {expert.titles}
               </p>
 
-              <p className="mx-auto mt-3 max-w-[500px] text-[12px] leading-[1.65] text-white/75 sm:text-[13px] lg:mx-0">
-                {expert.bio}
-              </p>
+              {hasDisplayValue(expert.bio) && (
+                <p className="mx-auto mt-3 max-w-[500px] text-[12px] leading-[1.65] text-white/75 sm:text-[13px] lg:mx-0">
+                  {expert.bio}
+                </p>
+              )}
 
-              <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] text-white/85 backdrop-blur-sm">
-                  <LocationIcon /> {expert.location}
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] text-white/85 backdrop-blur-sm">
-                  <GlobeMiniIcon /> {expert.languages.join(", ")}
-                </span>
-              </div>
+              {(hasDisplayValue(expert.location) || expert.languages.length > 0) && (
+                <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+                  {hasDisplayValue(expert.location) && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] text-white/85 backdrop-blur-sm">
+                      <LocationIcon /> {expert.location}
+                    </span>
+                  )}
+                  {expert.languages.length > 0 && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] text-white/85 backdrop-blur-sm">
+                      <GlobeMiniIcon /> {expert.languages.join(", ")}
+                    </span>
+                  )}
+                </div>
+              )}
 
               <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
                 <Link
@@ -517,12 +635,14 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
                 >
                   <CalendarIcon /> Book Consultation
                 </Link>
-                <a
-                  href="#expert-services"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/8 px-5 py-2.5 text-[12px] font-semibold text-white backdrop-blur-sm transition hover:bg-white/14"
-                >
-                  Explore Services <ArrowIcon />
-                </a>
+                {visibleServices.length > 0 && (
+                  <a
+                    href="#expert-services"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/8 px-5 py-2.5 text-[12px] font-semibold text-white backdrop-blur-sm transition hover:bg-white/14"
+                  >
+                    Explore Services <ArrowIcon />
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -531,7 +651,18 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
 
       {/* Stats bar — overlaps hero, compact */}
       <section className="relative z-10 mx-auto max-w-[920px] px-4 sm:px-6 lg:px-8">
-        <div className="-mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_12px_36px_rgba(46,0,75,0.1)] sm:-mt-12 md:grid-cols-5">
+        <div
+          className={[
+            "-mt-10 grid grid-cols-2 gap-0 overflow-hidden rounded-xl border border-[#E8EAF4] bg-white shadow-[0_12px_36px_rgba(46,0,75,0.1)] sm:-mt-12",
+            stats.length >= 5
+              ? "md:grid-cols-5"
+              : stats.length === 4
+                ? "md:grid-cols-4"
+                : stats.length === 3
+                  ? "md:grid-cols-3"
+                  : "md:grid-cols-2",
+          ].join(" ")}
+        >
           {stats.map((stat, idx) => (
             <div
               key={stat.label}
@@ -540,7 +671,9 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
                 idx !== stats.length - 1 ? "md:border-r md:border-[#EEF0FA]" : "",
                 idx % 2 === 0 && idx < stats.length - 1 ? "border-r border-[#EEF0FA] md:border-r" : "",
                 idx < stats.length - 2 ? "border-b border-[#EEF0FA] md:border-b-0" : "",
-                idx === stats.length - 1 ? "col-span-2 md:col-span-1" : "",
+                idx === stats.length - 1 && stats.length % 2 === 1
+                  ? "col-span-2 md:col-span-1"
+                  : "",
               ].join(" ")}
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
@@ -555,120 +688,136 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
         </div>
       </section>
 
-      {/* About — content-height columns + highlights row */}
+      {/* About — row height follows the blue card; left/middle match and scroll */}
       <section id="expert-about" className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-start lg:gap-6">
-          {/* Left — short summary only */}
-          <div className="rounded-2xl border border-[#E8EAF4] bg-white p-5 shadow-[0_4px_24px_rgba(46,0,75,0.05)] sm:p-6 lg:col-span-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
-              About Me +
-            </p>
-            <h2
-              className="mt-2 text-[22px] font-semibold leading-tight text-[#2E004B] sm:text-[24px]"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-            >
-              About {fullName}
-            </h2>
-            <p className="mt-1 text-[12px] text-[#8A8AA8]">Who am I in short</p>
-
-            <div className="mt-4 space-y-3 text-justify text-[13px] leading-[1.75] text-[#4A4A6A]">
-              {summaryAbout.map((para, index) => (
-                <p key={`about-${index}`} className="line-clamp-6">
-                  {para}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-stretch lg:gap-6">
+          <div className="relative h-full lg:col-span-5">
+            <article className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-[#E8EAF4] bg-white p-5 shadow-[0_4px_24px_rgba(46,0,75,0.05)] sm:p-6 lg:absolute lg:inset-0">
+              <div className="shrink-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
+                  About Me +
                 </p>
-              ))}
-            </div>
+                <h2
+                  className="mt-2 text-[22px] font-semibold leading-tight text-[#2E004B] sm:text-[24px]"
+                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                >
+                  About {fullName}
+                </h2>
+                <p className="mt-1 text-[12px] text-[#8A8AA8]">Who am I in short</p>
+              </div>
 
-            {aboutParagraphs.length > 1 && (
-              <p className="mt-2 text-[11px] text-[#8A8AA8]">
-                +{aboutParagraphs.length - 1} more in full profile below
-              </p>
-            )}
+              {summaryAbout.length > 0 && (
+                <FadeScroll className="mt-4 min-h-0 flex-1 max-lg:max-h-[220px]">
+                  <div className="space-y-3 text-justify text-[13px] leading-[1.75] text-[#4A4A6A]">
+                    {summaryAbout.map((para, index) => (
+                      <p key={`about-${index}`}>{para}</p>
+                    ))}
+                  </div>
+                </FadeScroll>
+              )}
 
-            <a
-              href="#expert-about-full"
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#2E004B]/12 bg-[#F7F5FC] px-4 py-2.5 text-[12px] font-semibold text-[#2E004B] transition hover:border-[#D4AF37]/40 sm:w-auto"
-            >
-              Know More About Me <ArrowIcon />
-            </a>
+              {showKnowMore && (
+                <p className="mt-2 shrink-0 text-[11px] text-[#8A8AA8]">
+                  +{aboutParagraphs.length - 1} more in full profile below
+                </p>
+              )}
+
+              {showKnowMore && (
+                <div className="mt-auto shrink-0 pt-4">
+                  <a
+                    href="#expert-about-full"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#2E004B]/12 bg-[#F7F5FC] px-4 py-2.5 text-[12px] font-semibold text-[#2E004B] transition hover:border-[#D4AF37]/40 sm:w-auto"
+                  >
+                    Know More About Me <ArrowIcon />
+                  </a>
+                </div>
+              )}
+            </article>
           </div>
 
-          {/* Center — professional details, natural height */}
-          <div className="lg:col-span-4">
-            <div className="rounded-2xl border border-[#E8EAF4] bg-white p-5 shadow-[0_4px_24px_rgba(46,0,75,0.05)] sm:p-6">
+          <div className="relative h-full lg:col-span-4">
+            <article className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-[#E8EAF4] bg-white p-5 shadow-[0_4px_24px_rgba(46,0,75,0.05)] sm:p-6 lg:absolute lg:inset-0">
               <h3
-                className="text-[16px] font-semibold text-[#2E004B]"
+                className="shrink-0 text-[16px] font-semibold text-[#2E004B]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Professional Details
               </h3>
 
-              <div className="mt-4 grid grid-cols-2 items-start gap-x-3 gap-y-1 sm:gap-x-5 sm:gap-y-0">
+              <div className="mt-4 shrink-0 grid grid-cols-2 items-start gap-x-3 gap-y-1 sm:gap-x-5 sm:gap-y-0">
                 <DetailRow label="Profession" value={expert.profession} />
                 <DetailRow label="Experience" value={expert.experienceDetail} />
                 <DetailRow label="Location" value={expert.location} />
                 <DetailRow label="Languages" value={expert.languages.join(", ")} />
-                {expert.education.length > 0 && (
-                  <DetailRow label="Education" value={expert.education.join(" • ")} />
-                )}
+                <DetailRow label="Education" value={expert.education.join(" • ")} />
               </div>
 
-              {expert.specializations.length > 0 && (
-                <div className="mt-4 border-t border-[#EEF0FA] pt-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
-                    Core Specializations
-                  </p>
-                  <div className="mt-2.5 flex flex-wrap gap-2">
-                    {expert.specializations.map((spec) => (
-                      <span
-                        key={spec}
-                        className="rounded-full border border-[#E8EAF4] bg-[#FAFBFF] px-3 py-1 text-[11px] font-medium text-[#4A4A6A]"
-                      >
-                        {spec}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+              {(expert.specializations.length > 0 || expert.certifications.length > 0) && (
+                <FadeScroll className="mt-4 min-h-0 flex-1 border-t border-[#EEF0FA] pt-4 max-lg:max-h-[200px]">
+                  {expert.specializations.length > 0 && (
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
+                        Core Specializations
+                      </p>
+                      <div className="mt-2.5 flex flex-wrap gap-2">
+                        {expert.specializations.map((spec) => (
+                          <span
+                            key={spec}
+                            className="rounded-full border border-[#E8EAF4] bg-[#FAFBFF] px-3 py-1 text-[11px] font-medium text-[#4A4A6A]"
+                          >
+                            {spec}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {expert.certifications.length > 0 && (
+                    <div className={expert.specializations.length > 0 ? "mt-4" : ""}>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
+                        Certifications
+                      </p>
+                      <ul className="mt-2.5 space-y-1.5">
+                        {expert.certifications.map((cert) => (
+                          <li key={cert} className="flex items-start gap-2 text-[11px] text-[#4A4A6A]">
+                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#D4AF37]" />
+                            {cert}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </FadeScroll>
               )}
 
-              {expert.certifications.length > 0 && (
-                <div className="mt-4 border-t border-[#EEF0FA] pt-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8A8AA8]">
-                    Certifications
-                  </p>
-                  <ul className="mt-2.5 space-y-1.5">
-                    {expert.certifications.map((cert) => (
-                      <li key={cert} className="flex items-start gap-2 text-[11px] text-[#4A4A6A]">
-                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#D4AF37]" />
-                        {cert}
-                      </li>
-                    ))}
-                  </ul>
+              {profileStats.length > 0 && (
+                <div
+                  className={`mt-auto grid shrink-0 gap-2 border-t border-[#EEF0FA] pt-4 ${
+                    profileStats.length === 1
+                      ? "grid-cols-1"
+                      : profileStats.length === 2
+                        ? "grid-cols-2"
+                        : "grid-cols-3"
+                  }`}
+                >
+                  {profileStats.map((item) => (
+                    <div
+                      key={item.label}
+                      className="rounded-xl bg-[#FAFBFF] px-2 py-2.5 text-center"
+                    >
+                      <p className="text-[13px] font-semibold leading-tight text-[#2E004B] sm:text-[14px]">
+                        {item.value}
+                      </p>
+                      <p className="mt-0.5 text-[10px] text-[#8A8AA8]">{item.label}</p>
+                    </div>
+                  ))}
                 </div>
               )}
-
-              <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[#EEF0FA] pt-4">
-                <div className="rounded-xl bg-[#FAFBFF] px-2 py-2.5 text-center">
-                  <p className="text-[14px] font-semibold text-[#2E004B]">{expert.sessions}</p>
-                  <p className="mt-0.5 text-[10px] text-[#8A8AA8]">Sessions</p>
-                </div>
-                <div className="rounded-xl bg-[#FAFBFF] px-2 py-2.5 text-center">
-                  <p className="text-[14px] font-semibold text-[#2E004B]">{expert.clients}</p>
-                  <p className="mt-0.5 text-[10px] text-[#8A8AA8]">Clients</p>
-                </div>
-                <div className="rounded-xl bg-[#FAFBFF] px-2 py-2.5 text-center">
-                  <p className="text-[13px] font-semibold leading-tight text-[#2E004B]">
-                    {expert.rating.split("/")[0]?.trim() || expert.rating}
-                  </p>
-                  <p className="mt-0.5 text-[10px] text-[#8A8AA8]">Rating</p>
-                </div>
-              </div>
-            </div>
+            </article>
           </div>
 
-          {/* Right — wisdom card, content height */}
-          <div
-            className="relative overflow-hidden rounded-2xl lg:col-span-3"
+          <article
+            className="relative flex min-h-0 flex-col overflow-hidden rounded-2xl lg:col-span-3 lg:min-h-[400px] lg:max-h-[560px]"
             style={{
               backgroundImage: "url('/experts-page/cosmic-hero-bg.png')",
               backgroundSize: "cover",
@@ -677,98 +826,95 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
             }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-[#2E004B]/30 via-[#2E004B]/50 to-[#1A0533]/90" />
-            <div className="relative space-y-4 p-5 sm:p-6">
-              <div>
+            <div className="relative flex h-full min-h-0 flex-col p-5 sm:p-6">
+              <div className="shrink-0">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#D4AF37]">
                   Words of Wisdom
                 </p>
-                <p className="mt-2 text-[12px] italic text-white/75">{expert.titles}</p>
+                {hasDisplayValue(expert.titles) && (
+                  <p className="mt-2 text-[12px] italic text-white/75">{expert.titles}</p>
+                )}
               </div>
 
-              <div>
-                <span className="text-[28px] leading-none text-[#D4AF37]">&ldquo;</span>
-                <p
-                  className="mt-1 text-[15px] font-medium leading-snug text-white"
-                  style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-                >
-                  The stars incline us, they do not bind us.
-                </p>
-                <p className="mt-3 text-justify text-[11px] leading-relaxed text-white/80">
-                  {expert.highlights[1]?.desc ?? expert.bio}
-                </p>
-              </div>
-
-              {expert.highlights[3] && (
-                <div className="rounded-xl border border-white/15 bg-white/10 px-3.5 py-3 backdrop-blur-sm">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[#F0DDB8]">
-                    {expert.highlights[3].title}
+              <FadeScroll
+                dark
+                fadeFrom="from-[#1A0533]"
+                className="mt-4 min-h-0 flex-1 max-lg:max-h-[260px]"
+              >
+                <div>
+                  <span className="text-[28px] leading-none text-[#D4AF37]">&ldquo;</span>
+                  <p
+                    className="mt-1 text-[15px] font-medium leading-snug text-white"
+                    style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                  >
+                    The stars incline us, they do not bind us.
                   </p>
-                  <p className="mt-1.5 text-justify text-[11px] leading-relaxed text-white/80">
-                    {expert.highlights[3].desc}
-                  </p>
+                  {hasDisplayValue(wisdomSupport) && (
+                    <p className="mt-3 text-justify text-[11px] leading-relaxed text-white/80">
+                      {wisdomSupport}
+                    </p>
+                  )}
                 </div>
-              )}
+
+                {uniquenessHighlight && (
+                  <div className="mt-4 rounded-xl border border-white/15 bg-white/10 px-3.5 py-3 backdrop-blur-sm">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-[#F0DDB8]">
+                      {uniquenessHighlight.title}
+                    </p>
+                    <p className="mt-1.5 text-justify text-[11px] leading-relaxed text-white/80">
+                      {uniquenessHighlight.desc}
+                    </p>
+                  </div>
+                )}
+              </FadeScroll>
             </div>
-          </div>
+          </article>
         </div>
 
-        {/* Highlights — own row, each card height = its content */}
-        {expert.highlights.length > 0 && (
-          <div className="mt-5 grid grid-cols-2 items-start gap-2.5 sm:gap-3 lg:grid-cols-4">
-            {expert.highlights.map((item) => (
+        {visibleHighlights.length > 0 && (
+          <div
+            className={`mt-5 grid items-stretch gap-3 ${highlightsGridClass(visibleHighlights.length)}`}
+          >
+            {visibleHighlights.map((item) => (
               <article
                 key={item.title}
-                className="rounded-xl border border-[#EEF0FA] bg-[#FAFBFF] px-3 py-3 sm:px-4 sm:py-3.5"
+                className="flex h-full flex-col rounded-2xl border border-[#E8EAF4] bg-white px-4 py-4 shadow-[0_4px_24px_rgba(46,0,75,0.04)] sm:px-5 sm:py-5"
               >
-                <div className="flex items-start gap-1.5 sm:items-center sm:gap-2">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F] sm:h-7 sm:w-7">
+                <div className="flex shrink-0 items-center gap-2">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
                     <LotusIcon />
                   </span>
-                  <h4 className="text-[11px] font-semibold leading-snug text-[#2E004B] sm:text-[12px]">
+                  <h4 className="text-[13px] font-semibold leading-snug text-[#2E004B]">
                     {item.title}
                   </h4>
                 </div>
-                <p className="mt-1.5 text-justify text-[10px] leading-relaxed text-[#6B6B8A] sm:mt-2 sm:text-[11px]">
-                  {item.desc}
-                </p>
+                <FadeScroll className="mt-3 h-[158px]" fadeFrom="from-white">
+                  <p className="text-justify text-[12px] leading-relaxed text-[#5C5C7A]">
+                    {item.desc}
+                  </p>
+                </FadeScroll>
               </article>
             ))}
           </div>
         )}
 
-        {/* Full about — remaining paragraphs */}
-        <div
-          id="expert-about-full"
-          className="mt-8 rounded-2xl border border-[#E8EAF4] bg-white px-6 py-8 shadow-[0_8px_32px_rgba(46,0,75,0.05)] sm:px-8"
-        >
-          <SectionHeading title="More About Me" />
-          <div className="mt-8 space-y-4 text-justify text-[13px] leading-[1.85] text-[#4A4A6A] sm:text-[14px]">
-            {(aboutParagraphs.length > 0 ? aboutParagraphs : summaryAbout).map((para, index) => (
-              <p key={`full-about-${index}`}>{para}</p>
-            ))}
-          </div>
-          {expert.certifications.length > 0 && (
-            <div className="mt-6 border-t border-[#EEF0FA] pt-6">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#2E004B]">
-                Certifications
-              </p>
-              <ul className="mt-2 flex flex-wrap gap-2">
-                {expert.certifications.map((c) => (
-                  <li
-                    key={c}
-                    className="rounded-full border border-[#E8EAF4] bg-[#F7F5FC] px-3 py-1 text-[12px] text-[#4A4A6A]"
-                  >
-                    {c}
-                  </li>
-                ))}
-              </ul>
+        {showFullAbout && (
+          <div
+            id="expert-about-full"
+            className="mt-8 rounded-2xl border border-[#E8EAF4] bg-white px-6 py-8 shadow-[0_8px_32px_rgba(46,0,75,0.05)] sm:px-8"
+          >
+            <SectionHeading title="More About Me" />
+            <div className="mt-8 space-y-4 text-justify text-[13px] leading-[1.85] text-[#4A4A6A] sm:text-[14px]">
+              {aboutParagraphs.map((para, index) => (
+                <p key={`full-about-${index}`}>{para}</p>
+              ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </section>
 
       {/* Services Offered */}
-      {expert.services.length > 0 && (
+      {visibleServices.length > 0 && (
         <section id="expert-services" className="bg-[#F7F5FC] py-12 sm:py-16">
           <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
             <SectionHeading
@@ -776,14 +922,14 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
               title="Services Offered"
             />
 
-            <div className="mt-8 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-              {expert.services.map((service, index) => {
+            <div className="mt-8 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+              {visibleServices.map((service, index) => {
                 const featured = index === 0;
                 return (
                   <article
                     key={`${service.title}-${index}`}
                     className={[
-                      "relative flex flex-col rounded-2xl px-4 py-5 text-center transition hover:-translate-y-0.5 sm:px-5 sm:py-5",
+                      "relative flex h-full flex-col rounded-2xl px-4 py-5 text-center transition hover:-translate-y-0.5 sm:px-5 sm:py-5",
                       featured
                         ? "bg-gradient-to-br from-[#2E004B] via-[#3D1068] to-[#2E004B] text-white shadow-[0_12px_36px_rgba(46,0,75,0.25)]"
                         : "border border-[#E4E2EF] bg-white shadow-[0_4px_20px_rgba(46,0,75,0.06)] hover:border-[#D4AF37]/35",
@@ -791,7 +937,7 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
                   >
                     <span
                       className={[
-                        "mx-auto flex h-10 w-10 items-center justify-center rounded-full",
+                        "mx-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
                         featured
                           ? "bg-[#D4AF37]/20 text-[#F0DDB8]"
                           : "bg-[#EDEAF8] text-[#3D3D8F]",
@@ -799,30 +945,42 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
                     >
                       <ServiceCardIcon index={index} />
                     </span>
-                    <h3
-                      className={[
-                        "mt-3 text-[15px] font-semibold leading-snug sm:text-[16px]",
-                        featured ? "text-white" : "text-[#2E004B]",
-                      ].join(" ")}
-                      style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                    <FadeScroll
+                      dark={featured}
+                      fadeFrom={featured ? "from-[#2E004B]" : "from-white"}
+                      className="mt-3 h-[176px]"
                     >
-                      {service.title}
-                    </h3>
-                    <p
-                      className={[
-                        "mx-auto mt-2 text-justify text-[12px] leading-[1.6]",
-                        featured ? "text-white/75" : "text-[#5C5C7A]",
-                      ].join(" ")}
-                    >
-                      {service.desc}
-                    </p>
-                    {featured && (
+                      {hasDisplayValue(service.title) && (
+                        <h3
+                          className={[
+                            "text-[15px] font-semibold leading-snug sm:text-[16px]",
+                            featured ? "text-white" : "text-[#2E004B]",
+                          ].join(" ")}
+                          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+                        >
+                          {service.title}
+                        </h3>
+                      )}
+                      {hasDisplayValue(service.desc) && (
+                        <p
+                          className={[
+                            "mx-auto mt-2 text-justify text-[12px] leading-[1.6]",
+                            featured ? "text-white/75" : "text-[#5C5C7A]",
+                          ].join(" ")}
+                        >
+                          {service.desc}
+                        </p>
+                      )}
+                    </FadeScroll>
+                    {featured ? (
                       <Link
                         href="/#book"
-                        className="mt-3 inline-flex items-center justify-center gap-1 self-center rounded-full bg-[#D4AF37] px-4 py-1.5 text-[12px] font-semibold text-[#2E004B] transition hover:brightness-105"
+                        className="mt-3 inline-flex shrink-0 items-center justify-center gap-1 self-center rounded-full bg-[#D4AF37] px-4 py-1.5 text-[12px] font-semibold text-[#2E004B] transition hover:brightness-105"
                       >
                         Book Now <ArrowIcon />
                       </Link>
+                    ) : (
+                      <div className="mt-3 h-[30px] shrink-0" aria-hidden />
                     )}
                   </article>
                 );
@@ -837,11 +995,11 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
         <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Choose Your Path" title="Consultation Types" />
 
-          <div className="mt-10 grid grid-cols-2 items-start gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 items-stretch gap-3 sm:gap-4 lg:grid-cols-4">
             {enabledConsultations.map((type) => (
               <div
                 key={type.label}
-                className="group rounded-2xl border border-[#E4E2EF] bg-white px-3 py-4 text-center shadow-[0_2px_12px_rgba(46,0,75,0.04)] transition hover:border-[#D4AF37]/35 hover:shadow-[0_8px_24px_rgba(46,0,75,0.08)] sm:px-4 sm:py-5"
+                className="group flex h-full flex-col rounded-2xl border border-[#E4E2EF] bg-white px-3 py-4 text-center shadow-[0_2px_12px_rgba(46,0,75,0.04)] transition hover:border-[#D4AF37]/35 hover:shadow-[0_8px_24px_rgba(46,0,75,0.08)] sm:px-4 sm:py-5"
               >
                 <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-[#F0F2F8] text-[#3D3D8F] transition group-hover:bg-[#EDEAF8] sm:h-11 sm:w-11">
                   {type.icon}
@@ -859,29 +1017,29 @@ export function ExpertProfileDetailView({ expert }: { expert: ExpertProfile }) {
       </section>
 
       {/* Why Choose — dark banner */}
-      <section className="bg-[#2E004B] py-7 sm:py-12 lg:py-14">
+      <section className="bg-[#2E004B] py-6 sm:py-8">
         <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-5 text-center sm:gap-7 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:text-left">
+          <div className="flex flex-col items-center gap-4 text-center sm:gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:text-left">
             <div className="w-full max-w-lg">
               <h2
-                className="text-[20px] font-semibold leading-snug text-white sm:text-[28px] lg:text-[30px]"
+                className="text-[20px] font-semibold leading-snug text-white sm:text-[24px] lg:text-[26px]"
                 style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
               >
                 Why Choose {fullName}?
               </h2>
               {whyChooseBio && (
-                <p className="mt-2 line-clamp-2 text-[12px] leading-relaxed text-white/70 sm:mt-3 sm:line-clamp-none sm:text-[14px]">
+                <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-white/70 sm:text-[13px]">
                   {whyChooseBio}
                 </p>
               )}
               <Link
                 href="/#book"
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#F0DDB8] via-[#D4AF37] to-[#A67C4A] px-5 py-2.5 text-[12px] font-semibold text-[#2E004B] shadow-[0_6px_20px_rgba(212,175,55,0.28)] transition hover:brightness-105 sm:mt-6 sm:px-6 sm:py-3 sm:text-[13px]"
+                className="mt-3.5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#F0DDB8] via-[#D4AF37] to-[#A67C4A] px-5 py-2 text-[12px] font-semibold text-[#2E004B] shadow-[0_6px_20px_rgba(212,175,55,0.28)] transition hover:brightness-105 sm:px-5 sm:py-2.5 sm:text-[13px]"
               >
                 Book Your Consultation <ArrowIcon />
               </Link>
             </div>
-            <div className="grid w-full grid-cols-4 gap-2 sm:gap-4 lg:w-auto lg:gap-6">
+            <div className="grid w-full grid-cols-4 gap-2 sm:gap-3 lg:w-auto lg:gap-5">
               <WhyChooseItem icon={<StarIcon />} label="Trusted Expert" />
               <WhyChooseItem icon={<ShieldIcon />} label="100% Secure" />
               <WhyChooseItem icon={<PeopleIcon />} label="Happy Clients" />
@@ -977,6 +1135,8 @@ function WhyChooseItem({ icon, label }: { icon: ReactNode; label: string }) {
 }
 
 function DetailRow({ label, value }: { label: string; value: string }) {
+  if (!hasDisplayValue(value)) return null;
+
   return (
     <div className="mt-2.5 border-b border-[#F3F4FA] pb-2.5 sm:last:border-b-0 sm:last:pb-0">
       <p className="text-[9px] font-semibold uppercase tracking-[0.06em] text-[#8A8AA8] sm:text-[10px]">

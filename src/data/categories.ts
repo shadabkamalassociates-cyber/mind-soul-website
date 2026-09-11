@@ -32,3 +32,5 @@ export function getCategory(slug: string): SessionCategory | undefined {
 export function getCategorySlugs(): string[] {
   return sessionCategories.map((c) => c.slug);
 }
+
+

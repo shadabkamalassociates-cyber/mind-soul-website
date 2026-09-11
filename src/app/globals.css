@@ -185,6 +185,50 @@ a {
   border-radius: 4px;
 }
 
+.expert-card-scroll,
+.expert-card-scroll-dark {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.expert-card-scroll:hover,
+.expert-card-scroll:focus-visible {
+  scrollbar-color: rgba(154, 148, 184, 0.7) transparent;
+}
+
+.expert-card-scroll-dark:hover,
+.expert-card-scroll-dark:focus-visible {
+  scrollbar-color: rgba(212, 175, 55, 0.65) transparent;
+}
+
+.expert-card-scroll::-webkit-scrollbar,
+.expert-card-scroll-dark::-webkit-scrollbar {
+  width: 4px;
+}
+
+.expert-card-scroll::-webkit-scrollbar-track,
+.expert-card-scroll-dark::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.expert-card-scroll::-webkit-scrollbar-thumb,
+.expert-card-scroll-dark::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.expert-card-scroll:hover::-webkit-scrollbar-thumb,
+.expert-card-scroll:focus-visible::-webkit-scrollbar-thumb {
+  background: rgba(154, 148, 184, 0.55);
+}
+
+.expert-card-scroll-dark:hover::-webkit-scrollbar-thumb,
+.expert-card-scroll-dark:focus-visible::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.55);
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;
