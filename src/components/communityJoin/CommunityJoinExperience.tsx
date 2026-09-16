@@ -332,9 +332,9 @@ export default function CommunityJoinExperience({
                 <div className="just99-webinar-chip">
                   <span className="just99-webinar-chip-label">Upcoming Webinar</span>
                   <p className="just99-webinar-chip-dates">
-                    10th &amp; 11th October
+                    Comming Soon
                   </p>
-                  <p className="just99-webinar-chip-days">Saturday and Sunday</p>
+                  {/* <p className="just99-webinar-chip-days">Saturday and Sunday</p> */}
                 </div>
                 <h1 id="community-popup-title" className="just99-split-title">
                   <span>Heal Your Mind.</span>
@@ -809,9 +809,9 @@ function FormPanel({
         <p className="just99-lead-webinar">
           <span className="just99-lead-webinar-label">Upcoming Webinar</span>
           <span className="just99-lead-webinar-dates">
-            10th &amp; 11th October
+            Comming Soon
           </span>
-          <span className="just99-lead-webinar-days">Saturday and Sunday</span>
+          {/* <span className="just99-lead-webinar-days">Saturday and Sunday</span> */}
         </p>
 
         <form onSubmit={onSubmit} className="just99-lead-form">
@@ -864,10 +864,10 @@ function FormPanel({
             <GoldCheckIcon />
             One-time payment of ₹{COMMUNITY_JOIN_PRICE_INR}
           </li>
-          <li>
+          {/* <li>
             <GoldCheckIcon />
             Live webinar on 10th &amp; 11th October
-          </li>
+          </li> */}
           <li>
             <GoldCheckIcon />
             Lifetime community access

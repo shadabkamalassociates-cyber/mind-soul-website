@@ -74,7 +74,7 @@ export default function Just99LandingSections() {
               <p className="just99-webinar-desc">{JUST99_WEBINAR.description}</p>
             </header>
 
-            <div className="just99-webinar-days-grid">
+            {/* <div className="just99-webinar-days-grid">
               {JUST99_WEBINAR.daysDetail.map((item) => (
                 <article key={item.day} className="just99-webinar-day-card">
                   <span className="just99-webinar-day-tag">{item.day}</span>
@@ -83,7 +83,7 @@ export default function Just99LandingSections() {
                   <p className="just99-webinar-day-focus">{item.focus}</p>
                 </article>
               ))}
-            </div>
+            </div> */}
 
             <ul className="just99-webinar-highlights">
               {JUST99_WEBINAR.highlights.map((item) => (

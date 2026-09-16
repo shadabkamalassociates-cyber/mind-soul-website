@@ -49,8 +49,8 @@ export const JUST99_TRUST_STATS = [
 export const JUST99_WEBINAR = {
   eyebrow: "Upcoming Webinar",
   title: "Live Healing Webinar",
-  dates: "10th & 11th October",
-  days: "Saturday and Sunday",
+  dates: "Comming Soon",
+  days: "",
   description:
     "Join our live two-day webinar and take the first step toward healing your mind, uplifting your soul, and growing with a guided community.",
   paymentLink: "https://razorpay.com/payment-link/plink_TXSTLlqmIH5o1N",
