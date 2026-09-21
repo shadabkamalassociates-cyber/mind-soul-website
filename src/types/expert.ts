@@ -25,6 +25,7 @@ export type Expert = {
   whatsapp_number?: string | null;
   city?: string | null;
   state?: string | null;
+  country?: string | null;
   languages?: string[] | string | null;
   education?: string[] | string | null;
   certifications?: string[] | string | null;
