@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const apiProxyTarget =
-  process.env.API_PROXY_TARGET ?? "https://backend.apnasmartgate.com/api";
+  process.env.API_PROXY_TARGET ?? "http://localhost:5003/api";
 
 const nextConfig: NextConfig = {
   images: {

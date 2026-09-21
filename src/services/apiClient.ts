@@ -1,6 +1,6 @@
 const REMOTE_API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
-  "https://backend.apnasmartgate.com/api";
+  "http://localhost:5003/api";
 
 /** Browser requests use the Next.js /api proxy to avoid CORS. */
 export const API_BASE_URL =

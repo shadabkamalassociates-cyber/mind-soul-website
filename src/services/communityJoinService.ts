@@ -100,15 +100,15 @@ export async function purchaseCommunityJoinWithRazorpay(
   details: CommunityJoinDetails,
   source = "website_popup",
 ) {
-  try {
-    await submitCommunityJoinLead(details, source);
-  } catch {
-    // Lead capture is best-effort; payment can still proceed.
-  }
+  // try {
+  //   await submitCommunityJoinLead(details, source);
+  // } catch {
+  //   Lead capture is best-effort; payment can still proceed.
+  // }
 
   const createRes = await createCommunityJoinOrder(details, source);
   const order = createRes.razorpayOrder;
-
+  
   if (!createRes.success || !order?.id || !order.key) {
     throw new Error(
       createRes.message || "Unable to start payment. Please try again later.",

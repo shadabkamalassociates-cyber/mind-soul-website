@@ -11,7 +11,7 @@ import {
 } from "@/store/slices/categoriesSlice";
 
 const BACKEND_ORIGIN =
-  (process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://backend.apnasmartgate.com/api").replace(
+  (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:5003/api").replace(
     /\/api$/,
     "",
   );
