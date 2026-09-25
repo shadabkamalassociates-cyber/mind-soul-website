@@ -20,7 +20,7 @@ const navItems = [
   { label: "Blogs", href: "/blogs" },
   { label: "Categories", href: "/categories", hasDropdown: true },
   { label: "Contact", href: "/contact" },
-  { label: "At Just 11", href: "/just11" },
+  { label: "Vedic Healing", href: "/vedic-healing" },
 ];
 
 function isNavItemActive(pathname: string, href: string) {

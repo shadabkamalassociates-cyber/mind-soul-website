@@ -5,12 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import AddToCartButton from "@/components/AddToCartButton";
+import { ApiError } from "@/services/apiClient";
+import { openRazorpayCheckout } from "@/lib/razorpayCheckout";
+import { verifySessionPayment } from "@/services/purchaseService";
 import {
   fetchAllLiveSessions,
   fetchAllRecordedSessions,
   mapSessionForDetailPage,
   mapSessionForRecordedUi,
+  purchaseSessionAccess,
   type SessionUiContext,
 } from "@/services/sessionsService";
 
@@ -18,11 +21,17 @@ export type SessionAccessVariant = "live" | "recorded";
 
 type LockedPreview = {
   sessionId: string;
+  amount: number;
   title: string;
   image: string;
   badgeLabel: string;
   meta: { key: string; label: ReactNode }[];
 };
+
+function parseSessionAmount(price: unknown) {
+  const numeric = Number(String(price ?? "").replace(/[^\d.]/g, ""));
+  return Number.isFinite(numeric) ? numeric : 0;
+}
 
 const VARIANT_CONTENT: Record<
   SessionAccessVariant,
@@ -198,6 +207,7 @@ async function mapPreviewFromApi(
     const mapped = mapSessionForDetailPage(found, sessionUiContext);
     return {
       sessionId: mapped.sessionId,
+      amount: parseSessionAmount(found.price),
       title: mapped.title,
       image: mapped.image,
       badgeLabel: "Live",
@@ -224,6 +234,7 @@ async function mapPreviewFromApi(
   const mapped = mapSessionForRecordedUi(found, sessionUiContext);
   return {
     sessionId: mapped.sessionId,
+    amount: parseSessionAmount(found.price),
     title: mapped.title,
     image: mapped.image,
     badgeLabel: "Recorded",
@@ -253,6 +264,52 @@ export function SessionAccessLockedPage({
   const content = VARIANT_CONTENT[variant];
   const [preview, setPreview] = useState<LockedPreview | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(true);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
+
+  async function handlePayNow() {
+    if (!preview?.sessionId || paying) return;
+
+    setPaying(true);
+    setPayError(null);
+
+    try {
+      const result = await purchaseSessionAccess({
+        sessionId: preview.sessionId,
+        amount: preview.amount,
+      });
+
+      const order = result?.data;
+      if (!result?.success || !order?.orderId || !order.keyId || !order.amount) {
+        throw new Error(result?.message || "Unable to start payment.");
+      }
+
+      const payment = await openRazorpayCheckout({
+        key: order.keyId,
+        orderId: order.orderId,
+        amount: order.amount,
+        currency: order.currency || "INR",
+        description: preview.title || "Session purchase",
+      });
+
+      await verifySessionPayment(payment);
+      window.location.reload();
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+
+      setPayError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Unable to unlock this session.",
+      );
+      setPaying(false);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -370,12 +427,16 @@ export function SessionAccessLockedPage({
 
             <div className="mt-6 space-y-3">
               {preview?.sessionId ? (
-                <AddToCartButton
-                  sessionId={preview.sessionId}
-                  label="Pay Now & Unlock Session"
-                  redirect
+                <button
+                  type="button"
+                  disabled={paying || loadingPreview}
+                  onClick={() => {
+                    void handlePayNow();
+                  }}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6B4EFF] to-[#3D3D8F] py-3.5 text-[14px] font-semibold text-white shadow-[0_10px_24px_rgba(61,61,143,0.22)] transition hover:opacity-95 disabled:opacity-60"
-                />
+                >
+                  {paying ? "Processing..." : "Pay Now & Unlock Session"}
+                </button>
               ) : (
                 <Link
                   href="/cart"
@@ -384,6 +445,10 @@ export function SessionAccessLockedPage({
                   Pay Now & Unlock Session
                 </Link>
               )}
+
+              {payError ? (
+                <p className="text-center text-[13px] text-[#B42318]">{payError}</p>
+              ) : null}
 
               <Link
                 href={content.otherSessionsHref}

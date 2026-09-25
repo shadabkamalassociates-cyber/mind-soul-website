@@ -187,6 +187,29 @@ export async function fetchSessionById(id: string | number) {
   return extractData<Session>(res);
 }
 
+export type PurchaseSessionResponse = {
+  success?: boolean;
+  message?: string;
+  data?: {
+    orderId?: string;
+    amount?: number;
+    currency?: string;
+    keyId?: string;
+    sessionId?: string;
+    purchaseId?: string;
+  };
+};
+
+export async function purchaseSessionAccess(body: {
+  sessionId: string;
+  amount: number;
+}) {
+  return apiPost<PurchaseSessionResponse>("/sessions/purchase-session", {
+    sessionId: body.sessionId,
+    amount: body.amount,
+  });
+}
+
 export function mapSessionForUi(session: Session, ctx?: SessionUiContext) {
   const id = String(session.id ?? session._id ?? "");
   const title = String(session.title ?? "Untitled Session");
