@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const WHATSAPP_COMMUNITY_LINK =
-  "https://chat.whatsapp.com/E0SZ7y0LPRdCycX308e9Lb";
+  "https://chat.whatsapp.com/IAXonPy2RRRJT0Yfc3jK2c";
 
 type CongratulationsDialogProps = {
   onClose?: () => void;
@@ -85,13 +85,13 @@ export default function CongratulationsDialog({ onClose }: CongratulationsDialog
 
       <div className="congrats-actions">
 
-      <a
-  href={WHATSAPP_COMMUNITY_LINK}
-  className="congrats-btn-join"
-  target="_blank"
-  rel="noopener noreferrer"
-  onClick={handleJoinNowClick}
->
+            <a
+        href={WHATSAPP_COMMUNITY_LINK}
+        className="congrats-btn-join"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={handleJoinNowClick}
+      >
   <span className="congrats-btn-icon" aria-hidden>
     <WhatsAppIcon />
   </span>
@@ -221,3 +221,4 @@ function ShieldIcon() {
     </svg>
   );
 }
+

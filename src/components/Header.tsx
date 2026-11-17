@@ -12,6 +12,10 @@ import {
 import { logout } from "@/store/slices/authSlice";
 import { fetchCart, resetCart } from "@/store/slices/cartSlice";
 
+const courseLinks = [
+  { label: "Third Eye Awakening", href: "/courses/third-eye-awakening" },
+];
+
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -21,6 +25,7 @@ const navItems = [
   { label: "Categories", href: "/categories", hasDropdown: true },
   { label: "Contact", href: "/contact" },
   { label: "Vedic Healing", href: "/vedic-healing" },
+  { label: "Third-eye", href: "/courses/third-eye-awakening", highlight: true },
 ];
 
 function isNavItemActive(pathname: string, href: string) {
@@ -40,6 +45,7 @@ function isNavItemActive(pathname: string, href: string) {
   if (href === "/categories")
     return pathname === "/categories" || pathname.startsWith("/categories/");
   if (href === "/") return pathname === "/";
+  if (href.startsWith("/courses")) return pathname.startsWith("/courses");
   return false;
 }
 
@@ -52,10 +58,12 @@ export default function Header() {
   const cartItems = useAppSelector((s) => s.cart.items);
   const auth = useAppSelector((s) => s.auth);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [coursesOpen, setCoursesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const coursesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (categoriesStatus === "idle") {
@@ -71,6 +79,7 @@ export default function Header() {
 
   useEffect(() => {
     setCategoriesOpen(false);
+    setCoursesOpen(false);
     setMobileMenuOpen(false);
     setMobileCategoriesOpen(false);
     setQuery("");
@@ -90,10 +99,14 @@ export default function Header() {
       if (!dropdownRef.current?.contains(e.target as Node)) {
         setCategoriesOpen(false);
       }
+      if (!coursesRef.current?.contains(e.target as Node)) {
+        setCoursesOpen(false);
+      }
     }
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setCategoriesOpen(false);
+        setCoursesOpen(false);
         setMobileMenuOpen(false);
         setMobileCategoriesOpen(false);
       }
@@ -139,6 +152,46 @@ export default function Header() {
         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-5 lg:flex xl:gap-6">
           {navItems.map((item) => {
             const isActive = isNavItemActive(pathname, item.href);
+
+            if ("hasCoursesDropdown" in item && item.hasCoursesDropdown) {
+              return (
+                <div key={item.label} className="relative" ref={coursesRef}>
+                  <button
+                    type="button"
+                    aria-expanded={coursesOpen}
+                    aria-haspopup="listbox"
+                    onClick={() => {
+                      setCategoriesOpen(false);
+                      setCoursesOpen((v) => !v);
+                    }}
+                    className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-[13.5px] font-medium transition-colors hover:text-[#3D3D8F] xl:text-[14px] ${
+                      isActive || coursesOpen ? "text-[#3D3D8F]" : "text-[#1A1A4A]"
+                    }`}
+                  >
+                    {item.label}
+                    <ChevronIcon open={coursesOpen} />
+                  </button>
+                  {coursesOpen && (
+                    <ul
+                      role="listbox"
+                      className="absolute left-1/2 top-[calc(100%+14px)] z-[60] w-[260px] -translate-x-1/2 overflow-hidden rounded-2xl border border-[#E4E6F2] bg-white py-2 shadow-[0_16px_40px_rgba(26,26,74,0.14)]"
+                    >
+                      {courseLinks.map((course) => (
+                        <li key={course.href}>
+                          <Link
+                            href={course.href}
+                            onClick={() => setCoursesOpen(false)}
+                            className="block px-4 py-2.5 text-[13px] font-medium text-[#1A1A4A] transition hover:bg-[#F4F2FA] hover:text-[#3D3D8F]"
+                          >
+                            {course.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            }
 
             if (item.hasDropdown) {
               return (
@@ -223,7 +276,11 @@ export default function Header() {
                 key={item.label}
                 href={item.href}
                 className={`shrink-0 whitespace-nowrap text-[13.5px] font-medium transition-colors hover:text-[#3D3D8F] xl:text-[14px] ${
-                  isActive ? "text-[#3D3D8F]" : "text-[#1A1A4A]"
+                  "highlight" in item && item.highlight
+                    ? "nav-blink-highlight px-2.5 py-1"
+                    : isActive
+                      ? "text-[#3D3D8F]"
+                      : "text-[#1A1A4A]"
                 }`}
               >
                 {item.label}
@@ -374,9 +431,11 @@ export default function Header() {
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className={`block rounded-xl px-3 py-3 text-[15px] font-medium transition ${
-                        isActive
-                          ? "bg-[#F4F2FA] text-[#3D3D8F]"
-                          : "text-[#1A1A4A] hover:bg-[#F8F9FC]"
+                        "highlight" in item && item.highlight
+                          ? "nav-blink-highlight"
+                          : isActive
+                            ? "bg-[#F4F2FA] text-[#3D3D8F]"
+                            : "text-[#1A1A4A] hover:bg-[#F8F9FC]"
                       }`}
                     >
                       {item.label}

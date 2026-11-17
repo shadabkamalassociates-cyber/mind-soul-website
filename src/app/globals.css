@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+@keyframes nav-blink-colors {
+  0%,
+  100% {
+    color: #6d28d9;
+    background: linear-gradient(90deg, rgba(217, 182, 109, 0.22), rgba(155, 109, 255, 0.18));
+    box-shadow: 0 0 0 1px rgba(217, 182, 109, 0.45), 0 0 14px rgba(124, 58, 237, 0.35);
+  }
+  50% {
+    color: #b45309;
+    background: linear-gradient(90deg, rgba(155, 109, 255, 0.28), rgba(217, 182, 109, 0.35));
+    box-shadow: 0 0 0 1px rgba(109, 40, 217, 0.5), 0 0 18px rgba(217, 182, 109, 0.45);
+  }
+}
+
+.nav-blink-highlight {
+  border-radius: 999px;
+  font-weight: 700;
+  animation: nav-blink-colors 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-blink-highlight {
+    animation: none;
+    color: #6d28d9;
+    background: rgba(155, 109, 255, 0.16);
+    box-shadow: 0 0 0 1px rgba(217, 182, 109, 0.4);
+  }
+}
+
 :root {
   --bg: #05070a;
   --bg-elevated: #0a0b10;

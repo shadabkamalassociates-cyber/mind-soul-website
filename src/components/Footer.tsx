@@ -156,6 +156,26 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
+              <div className="mt-5 space-y-2.5 border-t border-[#3D3D8F]/15 pt-4">
+                <a
+                  href="tel:+919289444951"
+                  className="footer-link flex items-center gap-2 text-[13px] font-medium"
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
+                    <PhoneIcon />
+                  </span>
+                  +91 92894 44951
+                </a>
+                <a
+                  href="mailto:cosmicguruji@gmail.com"
+                  className="footer-link flex items-center gap-2 text-[13px] font-medium"
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EDEAF8] text-[#3D3D8F]">
+                    <MailIcon />
+                  </span>
+                  cosmicgurujii@gmail.com
+                </a>
+              </div>
             </div>
           </div>
 
@@ -333,6 +353,42 @@ function LotusWhite() {
         d="M12 20C12 20 5 14.5 5 10C5 7.5 7 6 9 6C10.2 6 11.1 6.6 12 7.5C12.9 6.6 13.8 6 15 6C17 6 19 7.5 19 10C19 14.5 12 20 12 20Z"
         stroke="white"
         strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <path
+        d="M5.1 2.6C5.3 2.2 5.8 2 6.2 2.1L8 2.6C8.4 2.7 8.7 3.1 8.7 3.5L8.5 5.2C8.5 5.5 8.3 5.8 8 5.9L7.1 6.3C7.8 7.6 8.8 8.7 10.1 9.4L10.5 8.5C10.6 8.2 10.9 8 11.2 8L12.9 7.8C13.3 7.8 13.7 8.1 13.8 8.5L14.3 10.3C14.4 10.7 14.2 11.2 13.8 11.4C12.1 12.3 9.9 12.1 7.8 10.8C5.8 9.6 4.4 7.6 3.9 5.5C3.8 5.1 4 4.6 4.4 4.4L5.1 2.6Z"
+        stroke="currentColor"
+        strokeWidth="1.15"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+      <rect
+        x="2"
+        y="3.5"
+        width="12"
+        height="9"
+        rx="1.4"
+        stroke="currentColor"
+        strokeWidth="1.15"
+      />
+      <path
+        d="M3 4.5L8 8.2L13 4.5"
+        stroke="currentColor"
+        strokeWidth="1.15"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
